@@ -1,0 +1,270 @@
+---
+title: "Notes from Online SYS-6018 Summer 2020"
+author: Mike Porter
+date: mdp2u@virginia.edu
+output: html_document
+---
+
+## Overview
+
+These are a collection of notes describing my experience teaching the on-line version of SYS-6018 during Summer 2020. 
+
+### Project
+
+- The project has two parts. Part I is due in M06, Part II due in M12. It is worth a large percentage of the course grade.
+
+- Problem: M10 has a different description of the project and different powerpoint. 
+    - Suggestion: only give the project description in one place to avoid future problems like this if something gets changed. 
+
+- Suggestion: Instead of powerpoint, have students submit .Rmd plus the compiled html or pdf (Rmd can even be knitted to powerpoint). Or at the least, have them submit the R code. It was hard to know how many points to take off when numbers are off, but unsure for the reason why. Would also be good practice to have students cite consulted resources instead of plagiarize (this also leads to good discussion about dangers of using random blogs to figure out what to do).
+    - PDFs open in browser, but powerpoint require download. Slows down grading. 
+
+- Suggestion: Change grading rubric for project. With current version, it is pretty easy for student to post some number and state basic conclusions without much knowledge. Too many points for extra credit; make AUROC and/or other metrics required.
+    - Use metrics other than Accuracy (unbalanced data). 
+
+- Some students tried to use the `caret` package to help automate the workflow. This is not covered in the course and students struggled to understand what was happening behind the scenes (e.g., same folds used for all models?; what model parameters are used when `predict()` is used on a caret object?)
+
+- Problem: There are no instructions about if or how students can work together on the projects. During Part I, several students obviously used the same code, but there were no instructions about working together. Also, it would help to see code to spot potential issues. 
+
+- Common student problems
+    - Used different folds for each model. This hinders fair comparisons. Perhaps this isn't covered in sufficient detail in lectures.
+    - Part I: used 5-class classification instead of binary
+    - Part I: thought knn used geographic distance
+    
+- Suggestion: create instructor guide with solutions for project. 
+    - We have a solution file, but it needs review and more info about expected deviations. 
+
+- The hold-out data is different file format and different distribution. 
+    - Had to spend live lecture time to discuss this.
+
+
+### Quizzes
+
+- I want students to see their grade in gradebook after submission, but not the specific questions they got wrong. The correct solutions are still not released until the due date. And we can give them 3 submissions. This seemed to work well. 
+
+- Make sure to change the *working copies* of Collab quizzes. Those are the only parts that can be copied to future semesters. 
+    
+
+### Textbook Homework
+
+- Suggestion: Require homework submissions with Rmd files + knitted html/pdf. 
+    - Students had no problems with this as it was required in the Stat 6021 pre-req.
+
+- Copying HW solutions. This is a big problem and most students don't think about it. They just get busy and copy it. 
+    - Need to be very clear about what is acceptable 
+    - No one cites work. Be sure to cite what resources you used. 
+    - Discuss this at beginning of semester
+
+
+- The online students have full time jobs and run into problems with due dates at times. Also covid-19 has caused other issues. 
+    - I changed policy mid-semester, which seemed to work out well:
+        - drop lowest HW and allow up to 3 late submissions without penalty
+
+        
+### Textbook Labs
+
+- The book is good, but the labs using that outdated base R code will extend bad R coding habits.     
+    - We converted a few labs to tidyverse and Rmd. 
+    - Need to finish for all chapters. Perhaps add caret notation too. 
+
+
+
+
+# Issues/Concerns 
+
+The notes came from my TA who was a recent graduate of the residential MSDS program; he listed anything he was unsure of. He did a great job overall, but worth checking into the specifics. 
+
+We did a substantial update of the quiz questions, but they were not reviewed very thoroughly. However no student complaints so far. 
+
+## Overall
+
+- The course should really be converted to tidyverse (dplyr, readr, ggplot2, ...) . Labs, course lectures, etc. Assign R4DS textbook to help with tidyverse coding. Make new videos for tidyverse labs. 
+
+
+## M-01
+
+Video on K-nearest neighbor where arrows point to 1/K is incorrect. Figures 2.16 and 2.17 in ISLR. 
+
+## M-02
+
+### Section 2.3 (Model Selection)
+
+-	General: The video focuses on using the f-statistic for model selection, but doesn’t mention AIC, BIC, Mallows, etc. even in passing. The textbook at least notes they exist, and states they will be covered later.  
+
+-	9:15: The video compares the regression coefficients for two different variables, and notes that because one is larger, it has a bigger impact on the dependent variable. This might be true, but it’s very dangerous because we don’t know the units for the two variables. If they are measured in the same number of units (say, number of ads), then it works in this specific instance, but as a general rule I think it’s a bad idea to look at the magnitude of regression coefficients unless you have standardized your input variables.  
+
+
+### Section 2.4 (Polynomials and Interaction Terms in Linear Models):
+
+-	General: I think this video is fine. If you wanted to get really nitpicky, throughout the video, they talk about “relaxing” the linear assumption when using polynomials. But the linear assumption is just that the output is a linear function of the inputs (i.e., the Beta coefficients are linear), and that assumption is never relaxed even when fitting with polynomials or interaction terms.  It’s just that the inputs can be non-linear. 
+
+
+## M-03
+
+### Interactive Quiz 3.3:
+
+-	This quiz is fine, albeit insanely easy – it just asks the student to copy a bunch of test error rates from a bar chart to a table. Because of how it’s structured, it would take a long time to change, so it’s probably fine as it is since nothing is actually wrong. As an aside, I did find it interesting that for the non-linear data (where each class comes from a 3-4 Gaussian mixture model), logistic regression outperformed QDA. Might be an interesting talking point for the lecture.  
+
+
+
+### M-03 Homework
+
+- The book code for confusion matrices is kind of cumbersome, so it might be worth introducing the confusionMatrix() function from caret. (Only one student used it in their code.) It produces a much cleaner matrix and automatically computes all the various accuracy metrics
+
+- A couple of people suggested in narrative explanations that collinearity in the data was likely responsible for the poor predictions, but the predictors used for the models had almost no collinearity as far as I could tell (it seemed  clear from the scatter plots, but to be sure I also tested the Vifs which were all around one). I didn't deduct any points since it's not something this class has spent much time on, but it might be worth noting. 
+
+
+
+## M-04
+
+### Section 4.2 (Bootstrapping)
+
+- Video: I didn’t notice anything wrong with the video, although it’s pretty short and just gives a very high level overview (only 2:55 long). One thing the video and textbook don’t appear to cover (unless I missed it) is how big the bootrstrapped sample size should be. I vaguely recall from our class that it should be the same size as the original dataset, but I’m seeing different things online. 
+
+### 4.3 (Principal Components)
+
+- General: I noticed there isn’t an assigned textbook reading for this one. There is a textbook section on PCA (p. 230, 10.2 and 6.3), so I wasn’t sure if this was deliberate or accidental. 
+
+- PCA is covered in a few different places in the course.
+
+### 4.4 
+
+- I did not watch the video for 4.4 since there is no quiz associated with that chapter. 
+
+
+## M-05 
+
+### Section 5.1 (Variable Selection for Linear Models)
+
+- At around 7:01, the video notes that if the models are the same size, you can just use the R-squared value for model selection. I guess technically this is true (since all the models are the same size, the penalty will be the same for things like AIC, BIC, etc.), but in general, I haven’t previously heard anyone recommend using R-squared as a model selection tool.  
+
+- At 8:32, the video starts talking about forward and backwards stepwise selection for choosing variables. I’m not sure what your feelings are, but our linear models professor hated those with a fiery passion. 
+
+
+### Section 5.2 (Shrinkage Methods)
+
+Video #2 (Model Averaging):
+
+-	This whole video might be one worth watching. I had a hard time following it at times, and it just didn’t seem to “fit” cohesively. A few of the specific things I noted are below: 
+
+-	3:55: The video shows a simplified version of Bayes theorem that doesn’t include the prior. I see why they did it in the context of model averaging, but I’m not sure how you feel about it. 
+
+-	14:55 & 16:16: This may be my inexperience, but I hadn’t ever seen Bayes Model Averaging used for conclusions of statistical significance. But in these two places, the video almost makes it seem (without outright saying it) like Bayesian model selection can conclude a variable of interest is statistically significant. (In this example, the question at hand is whether the probability of imprisonment and average time served in prisons have an impact on the crime rate.) 
+
+-	17:55 (the technical piece sorta starts at 19:10) They use an example of Bayesian Model averaging based on a study, but didn’t really describe how Bayesian Model Averaging was used in this study. There are some results with a bunch of different models and p-values (starting at 22:02), but I’m not seeing how was model averaging used with these different models? I’m definitely missing something. 
+
+
+
+## M-06
+
+All quizzes updated
+
+## M-07
+
+### Homework M-07
+
+- Problem 8.7 uses random forest which is covered in next session
+
+- I just wanted to give a heads up regarding quiz 7.2 - it references the Microsoft White Paper on Random Decision Forests, which appears under the tasks for Topic 7.3. I assume that the link was misplaced into Topic 7.3.
+
+## M-08
+
+### Section 8.2 (Random Forest)
+
+-	Video 1 6:42 (hyperparameter tuning): Nothing he says is incorrect, but there is a decent amount of emphasis on using cross-validation to select the number of trees, and he recommends testing from 1-1000. My impression was always use as many as you can / have time for. 
+
+
+### Section 8.4 (Boosting)
+
+- Video #2: This video goes over how to implement XG Boost in R, and seemed good for the most part. One minor thing is he compares performance of different models using his holdout test set, which can be a bit risky because you can overfit to that specific test set (see 27:45). But it’s not the emphasis of the video so it’s probably fine. 
+
+
+### Other 
+
+- for RF/Bagging too much focus on choosing n.trees
+
+- The linked XGboost video uses incorrect sparse.model.matrix. Uses -1 to get one-hot, but it really means no intercept. It will only work with a single factor! 
+
+- AdaBoost description (8:xx, 8.4) says only uses stumps.	
+
+
+
+
+## M-09
+
+
+Homework Problem 9.8
+For the linear kernel, a bunch of students manually overrode the default arguments to set scale=FALSE, meaning the data would not be scaled for the SVC. This predictably caused their results to be quite a bit worse than they should have been. It was so common that I wondered if there was a reference in the book somewhere, and sure enough, on pages 359-360 (see book here), the book walked through an example thats sets the scale=FALSE
+
+A couple of students ran cross-validation for gamma and the degree of polynomial, even though the question specified what values to use. This then resulted in getting optimal results that were different, as CV would often find a value of gamma that was better than the default.
+
+
+### Live Lecture
+
+- Spend time reviewing Project Part I submissions
+
+- Showed how to load Part II hold-out data. It is different format that Part I. 
+
+
+## M-10
+
+
+### Module 10.2 (PCA Visualization)
+
+- Video: The example starting at 5:55 was a bit tricky to follow. The biggest thing that was a little confusing was where do the vectors that correspond to features come from? Are those the original axes in the xth dimension? I’m also not sure the video makes clear that a PC may correspond to a latent variable, as opposed to one that is explicitly stated in the dataset. (The example at 13:16 is pretty sweet though!)
+
+
+### Module 10.4 (K-Means Clustering)
+
+- Video: It’s very clear, and does a good job explaining the basics of how K-Means works. One thing it doesn’t touch on is the EM algorithm itself, just FYI. 
+
+## M-11
+
+### 11.1 – Neural Nets
+
+- Video: Probably for simplicity, the video uses sigmoid activations, which I think it the standard for most basic explanations. However, I don’t believe it ever notes that you can (and in my understanding, often do) use other activation functions (e.g., relu, softmax etc.). 
+
+- The video compares the structure of neural networks to several other methods, including PCA (7:49), Adaboost (11:19), Random Forest (11:57) and Bayesian Model Averaging (12:21), but I found these connections a little confusing. While all of these are essentially taking the outputs of multiple models and combining them into one final model (i.e., they’re ensemble methods, with the exception of PCA), a neural network has a lot of differences in how it’s implemented, especially when you get into multiple layers. The video does note this, but for me, it muddies the waters more than it helps to clarify. (Who knows, for other students it might be illuminating.) 
+
+
+
+### Module 11.3 – Feature Engineering
+
+- Video #1 (Feature Engineering w/ Matlab): This is a very broad overview of feature engineering – it’s more conceptual and doesn’t really get into Matlab usage FYI. One thing the video repeatedly mentions (e.g., at 0:25) is that the only way to test whether a feature is good is to add it to your model and see “if the result improved.” It’s a big vague on what the “result” is however – hopefully at this point people would understand that it’s not the training error, but it could potentially be worth clarifying. 
+
+- Video #2 (Feature Engineering): This one is a conference talk about feature engineering. It’s good overall – one thing I found interesting though is he doesn’t mention cross-validation when discussing possible ways to select features (14:04). 
+
+## M-12
+
+### Module 12.1 (Good Kaggle Competition Entries)
+
+-	Doubt it matters, but at the 3:45 chart, the presenter inappropriately uses a pie chart to compare the value of a predictor across different housing districts. (A pie chart makes no sense because it’s not out of one whole.) And even if a pie chart were appropriate, this one has too many fields to be intelligible. (Doubt it matters, but poor data visualization gnaws at me.)
+
+-	They also use R-squared frequently as their evaluation metric of choice (e.g., 20:48), which as we’ve covered is not ideal. 
+
+-	Also, it seems like their methodology seemed to be “try a bunch of stuff and see what increases the Kaggle score” (21:40), which is the equivalent of overfitting to one specific test set. 
+
+-	All that being said, I do think the video communicates the importance of not just diving head-first into model building, but in taking the time to understand the data first. They clearly were thoughtful in their analysis of the data, and that led to some cleaning and imputing that helped their final results. 
+
+- Note: There are two additional videos, both on implementing XGBoost. The first video is the same one from Module 8.4 (not sure if that is intentional), and the second one is optional (and an hour and a half long) so I did not review it. (That being said, I certainly can if you think it is worth doing.) 
+
+
+
+--------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+
+

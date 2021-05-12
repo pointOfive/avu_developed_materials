@@ -1,0 +1,36 @@
+NOTE: *'s beside questions that *might* be useful? I.e., starting at PollEv q 7.
+
+
+1. Level/Year at UVA? (wordcloud): This information is available from the class roster in SIS, so you don't need to ask the students for it.
+
+In general, the undergraduate students are "sophisticated" and will not seem very engaged in "vanilla" ice breakers, so you'll need to be more clever than these to get any sort of meaningful engagement going from students
+
+2. Major? (wordcloud): spaces are broken up with PollEv word cloud, which makes these less fun and meaningful... I might change to an upvote style for this question; but, again, this information is available through SIS
+
+I think the above information could be presented to the students in a way that's actually MORE interesting and engaging than the interactive POLL... there's probably better interactive polls that could be had...
+
+3. Minor? (wordcloud): same story as 2...
+
+4. Where are you from? (upvote): Boring, as you'll find out everyone is from Northern VA... A map that let students place a pin on where they're from might work
+
+5. Music Recommendtion? (upvote): this was a shockingly boring result, I thought... this is where I think one would have to be much more clever with UVA UGs
+
+6. Goals/Plans upon graduation? (upvote): this was a shockingly boring result, I thought... this is where I think one would have to be much more clever with UVA UGs
+
+*7. Do you code? (upvote): this prompted a reasonable question of "Do we need to code" to which I said "no, you'll figure it out" and I think that's true; though, I suspect a couple students (who do not seem to put any time or effort into the course) might not agree with this
+
+*8. Does your genome code? (Y/N): this was a silly question trying to point out that everyone "codes"... I think I'd use this again as just a sort of silly thing, but that's more about my own style, as opposed to it being a hit with the students who were just quiet the whole time.
+
+So, if you want to get some student verbalizations going, the PollEv prompts that I had aren't going to do it effectively...
+Basically, I don't think I'd do nearly as much PollEv as ice-breaker stuff.
+The following questions, though, about course logistics, I think were useful for clearly setting expectations up front
+
+*9. Coding Assignments are generally due (multiple choice): useful for emphasizing and setting expectations
+*10. Discussion board assignments are generally due (multiple choice): useful for emphasizing and setting expectations 
+*11. Do you understand that late assignment submissions probably won't be graded in this class? (Y/N): useful for emphasizing and setting expectations
+*12. Which of these reasons for missing a deadline Would NOT Work after the fact? (multiple choice): useful for emphasizing and setting expectations
+*13. If you have a (legitimate) reason for missing a deadline (multiple choice): useful for emphasizing and setting expectations
+
+14. Tell me something about yourself that you're willing to share with the class that defines and characterizes some aspect of who you are as a person... e.g., what interests and drives you(?); or, what formative experiences have you had(?), etc.? (free form)
+
+While this above question was perhaps good to read, it never became important in the class, and was too quickly forgotton to be useful... so I'd probably not bother with it in the future.  Students might appreciated it, though, perhaps?  It's just creating some busy work for yourself, though, which probably makes it a little unnecessary and probably really outside a reasonable scope of the class.

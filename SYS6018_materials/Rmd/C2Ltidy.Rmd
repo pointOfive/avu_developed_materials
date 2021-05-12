@@ -1,0 +1,289 @@
+# Chapter 2 Lab: Introduction to R
+
+<!-- where needed I refer to the following resources -->
+<!--  https://github.com/SmithCollege-SDS/tidy-islr/blob/master/lab01/Lab%201%20-%20Introduction%20to%20R.ipynb -->
+<!--  https://github.com/uc-cfss/tidy-islr/blob/master/02-stat-learn.Rmd -->
+
+## ~~Basic Commands~~ Base R
+
+```{r base-R}
+x <- c(1,3,2,5)
+x
+x = c(1,6,2)
+x
+y = c(1,4,3)
+length(x)
+length(y)
+x+y
+ls()
+rm(x,y)
+ls()
+rm(list=ls())
+?matrix
+x=matrix(data=c(1,2,3,4), nrow=2, ncol=2)
+x
+x=matrix(c(1,2,3,4),2,2)
+matrix(c(1,2,3,4),2,2,byrow=TRUE)
+sqrt(x)
+x^2
+x=rnorm(50)
+y=x+rnorm(50,mean=50,sd=.1)
+cor(x,y)
+set.seed(1303)
+rnorm(50)
+set.seed(3)
+y=rnorm(100)
+mean(y)
+var(y)
+sqrt(var(y))
+sd(y)
+```
+
+## ~~Graphics~~ tidyverse
+
+### tibble
+`install.packages("tidyverse")`
+
+```{r df}
+#x=rnorm(100)
+#y=rnorm(100)
+
+library(tibble)
+
+xy <- tibble(
+  x=rnorm(100),
+  y=rnorm(100)
+)
+```
+
+### ggplot2
+
+```{r scatter}
+#plot(x,y)
+#plot(x,y,xlab="this is the x-axis",ylab="this is the y-axis",main="Plot of X vs Y")
+
+library(ggplot2)
+
+scatter_plot <- ggplot(mapping=aes(x=x, y=y),
+                      data=xy) +
+  geom_point(color='green') +
+  labs(title="Plot of X vs Y",
+       x="this is the x-axis",
+       y="this is the y-axis")
+
+scatter_plot
+
+# pdf("Figure.pdf")
+# plot(x,y,col="green")
+# dev.off()
+
+ggsave(filename = "scatter_plot.pdf", plot = scatter_plot)
+
+```
+
+### More base R
+
+```{r seq}
+x=seq(1,10)
+x
+x=1:10
+x
+```
+
+### More ggplot2
+
+```{r contour}
+
+#x=seq(-pi,pi,length=50)
+#y=x
+#f=outer(x,y,function(x,y)cos(y)/(1+x^2))
+#contour(x,y,f)
+
+d <- seq(-pi,pi,length=50)
+x <- outer(d, d, function(x, y) x )
+y <- t(x)
+z <- outer(d, d, function(x, y) cos(y)/(1+x^2) )
+
+xyz <- tibble(
+  x=as.vector(x),
+  y=as.vector(y),
+  z1=as.vector(z)
+)
+
+contour_plot1 <- ggplot(mapping=aes(x=x, y=y, z=z1),
+                        data=xyz)
+
+contour_plot1+geom_contour()
+
+#contour(x,y,f,nlevels=45,add=T)
+
+contour_plot1+geom_contour()+geom_contour(bins=45)
+
+#fa=(f-t(f))/2
+#contour(x,y,fa,nlevels=15)
+
+xyz <- xyz %>% add_column(z2=as.numeric((z-t(z))/2))
+contour_plot2 <- ggplot(mapping=aes(x=x, y=y, z=z2),
+                        data=xyz) 
+
+contour_plot2+geom_contour(bins=15)
+
+#image(x,y,fa)
+
+contour_plot2+geom_contour_filled()
+```
+
+### plotly
+
+`install.packages("plotly", repos="http://cran.rstudio.com")`
+
+```{r plotly}
+#persp(x,y,fa)
+#persp(x,y,fa,theta=30)
+#persp(x,y,fa,theta=30,phi=20)
+#persp(x,y,fa,theta=30,phi=70)
+#persp(x,y,fa,theta=30,phi=40)
+
+library(plotly)
+
+plot_ly(x=x, y=y, z=z, type='surface') %>% 
+  layout(scene = list(aspectmode='cube'))
+
+```
+
+
+
+## ~~Indexing Data~~ More base R
+
+```{r indexing}
+A=matrix(1:16,4,4)
+A
+A[2,3]
+A[c(1,3),c(2,4)]
+A[1:3,2:4]
+A[1:2,]
+A[,1:2]
+A[1,]
+A[-c(1,3),]
+A[-c(1,3),-c(1,3,4)]
+dim(A)
+```
+
+## tidyverse indexing
+### dplyr: filter/select
+
+```{r dplyr}
+library(dplyr)
+
+filter(.data = xyz, x > 0)
+
+select(.data = xyz, x, y)
+
+```
+
+
+## ~~Loading Data~~ tidyverse: readr
+
+```{r auto1}
+
+#Auto=read.table("Auto.data")
+#fix(Auto)
+#Auto=read.table("Auto.data",header=T,na.strings="?")
+#fix(Auto)
+#Auto=read.csv("Auto.csv",header=T,na.strings="?")
+#fix(Auto)
+#dim(Auto)
+#Auto[1:4,]
+
+#Load the `Auto` data using the `read_csv()` function (from `readr` package).
+library(readr)
+Auto = read_csv('https://faculty.marshall.usc.edu/gareth-james/ISL/Auto.csv')
+Auto
+Auto %>% count(horsepower)
+Auto = read_csv('https://faculty.marshall.usc.edu/gareth-james/ISL/Auto.csv', 
+                na = "?")
+summary(Auto)
+
+# the tidyverse can handle NA's appropriately 
+# wihtout us explicitly dropping those rows
+
+#Auto=na.omit(Auto)
+#dim(Auto)
+#names(Auto)
+
+```
+
+## ~~Additional Graphical and Numerical Summaries~~ More ggplot2
+
+```{r auto2}
+
+#plot(cylinders, mpg)
+#plot(Auto$cylinders, Auto$mpg)
+#attach(Auto)
+#plot(cylinders, mpg)
+#cylinders=as.factor(cylinders)
+#plot(cylinders, mpg)
+#plot(cylinders, mpg, col="red")
+#plot(cylinders, mpg, col="red", varwidth=T)
+#plot(cylinders, mpg, col="red", varwidth=T,horizontal=T)
+#plot(cylinders, mpg, col="red", varwidth=T, xlab="cylinders", ylab="MPG")
+
+ggplot(Auto, aes(x=factor(cylinders), y=mpg)) + 
+  geom_boxplot(fill="orange", color="blue") + 
+  labs(x="cylinders", y="MPG")
+
+Auto <- mutate(.data=Auto,
+               cylinders=as.factor(cylinders))
+ggplot(data = Auto, mapping = aes(x=cylinders, y=mpg)) +
+  geom_boxplot(fill="orange", color="blue") + 
+  labs(x="cylinders", y="MPG")
+
+#hist(mpg)
+#hist(mpg,col=2)
+#hist(mpg,col=2,breaks=15)
+
+ggplot(Auto, aes(x=mpg)) + 
+  geom_histogram(binwidth=1, 
+                 center=10, 
+                 fill="orange", 
+                 color="blue")
+
+```
+
+### More tidyverse: GGally
+
+`install.packages("GGally")`
+
+```{r auto3}
+
+# pairs(Auto)
+# pairs(~ mpg + displacement + horsepower + weight + acceleration, Auto)
+
+library(GGally)
+ggpairs(data = select(.data = Auto, -name))
+
+```
+
+### More plotly (with ggplot)
+
+```{r auto4}
+
+#plot(horsepower,mpg)
+#identify(horsepower,mpg,name)
+
+qplot(data=Auto, x=horsepower, y=mpg, label=name)
+
+# this converts the ggplot2 figure to an interactive plotly figure
+# click on the plotly figure to enable information on hover
+ggplotly()
+
+```
+
+
+### Done
+```{r auto5}
+
+# we already showed the tidyverse summary function
+
+#summary(Auto)
+#summary(mpg)

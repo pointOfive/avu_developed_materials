@@ -1,0 +1,460 @@
+
+
+---
+title: "Some tidyverse solutions for ISLR chapter 3"
+author: "**Schwartz**"
+date: "08/26/2020"
+output: html_document
+---
+
+
+<!--- Below are global settings for knitr. You can override any of them by adding the changes to individual chunks --->
+```{r global_options, include=FALSE}
+knitr::opts_chunk$set(error=TRUE,        # Keep compiling upon error
+                      collapse=FALSE,    # collapse by default
+                      echo=TRUE,         # echo code by default
+                      comment = "#>",    # change comment character
+                      fig.width = 5.5,     # set figure width
+                      fig.align = "center",# set figure position
+                      out.width = "49%", # set width of displayed images
+                      warning=FALSE,     # do not show R warnings
+                      message=FALSE)     # do not show R messages
+```
+
+<!--- Change font size for headers --->
+<style>
+h1.title {
+  font-size: 28px;
+}
+h1 {
+  font-size: 22px;
+}
+h2 {
+  font-size: 18px;
+}
+h3 { 
+  font-size: 14px;
+}
+
+</style>
+
+
+# Problems 
+
+```{r a-c, fig.width=8, fig.height=8, out.width="80%", cache=TRUE}
+library(readr)
+library(GGally)
+library(dplyr)
+library(broom)
+```
+
+## 9. Auto {.tabset}
+
+### (a) readr+ggppairs
+
+```{r a, fig.width=8, fig.height=8, out.width="80%", cache=TRUE}
+
+url = "http://faculty.marshall.usc.edu/gareth-james/ISL/Auto.csv"
+auto = read_csv(url, na="?")
+YX <- auto %>% dplyr::select(mpg:origin) 
+YX %>% ggpairs(upper=list(continuous=wrap("cor", size=3)))
+```
+
+### (b) cor
+
+```{r b, fig.width=8, fig.height=8, out.width="80%", cache=TRUE}
+YX %>% cor(method="pearson", use="pairwise.complete.obs") 
+```
+
+### (c) lm
+
+i. The p-value from the `glance` function (which is an F-Stastics) indicates
+clear response/predictor relationship.
+ii. Specifically, features `displacement`, `weight`, `year`, and `origin` have 
+statistically significant linear associations with `mpg`.
+iii. And, since `year` is positive we see that over time cars have gotten more
+fuel efficient!
+
+```{r c, fig.width=8, fig.height=8, out.width="80%", cache=TRUE}
+lm.fit <- lm(mpg~., dat=YX)
+glance(lm.fit)
+tidy(lm.fit)
+```
+
+### (d) diagnostics
+
+For the next problem, the *residual plot* (top-left) and *scale-location plot*
+show non-linearity and heteroskedasticity; the *qq plot* (top-right) shows some 
+deviation of the data from the normality assumption, which could degrade our 
+statistical accuracy; finally, the Cook's distance values in the *leverage plot*
+are not excessive (>1), so there are not any data points that should immediately
+concern us as being unduly influential in the model fit.  Nonetheless, we may 
+wish to interogate the data on row 14 (as identified by the hoverable version of 
+the *leverage* plot) since it's leverage score (i.e., the diagonal values on the 
+14 row of the *hat matrix*) is about 3-times larger than the average leverage
+score.  This means that this data point is relatively unusually placed in the 
+feature space relative to the rest of this data set. 
+
+`install.packages("ggfortify")`
+
+```{r d}
+
+#source("~/Documents/courses/SYS6018_Fall2020/regDiag.R")
+source("regDiag.R")
+lm_diagnostics_plots(lm.fit)
+
+library(plotly)
+lm.fit %>% resVlev %>% ggplotly()
+
+#https://stackoverflow.com/questions/36731027/how-can-i-plot-the-residuals-of-lm-with-ggplot
+library(ggfortify)
+autoplot(lm.fit)
+```
+
+### (e) interactions
+
+```{r e}
+
+#https://stackoverflow.com/questions/39886562/how-to-check-interaction-effects-for-a-lot-of-predictors-in-r
+
+lm(mpg~(cylinders+displacement+horsepower+weight+acceleration+year+origin)^2,
+   data=YX) %>% tidy() %>% filter(p.value < 0.05)
+
+lm.fit.interactions <-
+  lm(mpg~displacement+acceleration*origin+(displacement+acceleration):year,
+     data=YX) 
+lm.fit.interactions %>% tidy() 
+```
+
+### (f) transformations
+
+Partial residual plots (https://en.wikipedia.org/wiki/Partial_residual_plot),
+not to be confused with partial regression plots (https://en.wikipedia.org/wiki/Partial_regression_plot), 
+are a tool you have for diagnosing non-linearity in multiple regression contexts.  
+Unfortunately, it's beyond the scope of this course (https://stats.stackexchange.com/questions/265339/partial-residual-plot-with-interactions) 
+to work out partial residual plots when there are interactions between your 
+variables, so what I'm going to do is remove the interactions from the model 
+above in order to use the simple version of partial residual plots to explore 
+non-linearity for these features.  I'm then going to make any variable 
+transformations that appear to be indicated, and once that's done I would then 
+set about re-exploring interactions. Welcome to the joys of linear model 
+building.  I'm sure you know them well. 
+
+```{r partial-residual,fig.width=6, fig.height=6, out.width="80%", cache=TRUE}
+
+# while there are packages in R (`car::crPlots`) that provide partial residual 
+# plots, the tidyverse does not yet do so; so, I'm going to take the opportunity 
+# to implement them from scratch.  This also gives us an opportunity to see 
+# exactly what they are, and as well, see a little more tidyverse implementation
+# https://stats.stackexchange.com/questions/271314/multiple-regression-avplots-vs-termplot/414164#414164
+# https://aosmith.rbind.io/2018/01/31/added-variable-plots/
+
+library(purrr)
+features <- c('displacement','acceleration','origin','year') %>% 
+  purrr::set_names()
+lm.fit <- lm(mpg~displacement+acceleration+origin+year, data=YX)
+
+# https://aosmith.rbind.io/2018/08/20/automating-exploratory-plots/
+# https://statisticaloddsandends.wordpress.com/2018/10/16/extracting-elements-from-a-tibble/
+partial_residual_plot <- function(feature){
+  coef <- tidy(lm.fit) %>% filter(term==feature) %>% dplyr::select(estimate) %>%
+    pull(estimate)
+  lm.fit %>% augment() %>% 
+  ggplot(mapping=aes(x=.data[[feature]], y=.resid+coef*.data[[feature]])) + 
+    geom_point() + ggtitle(paste("coef =", coef)) +
+    geom_abline(intercept=0, slope=coef, color='red')
+}
+partial_residual_plots <- features %>% purrr::map(partial_residual_plot)
+library(gridExtra)
+grid.arrange(grobs=partial_residual_plots, ncol=2)
+
+YX_transformed <- YX %>% 
+  mutate(log_displacement=log(displacement)) %>%
+  mutate(squred_displacement=(displacement)^0.5) %>%
+  mutate(sqrt_displacement=(displacement)^2) 
+
+lm.fit <- lm(mpg~log_displacement+acceleration+origin+year, 
+             data=YX_transformed)
+log_displacement <- partial_residual_plot('log_displacement')
+lm.fit <- lm(mpg~sqrt_displacement+acceleration+origin+year, 
+             data=YX_transformed)
+sqrt_displacement <- partial_residual_plot('sqrt_displacement')
+lm.fit <- lm(mpg~displacement+squred_displacement+acceleration+origin+year, 
+             data=YX_transformed)
+squared_displacement <- partial_residual_plot('squred_displacement')
+```
+```{r partial-residual-2, fig.width=9, fig.height=3, out.width="80%", cache=TRUE}
+grid.arrange(log_displacement, sqrt_displacement, squared_displacement, ncol=3)
+```
+
+
+
+## 14. Synthetic {.tabset}
+
+### (a)
+
+$y = \beta_0 + \beta_1x_1+\beta_2x_2+\epsilon$
+
+
+$\beta_0=0, \beta_1=2, \beta_2=0.3$
+
+### (b)
+
+```{r x}
+set.seed(1)
+n <- 100
+x1 <- runif(n)
+x2 <- 0.5*x1+rnorm(n)/10
+cor(x1, x2)
+library(ggplot2)
+ggplot(mapping=aes(x=x1, y=x2)) + geom_point()
+```
+
+### (c)
+The estimated coefficients have rather large uncertainties and so while 
+(it is generally true under repeated experiments that) they the same sign and 
+rank order in terms of absolute magnitude as the true coefficient values, they 
+are not particularly close estimates of the true parameter values.  
+The second coefficient is not significant, and the first coefficient 
+is only just significant at the $\alpha=0.05$ level (for essentially all 
+repeated experiments).  Increasing the sample size can eventually lead to 
+statistical significance for the coefficients (against $H_0: \beta_i = 0$being 
+non-zero). 
+
+```{r y}
+y <-2 + 2*x1 + 0.3*x2 + rnorm(n)
+lm(y~x1+x2) %>% tidy()
+```
+
+### (d)-(e)
+
+When only one or the other feature (`x1` or `x2`) is used in the model fit
+the coefficient values are, "all of a sudden", statistically significant.
+
+```{r s}
+lm(y~x1) %>% tidy()
+lm(y~x2) %>% tidy()
+```
+
+### (f)
+
+This discrepancy in the coefficient estimates between the last three model fits
+is a result of multicollinearity, here correlation between `x1` and `x2` 
+(though, multicollinearity issues may in general be more complex and involve 
+more than just two features). What has happened in this synthetic data set is 
+that `y` is positively associated with both `x1` and `x2`, which in turn are 
+positively associated with each other.  So when `x1` increases `y` does so as 
+well, but at the same time so too does `x2`.  Determining, then, to which 
+feature we should attribute the *"effect"* is a mathematically ambiguous 
+problem.  I.e., the model can predict equally well by reducing one of the 
+corresponding coefficients while simultaneously increasing the other, and 
+vice-versa.  These circumstances are increasingly exacerbated as 
+multicollinearity within features increases.  When this happens the actual 
+"see-saw" balancing of fitted coefficient values becomes increasingly beholden 
+to arbitrary circumstances of the data set being used.  I.e., in "high 
+multicollinearity contexts", if you were to swap out the data set for another, 
+the actualized "see-saw" balancing of fitted coefficient values could be totally 
+different.  Fortunately (or unfortunately?) for us, this latter phenomenon *IS* 
+mathematically tractable, and presents itself in the form of increased 
+uncertainty around coefficient values, as seen in the reduced statistical 
+significance of the coefficient estimates in the initial model fit which 
+utilized both `x1` and `x2`.
+
+
+### (g)
+
+The mismeasured data point has much less impact on the coefficient estimates in
+the single feature models, while it completely reverses the roles of the 
+coefficients (in terms of their relative weights) in the multicollinearity 
+context.  This is the aforementioned increased instability that presents itself
+in high multicollinearity contexts. 
+
+
+
+```{r mismeasurement, fig.width=9, fig.height=3, out.width="80%", cache=TRUE}
+x1 <- runif(n)
+x2 <- 0.5*x1+rnorm(n)/10
+y <-2 + 2*x1 + 0.3*x2 + rnorm(n)
+models <- list(mod1=lm(y~x1+x2), mod2=lm(y~x1), mod3=lm(y~x2))
+purrr::map_df(models, tidy, .id="model")
+
+x1 <- c(x1, 0.1)
+x2 <- c(x2, 0.8)
+y <- c(y,6)
+models <- list(mod_x1_x2=lm(y~x1+x2), mod_x1=lm(y~x1), mod_x2=lm(y~x2))
+purrr::map_df(models, tidy, .id="model")
+
+grid.arrange(ggplot(mapping=aes(x=x1, y=x2)) + geom_point(),
+             ggplot(mapping=aes(x=x1, y=y)) + geom_point(),
+             ggplot(mapping=aes(x=x2, y=y)) + geom_point(), ncol=3)
+```
+
+From the leverage and pairwise plots we can see that the data point has very 
+high leverage in the full model, and quite high leverage in the `x2` model. 
+This is because this data point is very extreme/unusual in the feature spaces of 
+both models.  It does not have an unusual/extreme `x1` value, however, so it is 
+not a high leverage point with respect to the `x1` model.  High leverage does 
+not necessarily mean that a date point is an influential point, though.  It must
+also be an outlier relative to the model fit that did not take it into account.
+In the `x2` model this is not the case for this data point.  This can be seen
+from the Cook's distance plot which shows that this last added (mismeasured)
+data point is not a high influence point.  This is clear from the pairwise plot
+between `y` and `x2`.  While this point is extreme, it is right along the trend
+line present in the data.  
+
+So, the reason the partial (`x1` or `x2` only models) coefficient estimates are 
+not  so affected by this new data point (compared to the full model coefficient 
+estimates) is because it's not a high leveage point in the `x1` model, and it's 
+not an influential point in the `x2 model`.  On the other hand, this 
+demonstration sheds light as to why multicollinearity is such a problem.  I.e.,
+in high multicollinearity contexts is very easy for data points to become high
+leverage data points, and if they are subsequently as well characteristically
+outlier data points, then they will become influential data points, and can
+drastically affect the fit of your model.
+  
+  
+  
+  
+
+```{r mismeasuremen-2t, fig.width=9, fig.height=3, out.width="80%", cache=TRUE}
+
+lev <- function(lm.fit, lm.name){
+  lm.fit %>% augment() %>% dplyr::select(leverage=.hat) %>%
+  ggplot(mapping=aes(x=seq_along(leverage), y=leverage)) +
+    geom_bar(stat="identity", position="identity") + xlab("") +
+    ggtitle(lm.name)
+}
+
+grid.arrange(grobs=purrr::imap(models, lev), ncol=3)
+
+cooksd <- function(lm.fit, lm.name){
+  lm.fit %>% augment() %>% dplyr::select(x=.cooksd) %>%
+  ggplot(mapping=aes(x=seq_along(x), y=x)) +
+    geom_bar(stat="identity", position="identity") + xlab("") +
+    ylab("Cook's distance") + ggtitle(lm.name)
+}
+grid.arrange(grobs=purrr::imap(models, cooksd), ncol=3)
+```
+
+
+
+## 15. Boston: crim {.tabset}
+
+### (a) purrr
+
+All features, with the exception of `chas`, are linearly associated with `crim`
+as judged by the F-test p-values (the statistics of which are the squared values
+of the corresponding t-statistics used for coefficient testing) extracted below.
+I don't find that plots here are necessary.  For the purposes of this problem,
+the `lm` function serves the purpose of a very effective EDA tool perfectly 
+well.  It clearly demonstrates that there are certainly strong pairwise 
+associations between the outcome and features.  And actually, `lm` can quite
+frequently be used to great effect as an EDA tool to help you understand your 
+data. 
+
+
+```{r purrr}
+library(MASS)
+Boston %>% head()
+
+# https://aosmith.rbind.io/2019/07/22/automate-model-fitting-with-loops/#create-residual-plots-for-each-model
+fit_pairswise_lms <- function(X){
+  form <- paste("crim~", X)
+  lm(as.formula(form), data=Boston)
+}
+X <- names(Boston)[2:14] %>% purrr::set_names()
+lm.fits = X %>% purrr::map(fit_pairswise_lms)
+# https://purrr.tidyverse.org/#usage
+library(purrr)
+lm.fits %>% purrr::map(glance) %>% purrr::map_dbl("p.value")
+```
+
+### (b)-(c) multicollinearity
+
+Coefficent and significance values associated with each feature are 
+substantially attenuated, with only `zn`, `dis`, `rad`, `black`, `lstat`, and 
+`medv` retaining statistical significance (for $H_0: \beta_j=0$) at the 
+$\alpha=0.05$ level (with `nox`, too, extremely close to significance at that 
+level).  
+
+Of particular note is the `nox` variable, which as an extremely large magnitude 
+coefficient value regardless of the model context, but which changes signs
+between the different model specification contexts(!).
+
+The attenuation of the coefficient magnitudes can be seen from a side-by-side
+listing of the coefficients (`coefs`, not shown), or by the pairwise scatter
+plot of the coefficients which shows the reduced spread along the y-axis 
+compared to the x-axis. 
+
+```{r multicollinearity}
+
+#https://stackoverflow.com/questions/40306280/how-to-transpose-a-dataframe-in-tidyverse
+univariate_lm_coefs <- lm.fits %>% purrr::map(tidy) %>% 
+  purrr::map_dfc("estimate") %>% dplyr::slice(2) %>% 
+  tibble::rownames_to_column() %>%  
+  pivot_longer(-rowname) %>% 
+  pivot_wider(names_from=rowname, values_from=value) %>%
+  rename(univariate=`1`)
+
+multivariate_lm_coefs <- 
+  lm(crim~., data=Boston) %>% tidy() %>% dplyr::select(estimate) %>%
+  dplyr::slice(2:14) %>% rename(multivariate=estimate)
+
+coefs <- univariate_lm_coefs %>% add_column(multivariate_lm_coefs)
+
+coefs %>% ggplot(aes(x=univariate, y=multivariate)) + geom_point() +
+  geom_abline(slope=1, intercept=0)
+
+coefs %>% ggplot(aes(x=univariate, y=multivariate)) + geom_point() +
+  geom_abline(slope=1, intercept=0) + lims(x=c(-3,3), y=c(-3,3))
+
+```
+
+### (d) non-linearity 
+
+The proposed answer for this problem is the "use `lm` for EDA" technique that
+was noted above in the context of part (a).  We will pursue this approach here;
+however, note that the solution given above for part (f) of problem 9 -- i.e.,
+using *partial residual plots* -- is another technique that is available to help
+us explore and diagnose non-linearity.  I think the approach used here is quite
+a good one though; however, I discuss an improvement upon it that can be made
+below after showing the fits as requested by the book (which to provide
+evidence that certain non-linear relationships are present in our data). 
+
+``` {r non_linearity}
+find_significants <- function(X){
+  X %>% dplyr::filter(p.value<.05) %>% dplyr::filter(term != "(Intercept)")
+}
+
+Boston %>% dplyr::select(-crim) %>% 
+  purrr::map(~lm(crim~.x+I(.x^2)+I(.x^3), data=Boston)) %>% 
+  purrr::map(tidy) %>% purrr::map(find_significants)
+
+# Version 2: some notes
+# `poly()` would be a better choice because it works to decorrelate, i.e.,
+# remove as much potential multicollinearity from the higher order terms,
+# as possible
+# https://www.rdocumentation.org/packages/stats/versions/3.6.2/topics/poly
+# https://stackoverflow.com/questions/19484053/what-does-the-r-function-poly-really-do
+# Think of what `poly()` is doing as centering X before squaring it: see how 
+# that could reduce correlation between X and X^2?
+# Doing the decorrelation of the higher order terms, however, means 
+# transforming them, and that in turn means that the results below are going to 
+# be slightly different than the results above(!) which don't do any additional
+# transformation beyond the exponentiation to create the higher order terms
+# this `poly` approach, however, IS the preferred approach because it helps
+# decorrelate things... and as you can see below, it indeed more powerfully
+# identifies higher order relationships than plain `.x+I(.x^2)+I(.x^3)`...
+diagnose_non_linearity <- function(X){
+  form <- paste0("crim~poly(", X, ", degree=3)")
+  lm(formula=form, data=Boston)
+}
+
+# Note that the feature `chas` would not work in `poly()` and will cause it to 
+# fail because it has only two levels (0/1), so I just remove it here
+X[-3] %>% purrr::map(diagnose_non_linearity) %>% 
+  purrr::map(tidy) %>% purrr::map(find_significants)
+
+
+```
+

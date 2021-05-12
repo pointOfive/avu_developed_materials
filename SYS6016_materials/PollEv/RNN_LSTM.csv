@@ -1,0 +1,228 @@
+Untitled
+,Activity count,10
+,Participant count,58
+,Average responses,57.6
+
+Choose one of the following:,Activity type,Multiple choice
+,Total responses,57
+,Unique participants,57
+,Response options,Count,Percent,Correctness
+,"I pledge that all Poll Everywhere answers I submit today will (a) be my own and represent my own understandings, and (b) I will not contribute to other students' answers while the poll is active.",51,89.47,Correct
+,I will not be taking this quiz for credit.,6,10.53,Incorrect
+
+Which part is the forget gate?,Activity type,Multiple choice
+,Total responses,58
+,Unique participants,58
+,Response options,Count,Percent,Correctness
+,https://s3.amazonaws.com/polleverywhere-images/8cef4325fe7b11bfd7a3bc0f31c79fb031d2bb34b8fe0d98cb933af27a150185.png?pe_description=a.png,0,0.0,Incorrect
+,https://s3.amazonaws.com/polleverywhere-images/4f1e618b59fca7a10c124af55d0fa7defe74da03e5a55848d1c127aeda28ea52.png?pe_description=input.png,3,5.17,Incorrect
+,https://s3.amazonaws.com/polleverywhere-images/7ae95dda3461901bd6a2b7c2678c626eaabf8d3a0210e17ec0b0caf0a073bf94.png?pe_description=e.png,1,1.72,Incorrect
+,https://s3.amazonaws.com/polleverywhere-images/e37b923e012d55387df25feeec3084dd02bfa54f31c544b3afcd45165e1af57c.png?pe_description=d.png,0,0.0,Incorrect
+,https://s3.amazonaws.com/polleverywhere-images/437ba661c1fd70cf3c705d17385862a9bef2da459327b7b64819dc074911feaa.png?pe_description=output.png,4,6.9,Incorrect
+,https://s3.amazonaws.com/polleverywhere-images/3a014a7fcd91209e345489d37f738f364374ed5bd8c144aceff6f6f5d68c845a.png?pe_description=b.png,1,1.72,Incorrect
+,https://s3.amazonaws.com/polleverywhere-images/2b362a30845ffde3e8a2649e515267d9dc24e8c2b7b650ac3493140d8eca82e6.png?pe_description=forget.png,49,84.48,Correct
+,https://s3.amazonaws.com/polleverywhere-images/d3a418f7221d7d83842318588376a70e4cc1deb11b3a738da8b6d0427deab716.png?pe_description=c.png,0,0.0,Incorrect
+
+Which part is the output gate?,Activity type,Multiple choice
+,Total responses,58
+,Unique participants,58
+,Response options,Count,Percent,Correctness
+,https://s3.amazonaws.com/polleverywhere-images/8cef4325fe7b11bfd7a3bc0f31c79fb031d2bb34b8fe0d98cb933af27a150185.png?pe_description=a.png,1,1.72,Incorrect
+,https://s3.amazonaws.com/polleverywhere-images/4f1e618b59fca7a10c124af55d0fa7defe74da03e5a55848d1c127aeda28ea52.png?pe_description=input.png,0,0.0,Incorrect
+,https://s3.amazonaws.com/polleverywhere-images/7ae95dda3461901bd6a2b7c2678c626eaabf8d3a0210e17ec0b0caf0a073bf94.png?pe_description=e.png,0,0.0,Incorrect
+,https://s3.amazonaws.com/polleverywhere-images/e37b923e012d55387df25feeec3084dd02bfa54f31c544b3afcd45165e1af57c.png?pe_description=d.png,0,0.0,Incorrect
+,https://s3.amazonaws.com/polleverywhere-images/437ba661c1fd70cf3c705d17385862a9bef2da459327b7b64819dc074911feaa.png?pe_description=output.png,55,94.83,Correct
+,https://s3.amazonaws.com/polleverywhere-images/3a014a7fcd91209e345489d37f738f364374ed5bd8c144aceff6f6f5d68c845a.png?pe_description=b.png,2,3.45,Incorrect
+,https://s3.amazonaws.com/polleverywhere-images/2b362a30845ffde3e8a2649e515267d9dc24e8c2b7b650ac3493140d8eca82e6.png?pe_description=forget.png,0,0.0,Incorrect
+,https://s3.amazonaws.com/polleverywhere-images/d3a418f7221d7d83842318588376a70e4cc1deb11b3a738da8b6d0427deab716.png?pe_description=c.png,0,0.0,Incorrect
+
+Which part is the input gate?,Activity type,Multiple choice
+,Total responses,57
+,Unique participants,57
+,Response options,Count,Percent,Correctness
+,https://s3.amazonaws.com/polleverywhere-images/8cef4325fe7b11bfd7a3bc0f31c79fb031d2bb34b8fe0d98cb933af27a150185.png?pe_description=a.png,1,1.75,Incorrect
+,https://s3.amazonaws.com/polleverywhere-images/4f1e618b59fca7a10c124af55d0fa7defe74da03e5a55848d1c127aeda28ea52.png?pe_description=input.png,28,49.12,Correct
+,https://s3.amazonaws.com/polleverywhere-images/7ae95dda3461901bd6a2b7c2678c626eaabf8d3a0210e17ec0b0caf0a073bf94.png?pe_description=e.png,1,1.75,Incorrect
+,https://s3.amazonaws.com/polleverywhere-images/e37b923e012d55387df25feeec3084dd02bfa54f31c544b3afcd45165e1af57c.png?pe_description=d.png,22,38.6,Incorrect
+,https://s3.amazonaws.com/polleverywhere-images/437ba661c1fd70cf3c705d17385862a9bef2da459327b7b64819dc074911feaa.png?pe_description=output.png,0,0.0,Incorrect
+,https://s3.amazonaws.com/polleverywhere-images/3a014a7fcd91209e345489d37f738f364374ed5bd8c144aceff6f6f5d68c845a.png?pe_description=b.png,1,1.75,Incorrect
+,https://s3.amazonaws.com/polleverywhere-images/2b362a30845ffde3e8a2649e515267d9dc24e8c2b7b650ac3493140d8eca82e6.png?pe_description=forget.png,1,1.75,Incorrect
+,https://s3.amazonaws.com/polleverywhere-images/d3a418f7221d7d83842318588376a70e4cc1deb11b3a738da8b6d0427deab716.png?pe_description=c.png,3,5.26,Incorrect
+
+Where do gradients flow without saturating?,Activity type,Multiple choice
+,Total responses,58
+,Unique participants,58
+,Response options,Count,Percent,Correctness
+,https://s3.amazonaws.com/polleverywhere-images/8cef4325fe7b11bfd7a3bc0f31c79fb031d2bb34b8fe0d98cb933af27a150185.png?pe_description=a.png,1,1.72,Incorrect
+,https://s3.amazonaws.com/polleverywhere-images/4f1e618b59fca7a10c124af55d0fa7defe74da03e5a55848d1c127aeda28ea52.png?pe_description=input.png,1,1.72,Incorrect
+,https://s3.amazonaws.com/polleverywhere-images/7ae95dda3461901bd6a2b7c2678c626eaabf8d3a0210e17ec0b0caf0a073bf94.png?pe_description=e.png,1,1.72,Incorrect
+,https://s3.amazonaws.com/polleverywhere-images/e37b923e012d55387df25feeec3084dd02bfa54f31c544b3afcd45165e1af57c.png?pe_description=d.png,0,0.0,Incorrect
+,https://s3.amazonaws.com/polleverywhere-images/437ba661c1fd70cf3c705d17385862a9bef2da459327b7b64819dc074911feaa.png?pe_description=output.png,1,1.72,Incorrect
+,https://s3.amazonaws.com/polleverywhere-images/3a014a7fcd91209e345489d37f738f364374ed5bd8c144aceff6f6f5d68c845a.png?pe_description=b.png,51,87.93,Correct
+,https://s3.amazonaws.com/polleverywhere-images/2b362a30845ffde3e8a2649e515267d9dc24e8c2b7b650ac3493140d8eca82e6.png?pe_description=forget.png,0,0.0,Incorrect
+,https://s3.amazonaws.com/polleverywhere-images/d3a418f7221d7d83842318588376a70e4cc1deb11b3a738da8b6d0427deab716.png?pe_description=c.png,3,5.17,Incorrect
+
+Where does gradient info enter the LSTM unit?,Activity type,Multiple choice
+,Total responses,58
+,Unique participants,58
+,Response options,Count,Percent,Correctness
+,https://s3.amazonaws.com/polleverywhere-images/8cef4325fe7b11bfd7a3bc0f31c79fb031d2bb34b8fe0d98cb933af27a150185.png?pe_description=a.png,19,32.76,Correct
+,https://s3.amazonaws.com/polleverywhere-images/4f1e618b59fca7a10c124af55d0fa7defe74da03e5a55848d1c127aeda28ea52.png?pe_description=input.png,1,1.72,Incorrect
+,https://s3.amazonaws.com/polleverywhere-images/7ae95dda3461901bd6a2b7c2678c626eaabf8d3a0210e17ec0b0caf0a073bf94.png?pe_description=e.png,6,10.34,Incorrect
+,https://s3.amazonaws.com/polleverywhere-images/e37b923e012d55387df25feeec3084dd02bfa54f31c544b3afcd45165e1af57c.png?pe_description=d.png,7,12.07,Incorrect
+,https://s3.amazonaws.com/polleverywhere-images/437ba661c1fd70cf3c705d17385862a9bef2da459327b7b64819dc074911feaa.png?pe_description=output.png,2,3.45,Incorrect
+,https://s3.amazonaws.com/polleverywhere-images/3a014a7fcd91209e345489d37f738f364374ed5bd8c144aceff6f6f5d68c845a.png?pe_description=b.png,4,6.9,Incorrect
+,https://s3.amazonaws.com/polleverywhere-images/2b362a30845ffde3e8a2649e515267d9dc24e8c2b7b650ac3493140d8eca82e6.png?pe_description=forget.png,3,5.17,Incorrect
+,https://s3.amazonaws.com/polleverywhere-images/d3a418f7221d7d83842318588376a70e4cc1deb11b3a738da8b6d0427deab716.png?pe_description=c.png,16,27.59,Incorrect
+
+"What is the ""Long Term"" piece of LSTM?",Activity type,Multiple choice
+,Total responses,58
+,Unique participants,58
+,Response options,Count,Percent,Correctness
+,https://s3.amazonaws.com/polleverywhere-images/8cef4325fe7b11bfd7a3bc0f31c79fb031d2bb34b8fe0d98cb933af27a150185.png?pe_description=a.png,0,0.0,Incorrect
+,https://s3.amazonaws.com/polleverywhere-images/4f1e618b59fca7a10c124af55d0fa7defe74da03e5a55848d1c127aeda28ea52.png?pe_description=input.png,6,10.34,Incorrect
+,https://s3.amazonaws.com/polleverywhere-images/7ae95dda3461901bd6a2b7c2678c626eaabf8d3a0210e17ec0b0caf0a073bf94.png?pe_description=e.png,9,15.52,Incorrect
+,https://s3.amazonaws.com/polleverywhere-images/e37b923e012d55387df25feeec3084dd02bfa54f31c544b3afcd45165e1af57c.png?pe_description=d.png,3,5.17,Incorrect
+,https://s3.amazonaws.com/polleverywhere-images/437ba661c1fd70cf3c705d17385862a9bef2da459327b7b64819dc074911feaa.png?pe_description=output.png,1,1.72,Incorrect
+,https://s3.amazonaws.com/polleverywhere-images/3a014a7fcd91209e345489d37f738f364374ed5bd8c144aceff6f6f5d68c845a.png?pe_description=b.png,29,50.0,Correct
+,https://s3.amazonaws.com/polleverywhere-images/2b362a30845ffde3e8a2649e515267d9dc24e8c2b7b650ac3493140d8eca82e6.png?pe_description=forget.png,1,1.72,Incorrect
+,https://s3.amazonaws.com/polleverywhere-images/d3a418f7221d7d83842318588376a70e4cc1deb11b3a738da8b6d0427deab716.png?pe_description=c.png,9,15.52,Incorrect
+
+"What is the ""Short Term"" piece of LSTM?",Activity type,Multiple choice
+,Total responses,57
+,Unique participants,57
+,Response options,Count,Percent,Correctness
+,https://s3.amazonaws.com/polleverywhere-images/8cef4325fe7b11bfd7a3bc0f31c79fb031d2bb34b8fe0d98cb933af27a150185.png?pe_description=a.png,1,1.75,Incorrect
+,https://s3.amazonaws.com/polleverywhere-images/4f1e618b59fca7a10c124af55d0fa7defe74da03e5a55848d1c127aeda28ea52.png?pe_description=input.png,1,1.75,Incorrect
+,https://s3.amazonaws.com/polleverywhere-images/7ae95dda3461901bd6a2b7c2678c626eaabf8d3a0210e17ec0b0caf0a073bf94.png?pe_description=e.png,5,8.77,Incorrect
+,https://s3.amazonaws.com/polleverywhere-images/e37b923e012d55387df25feeec3084dd02bfa54f31c544b3afcd45165e1af57c.png?pe_description=d.png,0,0.0,Incorrect
+,https://s3.amazonaws.com/polleverywhere-images/437ba661c1fd70cf3c705d17385862a9bef2da459327b7b64819dc074911feaa.png?pe_description=output.png,0,0.0,Incorrect
+,https://s3.amazonaws.com/polleverywhere-images/3a014a7fcd91209e345489d37f738f364374ed5bd8c144aceff6f6f5d68c845a.png?pe_description=b.png,0,0.0,Incorrect
+,https://s3.amazonaws.com/polleverywhere-images/2b362a30845ffde3e8a2649e515267d9dc24e8c2b7b650ac3493140d8eca82e6.png?pe_description=forget.png,7,12.28,Incorrect
+,https://s3.amazonaws.com/polleverywhere-images/d3a418f7221d7d83842318588376a70e4cc1deb11b3a738da8b6d0427deab716.png?pe_description=c.png,43,75.44,Correct
+
+"Why does the gradient here vanish?  I.e., why can't this capture long term dependencies?",Activity type,Open ended
+,Total responses,59
+,Unique participants,56
+,Responses
+,"further back time steps have smaller and smaller gradients and exponentially
+smaller weights"
+,The magnitude of the gradient over time will be deteriorated because it will undergo detlaL_W several times.  Computing the gradient with respect to h_0 involves many factors of W with repeated gradient computation which can be problematics.
+,Repeatedly activating with the tanh function will saturate because the tanh function flattens out as y approaches 1 and -1 so the derivative at that point is 0 and the gradient vanishes. You have to call it in an RNN at every step for every piece of previous information so it will saturate.
+,"Also, because of backpropagation through time, we tend to have the same terms show up many times in the calculation of the gradient when we unroll the RNN. Hence, the exponentially small terms will dominate the product, causing the gradient to vanish"
+,Tanh gets saturated quickly with long/more sequences and cant backprop as a result.
+,The magnitude of the gradient over time will be deteriorated because it will undergo detlaL_W several times.  Computing the gradient with respect to h_0 involves many factors of W with repeated gradient computation which can be problematics (slide).
+,Because the long term portion (top) is interrupted.
+,The tanh gets saturated at 0. It cannot back prop - the sequence would get too long.
+,because tanh saturates and multiplying small numbers together will force them close to zero
+,"The more sequences it inputs, the closer it gets to 0 and tanh saturates at 1. suffers from vanishing gradient. cannot backprop once the sequences get too long."
+,"Repeated applications of Tanh leads to saturation, and since tanh does saturate, passing the gradient through it during backprop can cause vanishing gradients."
+,"Repeated gradients tend to only capture short-term dependencies by re-using the same function and gradient over and over. This is usually vanishing, when many values are > 1, but could explode with smaller values. Layers further back in time will have smaller and smaller gradients."
+,"the tanh function saturates quickly, which means the more sequences we input, the closer it gets to zero and there isn't a traceable gradient (can't do backprop)"
+,"It can't capture long term dependencies because we are using the same function and set of parameters at every time step, and it involves repeated gradient computations which leads to a lot of values less than 1, that only capture short-term dependencies and not long-term ones."
+,further back time steps have smaller and smaller gradients and therefore no longer play a role at the current state
+,"The tanh activation function will eventually saturate after repeated passes through these units. This will cause a vanishing gradient, which will prevent the flow of information into the deep (long term past) of the visible and hidden units. This is why this structure cannot capture long term dependencies."
+,"In a standard RNN, repeating modules contain a simple computation node. It only capture short-term dependencies"
+,"tanh gets saturated when long sequences are used as inputs, this is why long term dependencies cannot be tracked"
+,tanh changes very fast from -1 to 1
+,Tanh function produces small values around 0. When this gets multiplied many times in the long term the gradient becomes very very small and vanishes.
+,Tanh is a sigmoidal activation function that suffers from vanishing gradient problem so it saturates many values at 0 so it forgets nodes and loses the memory
+,training rnn on vanishing gradients problem. The further back in time steps have smaller and smaller gradient. This only produces parameters that can predict sort term dependencies
+,"Repeated composition of the same function leads to diminishing gradients so the farther back you go, the more computations, and thus the smaller the gradient, which then has less impact so it fails to truly capture the long-term dependencies"
+,"Weights are multiplied over and over during training, which makes them vanish over time if they're less than 1"
+,it produces values around 0
+,"When the backpropagation comes back and attempts to produce a gradient, it is forced to pass through the activation functions which shrinks the gradient until it vanishes and stops contributing to learning. Long term dependencies require going as far back as necessary to span the available series, which is not possible if the backpropagation continually shrinks."
+,"the same gradient is repeated many times so if it is <1, it will go towards 0 and only capture short term dependencies. The further you go back, the smaller the gradient."
+,Sequential data can go on for many cycles; continually updating the gradients via backprop on each cycle can lead to vanishing/exploding gradients.
+,the information runs through the activation function too many times to have a significant gradient.
+,"As tanh is repeatedly applied during the backward pass, the gradient often vanishes. This is because tanh can saturate, so repeatedly applying tanh makes the problem worse"
+,"Without updating the information, the gradient will continue to shrink repeatedly, similarly to deep feedforward nets."
+,"Tanh applied many times when the input is less than 1 will eventually go to 0, causing the gradient to vanish. So further back steps in time will update slowly if at all."
+,"The further back we go, the more gradients we must compute and the smaller they get."
+,"This is not an LSTM, just a normal RNN. Values are getting squished closer and closer to zero because nothing is being stored long term."
+,because it only captures short term dependencies because nothing is being kept in the cell to pass on to the next one; it has an issue of training over long sequences.
+,Repeatedly taking the gradients of ht over and over again usually causes the gradient to vanish because many are <1. When gradients vanish long term dependencies are lost.
+,The gradient vanishes because we are continuing to run in through the tanh function which causes the gradient to shrink
+,The deferential of weights (delta W) are less than 1.
+,Because it deteriorates as the gradient is propagated backwards through time steps making it smaller and smaller
+,repeated multiplication makes any gradient less than 1 goes to 0 very quickly and eventually vanish.
+,the tanh activation function causes initial gradients that were <1 to slowly decrease as it is passed back so that by the time it reaches the first cell it is essentially 0
+,Tanh will become highly saturated as it is repeated.
+,Because we are training on too long a sequence
+,because the previous input gets blended with the x and there is no long-term part that persists. all input gets integrated before tanh
+,The original data is not being accounted for. It's only looking at input and output of t-1
+,"Because the gradient will saturate at extreme values as you propogate back through the network given the tanh activation function. For extreme values that are passed into tanh, the gradient will vanish as it approaches zero, making updates to our model parameters nearly impossible."
+,"After repeated updates, long-term dependencies shrink and get overshadowed by short-term dependencies"
+,"The only information the cell receives from previous states is that which has already gone through the ""tanh"" gate in the previous cell."
+,Error signal decreases (or increases) exponentially
+,backpropagation through time is used
+,tanh tends to saturate at 1 and -1
+,"Repeated applications of Tanh leads to saturation, and since tanh does saturate, it can cause vanishing gradients."
+,Because tanh saturates fairly close to zero
+,because of repeated calculations that will lead to vanishing
+,The same activation function is repeatedly applied so eventually the gradient goes to 0.
+,There is no loop back
+,The gradient vanishes as the sequence length increases since there is only a single computation node. This means the model is limited to short term dependencies and cannot retain information about inputs that happened may time steps before.
+,the computation node is too simple and therefore further back time steps have smaller gradients causing a shrinking effect on all the further weights and thus you have a vanishing gradient.
+,There are no gates to control the flow of gradients and long-term multiplication with values less than 1 will cause the gradients to vanish.
+
+Are word vectors context dependent?,Activity type,Open ended
+,Total responses,56
+,Unique participants,56
+,Responses
+,"No, word vectors are dependent amongst its nearest neighbors and not the entire context."
+,"No, because the word vectors are not dependent on the context of the document as a whole, only on the words in it's immediate neighborhood."
+,"yes, it is recurrent"
+,No.
+,No because it's not dependent of the entire corpus but rather the words in its local proximity.
+,Yes
+,"No, although an aggregate of training data (neighbors) can be considered context in creating the word embedding"
+,Yes
+,Word vectors are context dependent.
+,"No, they are not specific to a certain sentence. However, they are  dependent on neighboring word occurrence and sequence."
+,Yes
+,"They can be depending on the implementation. Word2vec will produce a single context vector per word regardless of context in which the word is used, whereas attention methods may produce different context vectors for a single word depending upon the context in which it's used (e.g. ""stick with it"" vs. ""carrot or stick"")."
+,Yes.
+,No
+,No
+,Yes
+,"Yes, it captures the neighboring words in the representation. These neighboring words provide context."
+,"Yes, depends on its neighbors."
+,"No, they depend only on the immediate context but not the whole sentence"
+,No
+,Yes
+,Yes
+,Yes
+,"Yes, they are developed and used entirely based on surrounding words."
+,no
+,yes
+,No.
+,"No, they take into account more than immediate contexts of the word, meaning that they are not context dependent per se."
+,"Yes, word vectors are context dependent."
+,"Since word vectors are based on their neighbors in the corpus, they are context dependent because if we changed the neighbors, the output would change."
+,yes
+,No
+,no it is just getting the neighbors.
+,No
+,no
+,"Yes, context matters"
+,"Word vectors are a kind of ""aggregate context dependent"" but not sentence dependent"
+,yes
+,From our class discussion today they are not -- they are dataset dependent!
+,No
+,No
+,yes
+,Yes
+,No
+,no
+,Yes
+,No
+,No
+,yes
+,Yes!
+,yes
+,Yes
+,No
+,"If you are assuming a bag of words then no, a word vector is not context dependent. This is because the word vector does not preserve the order of words in the sequence. In order to develop context dependency you need to ensure that your model can track the long-term dependencies at different sequence lengths. This need to adapt to varying time scales and increased information is a reason why LSTM models are more favored than RNNs."
+,"yes, it depends on your window size and the corpus contents. Here the network is accounting for the words each term we choose is surrounded by therefore it is context dependent."
+,Nope

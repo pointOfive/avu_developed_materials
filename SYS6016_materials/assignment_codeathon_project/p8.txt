@@ -1,0 +1,37 @@
+
+
+Project Part 8: Final Project Report Submission
+Due: 5/13 3:30PM EST (before Final Presentations)
+Late: 0 (after 3:30PM EST beginning with the start of Final Presentations)
+Value: 20 points (2% of class grade)
+The final report will be evaluated based off of the clarity of its content, the relevance of the project to topics taught in the class, the novelty of the problem, and the technical quality and significance of the work. Please keep in mind that the intended audience is the Professor and the TAs. Thus, for example, you should not spend an entire page explaining what a softmax function does. Final project write-ups can be at most six pages long (including appendices and figures), expanding from the previous document. If you did this work in collaboration with someone else, or if someone else (such as another professor) had advised you on this work, your write-up must fully acknowledge their contributions.
+
+ 
+
+DIRECTIONS
+
+Here’s more detailed guidelines of what we expect to see in the final report as an academic paper:
+
+Abstract: A short summary describing your project.
+Motivation: What problem are you tackling, and what’s the setting you’re considering?
+Method: What machine learning techniques have you tried and why?
+Experiments: Describe the experiments that you’ve run, the outcomes, and any error analysis that you’ve done. You should have tried at least one baseline.
+Results: This section should focus only on results that are directly related to the problem. Leaving out your personal opinion, detail your results and provide solid evidence. Graphs and tables should only be used when there is too much data to efficiently include it within the text. If you have code repository and Jupyter Notebook, make sure you include the URL or supplemented files.
+Conclusion: This section should be a discussion of the results and the implications on the project to the well being of Virginia and its residents. The hypothesis should be answered and validated by the interpretation of the results. This section should also discuss how the results relate any shortcoming of the findings and potential for future work.
+Contribution: Please include a section that describes what each team member worked on and contributed to the project. This is to make sure team members are carrying a fair share of the work for the project.
+Codes: All of your code must be in Jupyter Notebook format. Zip all files into a single .zip file and submit the file to Colab along with the final report. If you use Github, please include a zip file or preferably a link to a Github repository with the code for your final project. You do not have to include the data or additional libraries (so if you submit a zip file, it should not exceed 10 MB).
+
+ 
+
+SUBMISSION INSTRUCTIONS
+
+Be sure to include the following in your team document:
+
+The title of the project
+The full names and UVA IDs of team members
+Designate a single team member to submit your document titled as: 
+
+"projectTitle_teamMemberComputingIDs.pdf"
+
+ Project Part 8: Final Project Report Submission FIXED
+Refer to the Course Project Final Report Rubric for grading details.

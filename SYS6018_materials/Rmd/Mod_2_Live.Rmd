@@ -1,0 +1,499 @@
+---
+title: "Mod_2_Live"
+author: "Schwartz"
+date: "09/05/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      fig.align = "center",
+                      out.width = "80%")
+
+```
+
+## Homeworks
+- turn in kntted .html/.pdf
+- name them "hw_mod_X_first_last"
+- put your name in the top
+
+
+## Data
+```{r points}
+library(tidyverse)
+library(plotly)
+# https://plotly.com/r/3d-scatter-plots/
+# https://plotly.com/r/reference/#scatter3d-hovertext
+# https://plotly.com/r/reference/
+#detach("package:ISLR", unload=TRUE)
+auto <- sample_n(ISLR::Auto, nrow(ISLR::Auto))
+fig <- 
+plot_ly(auto, x=~displacement, y=~year, z=~mpg, color=~mpg, 
+        type='scatter3d', mode='markers', hovertext=~name, hoverinfo='text')
+fig
+```
+
+- note the curvature on the margin
+- note the linearity on the other margin
+
+## Model
+```{r fit}
+lm.2ndOrder.fit <- lm(mpg~displacement+I(displacement^2)+
+                          year+I(year^2), data=auto)
+lm.2ndOrder.fit.coefs <- lm.2ndOrder.fit %>%
+  tidy() %>% dplyr::select(estimate) %>% pull()
+
+library(modelr)
+x1 <- auto[['displacement']] %>% modelr::seq_range(n=30)
+x2 <- auto[['year']] %>% seq_range(n=30)
+x1.grid <- outer(x1, x2, function(x1, x2) x1 )
+x2.grid <- outer(x1, x2, function(x1, x2) x2 )
+second_order_lm <- function(x1,x2,coefs){
+  coefs[1]+coefs[2]*x1+coefs[3]*x1^2+coefs[4]*x2+coefs[5]*x2^2
+}
+yhat <- second_order_lm(x1.grid, x2.grid, lm.2ndOrder.fit.coefs)
+
+#https://community.plotly.com/t/3d-scatter-3d-regression-line/4149/6
+#https://stackoverflow.com/questions/50573936/r-how-to-change-color-of-plotly-3d-surface
+fig %>% add_trace(x=x1.grid, y=x2.grid, z=yhat, type='surface',
+                  opacity=0.8)
+                  #colorscale=list(c(0, 1), c("gray", "black")),
+#plot_ly(x=x1.grid, y=x2.grid, z=yhat, type='surface', opacity=0.8) %>%
+#layout(title="\n\nCost Function: RMSE", 
+#       scene=list(xaxis=list(title="displacement"), 
+#                  yaxis=list(title="year"), zaxis=list(title="mpg")))
+```
+
+- that's a response surface
+- with a data cloud
+  - a data cloud is not a model
+  - i.e., yhat=y is overfit
+  
+## Cost function
+```{r fit}
+# https://stackoverflow.com/questions/42158198/r-equivalent-of-pythons-np-dot-for-3d-array
+# https://stackoverflow.com/questions/46843926/broadcasting-in-r/46845541#46845541
+# https://stackoverflow.com/questions/37034623/simplest-way-to-repeat-matrix-along-3rd-dimension
+
+two_var_cost_func <- function(x1, x2, y, par1.grid, par2.grid,
+                              fixed_intercept=0){
+  n <- length(y)
+  par1.x1 <- sweep(replicate(n, par1.grid), MARGIN=3, FUN='*', x1) 
+  par2.x2 <- sweep(replicate(n, par2.grid), MARGIN=3, FUN='*', x2) 
+  resid <- sweep(par1.x1+par2.x2+fixed_intercept, 3, y)
+  MSE <- (resid^2)
+  # calling this RMSE to simplify learning concepts, but it's really logMSE...
+  RMSE <- rowMeans(MSE, dim=2) %>% log()
+  RMSE
+}
+
+Beta1_hat <- seq(-150,150,2)/500 #seq(-33,33,length.out=300)#
+Beta2_hat <- seq(-100,200,2)/200 #seq(-100,100,length.out=300)#
+Beta1_hat.grid <- outer(Beta1_hat, Beta2_hat, function(x1, x2) x1 )
+Beta2_hat.grid <- outer(Beta1_hat, Beta2_hat, function(x1, x2) x2 )
+
+RMSE <- two_var_cost_func(x1=auto$displacement, x2=auto$year, y=auto$mpg, 
+                          par1.grid=Beta1_hat.grid, par2.grid=Beta2_hat.grid)
+
+# https://plotly.com/r/figure-labels/
+# https://github.com/plotly/plotly.js/issues/608
+plot_ly(x=Beta1_hat.grid, y=Beta2_hat.grid, z=RMSE, type='surface') %>%
+  layout(title = "\n\nCost Function: RMSE",
+         scene = list(xaxis=list(title="β1"),
+                      yaxis=list(title = "β2"),
+                      zaxis=list(title = "RMSE")))
+```
+
+$y = \beta_0 + \beta_1 displacement + \beta_2 year$ (kinda)
+
+- this is a cost function
+- note the RMSE on the side (what's RMSE?)
+- minimizing least squares == minimizing MSE == minimizing RMSE
+- this is how models are fit -- choose parameters/coefficients based on this surface
+- what's wrong with this surface (hint: 2d?)
+
+## Why: year & displacement?
+
+```{r eda}
+auto %>% dplyr::select(acceleration, displacement, year, mpg) %>% 
+  GGally::ggpairs(upper=list(continuous=GGally::wrap("cor", size=3)))
+```
+
+- I picked the wrong variable! [for linearity]
+- but it was just as well... [it's not actually linear]
+
+## Y-transformations
+
+```{r y_trans}
+boxcox <- function(y, lambda){
+  transformed_y <- (y^lambda-1)/lambda
+  if(lambda==0){transformed_y <- log(y)}
+  transformed_y
+}
+auto %>% dplyr::select(acceleration, displacement, year, mpg) %>% 
+  mutate(boxcox_mpg = boxcox(mpg, 0)) %>%
+  GGally::ggpairs(upper=list(continuous=GGally::wrap("cor", size=3)))
+```
+- look how transforming y helped...
+- can we do any better?
+
+## X-transformations
+
+```{r x_trans}
+auto %>% dplyr::select(acceleration, displacement, year, mpg) %>% 
+  mutate(sqrt_displacement = displacement^0.5) %>%
+  mutate(boxcox_mpg = boxcox(mpg, 0)) %>%
+  GGally::ggpairs(upper=list(continuous=GGally::wrap("cor", size=3)))
+```
+
+- now it's even a little bit better!
+
+## Model with Transformations 
+
+```{r trans_mod}
+auto_augmented <- auto %>% 
+  mutate(sqrt_displacement = displacement^0.5) %>%
+  mutate(boxcox_mpg = boxcox(mpg, 0))
+
+lm.transformed.fit <- lm(boxcox_mpg~sqrt_displacement+year, 
+                         data=auto_augmented)
+lm.transformed.fit.coefs <- lm.transformed.fit %>%
+  tidy() %>% dplyr::select(estimate) %>% pull()
+
+first_order_lm <- function(x1,x2,coefs){
+  coefs[1]+coefs[2]*x1+coefs[3]*x2
+}
+x1 <- auto_augmented[['sqrt_displacement']] %>% seq_range(n=30)
+x1.grid <- outer(x1, x2, function(x1, x2) x1 )
+yhat <- first_order_lm(x1.grid, x2.grid, lm.transformed.fit.coefs)
+
+plot_ly(auto_augmented, x=~sqrt_displacement, y=~year, z=~boxcox_mpg,
+        color=~boxcox_mpg,
+        type='scatter3d', mode='markers',
+        hovertext=~name, hoverinfo='text') %>% 
+  add_trace(x=x1.grid, y=x2.grid, z=yhat, type='surface', opacity=0.8)
+
+#plot_ly(x=x1.grid, y=x2.grid, z=yhat, type='surface', opacity=0.8) %>%
+#layout(title="\n\nCost Function: RMSE", 
+#       scene=list(xaxis=list(title="β1"), 
+#                  yaxis=list(title="β1"), zaxis=list(title="RMSE"))) %>%
+ 
+#layout(title="\n\nCost Function: RMSE", 
+#       scene=list(xaxis=list(title="sqrt_displacement"), 
+#                  yaxis=list(title="year"), zaxis=list(title="boxcox_mpg")))
+```
+- I did this all so that I could have a picture like this!
+- I want to model *linear* relationships
+
+## Model with Transformations: Uncertainty
+
+```{r trans_mod}
+lm.transformed.fit %>% tidy()
+```
+- so now it's a two parameter (coefficient) model (plus an intercept...)
+
+## Model with Transformations: Cost Function
+
+```{r cost_function}
+Beta1_hat <- seq(-.4,.4,length.out=300)
+Beta2_hat <- seq(-.05,.1,length.out=300)
+Beta1_hat.grid <- outer(Beta1_hat, Beta2_hat, function(x1, x2) x1 )
+Beta2_hat.grid <- outer(Beta1_hat, Beta2_hat, function(x1, x2) x2 )
+
+RMSE <- 
+two_var_cost_func(auto_augmented$sqrt_displacement, auto_augmented$year, 
+                  auto_augmented$boxcox_mpg, Beta1_hat.grid, Beta2_hat.grid,
+                  lm.transformed.fit.coefs[1])
+
+plot_ly(x=Beta1_hat.grid, y=Beta2_hat.grid, z=RMSE, type='surface') %>%
+  layout(title = "\n\nCost Function: RMSE",
+         scene = list(xaxis=list(title="β1"),
+                      yaxis=list(title = "β2"),
+                      zaxis=list(title = "RMSE")))
+```
+
+- so now we can really see what the real cost function surface looks like!
+- except of course for the intercept... but I pretended I just knew it
+- and *this* is how uncertainty is parameters is determined! Up in the table^^^ 
+
+## New Data
+
+```{r eda2}
+auto_augmented <- auto_augmented %>% 
+  mutate(sqrt_horsepower = horsepower^0.5, sqrt_weight = weight^0.5)
+auto_augmented %>% dplyr::select(horsepower, weight, sqrt_horsepower, 
+                                 sqrt_weight, mpg, boxcox_mpg) %>% 
+  GGally::ggpairs(upper=list(continuous=GGally::wrap("cor", size=3)))
+```
+- these new variables are really associated with the outcome! Great!
+- but what? (hint: each other?)
+
+## New Model 
+
+```{r trans_mod2}
+lm.transformed2.fit <- lm(boxcox_mpg~sqrt_weight+sqrt_horsepower, 
+                         data=auto_augmented)
+lm.transformed2.fit.coefs <- lm.transformed2.fit %>%
+  tidy() %>% dplyr::select(estimate) %>% pull()
+
+lm.transformed2.fit %>% tidy()
+```
+- how do these coefficients compare to those we had before?
+- now of course these *are* different variables... but just generally?
+- what's going on?
+
+## New Cost Function
+
+```{r cost_function2}
+
+Beta1_hat <- seq(-1.5,1.5,length.out=300)
+Beta2_hat <- seq(-.25,.25,length.out=300)
+Beta1_hat.grid <- outer(Beta1_hat, Beta2_hat, function(x1, x2) x1 )
+Beta2_hat.grid <- outer(Beta1_hat, Beta2_hat, function(x1, x2) x2 )
+
+RMSE <- 
+two_var_cost_func(auto_augmented$sqrt_horsepower, auto_augmented$sqrt_weight, 
+                  auto_augmented$boxcox_mpg, Beta1_hat.grid, Beta2_hat.grid,
+                  lm.transformed.fit.coefs[1])
+
+plot_ly(x=Beta1_hat.grid, y=Beta2_hat.grid, z=RMSE, type='surface') %>%
+  layout(title = "\n\nCost Function: RMSE",
+         scene = list(xaxis=list(title="β1"),
+                      yaxis=list(title = "β2"),
+                      zaxis=list(title = "RMSE")))
+```
+
+- look how much wider/flatter this new cost function is...
+- *THAT's* how uncertainty "wideness" is determined!
+- so compare the cost function surfaces and the resulting p-values!
+- that's why the p-values are an order of magnitude wider than before!
+- and the t-stats are so much smaller!
+- What's causing this?? (hint: VIF?) ...multicollinearity!!
+
+## VIF
+```{r vif}
+
+lm.vif.fit <- lm(boxcox_mpg~sqrt_displacement+year+sqrt_horsepower+sqrt_weight,
+                         data=auto_augmented)
+
+library(car)
+
+vif(lm.transformed.fit) %>% tidy()
+
+vif(lm.transformed2.fit)  %>% tidy()
+
+vif(lm.vif.fit)  %>% tidy()
+```
+- multicollinearity gets worse the more multicollinear features you add...
+
+# Multicollinearity
+
+```{r multicollinearity}
+auto_augmented %>% dplyr::select(sqrt_displacement, sqrt_horsepower, 
+                                 sqrt_weight) %>% 
+  GGally::ggpairs(upper=list(continuous=GGally::wrap("cor", size=3)))
+```
+
+## Partial Residual Plot: raw
+
+Partial residual plots (https://en.wikipedia.org/wiki/Partial_residual_plot),
+not to be confused with partial regression plots (https://en.wikipedia.org/wiki/Partial_regression_plot), 
+are a tool you have for diagnosing non-linearity in multiple regression contexts.  
+Unfortunately, it's beyond the scope of this course (https://stats.stackexchange.com/questions/265339/partial-residual-plot-with-interactions) 
+to work out partial residual plots when there are interactions between your 
+variables, so what I'm going to do is remove the interactions from the model 
+above in order to use the simple version of partial residual plots to explore 
+non-linearity for these features.  I'm then going to make any variable 
+transformations that appear to be indicated, and once that's done I would then 
+set about re-exploring interactions. Welcome to the joys of linear model 
+building.  I'm sure you know them well. 
+
+```{r partial_residual_plot}
+
+lm.big.fit <- lm(mpg~displacement+year+horsepower+weight,
+                 data=auto_augmented)
+
+partial_residual_plot <- function(feature, model){
+  coef <- model %>% tidy() %>% filter(term==feature) %>% 
+    dplyr::select(estimate) %>% pull(estimate)
+  model %>% broom::augment() %>% 
+  ggplot(mapping=aes(x=.data[[feature]], y=.resid+coef*.data[[feature]])) + 
+    geom_point() + ggtitle(paste("coef =", coef)) +
+    geom_abline(intercept=0, slope=coef, color='red')
+}
+
+features <- names(vif(lm.big.fit)) %>% purrr::set_names()
+
+partial_residual_plots <- features %>% 
+  purrr::map(partial_residual_plot, lm.big.fit)
+library(gridExtra)
+grid.arrange(grobs=partial_residual_plots, ncol=2)
+```
+
+- it's fine to look at these low dimensionality pictures... but...
+- in high dimensions you need to be able to "look at the margins"
+- and we need to be able to do that *while accounting for everything!*
+- because the marginal relationships might not actually behave the same way
+  with so many things in your model
+- this is done with partial residual plots
+
+## Partial Residual Plot: transformed
+
+```{r partial_residual_plot2}
+
+lm.bigger.fit <- lm(boxcox_mpg~displacement+year+horsepower+weight+
+                               I(displacement^2)+I(year^2)+I(horsepower^2)+
+                               I(weight^2),
+                    data=auto_augmented)
+
+features <- lm.bigger.fit  %>% tidy() %>% dplyr::select(term) %>% 
+  slice(seq(2,8,2)) %>% pull() %>% purrr::set_names()
+
+partial_residual_plots <- features %>% 
+  purrr::map(partial_residual_plot, lm.bigger.fit)
+grid.arrange(grobs=partial_residual_plots, ncol=2)
+```
+
+- there: fixed it
+
+## Partial Residual Plot: or don't use them at all
+```{r LM_EDA}
+lm(boxcox_mpg~(displacement+year+horsepower+weight)^2+
+               I(displacement^2)+I(year^2)+I(horsepower^2)+I(weight^2),
+               data=auto_augmented) %>% tidy() %>% dplyr::select(term, p.value)
+```
+
+## KNN
+```{r KNN}
+
+#http://www.sthda.com/english/articles/35-statistical-machine-learning-essentials/142-knn-k-nearest-neighbors-essentials/
+library(caret)
+knn.fit <- train(mpg~displacement+year, data=auto, method="knn", 
+                 tuneGrid=data.frame(k=9))
+
+x1 <- auto[['displacement']] %>% seq_range(n=30)
+x2 <- auto[['year']] %>% seq_range(n=30)
+x1.grid <- outer(x1, x2, function(x1, x2) x1 )
+x2.grid <- outer(x1, x2, function(x1, x2) x2 )
+
+yhat <- knn.fit %>% predict(tibble(displacement=c(x1.grid), 
+                                   year=c(x2.grid))) %>%
+  matrix(nrow=dim(x1.grid)[1], ncol=dim(x1.grid)[2])
+
+fig <-
+plot_ly(x=x1.grid, y=x2.grid, z=yhat, type='surface') %>%
+  layout(title = "\n\nknn.yhat",
+         scene = list(xaxis=list(title="displacement"),
+                      yaxis=list(title = "year"),
+                      zaxis=list(title = "mpg")))
+fig
+```
+
+- new response surface (knn)
+- what's wrong with this surface? 
+
+## KNN with data
+```{r knn_data}
+fig %>% add_markers(auto[['displacement']], auto[['year']], auto[['mpg']],
+                    type='scatter3d',  mode='markers', color=auto[['mpg']])
+```
+
+## KNN fixed
+
+```{r knn_fixed}
+knn.fit <- train(mpg~displacement+year, data=auto, method="knn", 
+                 preProcess=c("center","scale"), tuneGrid=data.frame(k=9))
+
+yhat <- knn.fit %>% predict(tibble(displacement=c(x1.grid), 
+                                   year=c(x2.grid))) %>%
+  matrix(nrow=dim(x1.grid)[1], ncol=dim(x1.grid)[2])
+
+plot_ly(x=x1.grid, y=x2.grid, z=yhat, type='surface') %>%
+  layout(title = "\n\nknn.yhat",
+         scene = list(xaxis=list(title="displacement"),
+                      yaxis=list(title = "year"),
+                      zaxis=list(title = "mpg"))) %>%
+  add_surface(contours = list(z = list(show=TRUE, 
+                                       usecolormap=TRUE, 
+                                       highlightcolor="#ff0000",
+                                       project=list(z=TRUE))))
+```
+
+- try k=155
+
+## Tuning Parameters
+
+```{r knn_test_train}
+knn.fit <- train(mpg~displacement+year, data=auto, method="knn", 
+                 preProcess=c("center","scale"), 
+                 tuneGrid=data.frame(k=seq(1,25,2)),
+                 trControl = trainControl("cv", number=5, returnResamp='all'))
+
+#caret:createFolds(1:dim(auto)[1],2)
+kfolds.training.samples <- knn.fit$control$index
+
+kfolds.training.error <- function(sample, data, k){
+   y <- data[sample,1] # y must be in first column
+   train(mpg~displacement+year, data=data[sample,], method='knn',
+         trControl=trainControl(method='none'), tuneGrid=data.frame(k=k)) %>%
+    predict(data[sample,]) %>% postResample(y) 
+}
+kfolds.training.errors <- function(k, samples, data){
+  samples %>% purrr::map(kfolds.training.error, data, k)
+}
+
+training.errors <- seq(1,25,2) %>% set_names() %>%
+  purrr::map(kfolds.training.errors, kfolds.training.samples, auto)
+
+in_sample <- training.errors %>% as_tibble() %>% 
+  unnest(cols=names(training.errors)) %>% slice(seq(1,15,3)) 
+
+in_sample %>% colMeans() %>% as.list() %>% tibble() %>% unnest(cols=c(.)) %>% 
+  add_column(k=as.numeric(names(in_sample))) %>% rename(RMSE='.') %>%
+  ggplot(aes(x=k, y=RMSE)) + geom_line(aes(color="Training"), size=1.5,
+                                       linetype="dashed") +
+  geom_line(knn.fit$results %>% tibble(), 
+            mapping=aes(x=k, y=RMSE, color="Testing"), size=2.5,) +
+  ggtitle("Train-Test Plot")
+#knn.fit$results %>% tibble() %>% ggplot(mapping=aes(x=k, y=RMSE, color="Testing")) + geom_line(size=2.5,) + ggtitle('hi')
+```
+
+- discuss model fitting parameters versus model tuning parameters
+- hammer this point home
+- especially since the Y axis in both is RMSE... or a cost score
+
+## Tuning Parameters... actually
+```{r}
+training.RMSEs <- in_sample %>% pivot_longer(cols=names(in_sample)) %>% 
+  rename(k=name,RMSE=value) %>% mutate(k=as.numeric(k))
+
+#ggplot(knn.fit)
+knn.fit$resample %>% as_tibble() %>% ggplot(aes(x=k, y=RMSE)) + 
+  geom_point(aes(color='Testing')) + geom_smooth(span=.1, color='purple') + 
+  geom_point(training.RMSEs, mapping=aes(x=k, y=RMSE, color='Training')) +
+  geom_smooth(data=training.RMSEs, formula='y~x', span=.1, color='forestgreen') +
+  ggtitle("ACTUALLY (what) a Train-Test Plot (is)")
+```
+
+
+
+
+## *My* Questions
+https://pollev.com/scottschwart658
+
+## *Your* Questions
+
+```{r decor_x_sq}
+
+x <- rnorm(100, 30, 10)
+uncentered_transform <- tibble(x=x,x_sq=x^2)
+uncentered_transform %>% ggplot(aes(x,x_sq)) + geom_point() +
+  ggtitle(paste('Correlation:',
+                as.character(round(cor(uncentered_transform)[1,2],3))))
+
+centered_transform <- tibble(x=x-mean(x),x_sq=(x-mean(x))^2)
+centered_transform %>% ggplot(aes(x,x_sq)) + geom_point() +
+  ggtitle(paste('Correlation:',
+                as.character(round(cor(centered_transform)[1,2],3))))
+
+```

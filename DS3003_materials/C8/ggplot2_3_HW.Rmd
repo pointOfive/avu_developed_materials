@@ -1,0 +1,173 @@
+---
+title: "ggplot2_3"
+author: "Schwartz"
+date: "11/2/2020"
+output:
+     html_document:
+          toc: TRUE
+          toc_depth: 4
+          toc_float: true
+          toc_collapsed: true
+          theme: journal
+          code_folding: show
+---
+
+<!--- Change font size for headers --->
+<style>
+h1.title {
+  font-size: 34px;
+}
+h1 {
+  font-size: 30px;
+}
+h2 {
+  font-size: 26px;
+}
+h3 { 
+  font-size: 22px;
+}
+
+</style>
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning=FALSE, message=FALSE, 
+                      fig.align = "center",
+                      out.width = "80%")
+```
+
+
+
+# HW [GROUP ASSIGNMENT]
+
+*Each group member must contribute unique figures to the groups submission in order for all group members to get credit for this homework. If only some members of the group contribute figures in the submitted `.Rmd` file, those group members must additionally provide a supplemental explanation along with their submission as to why other students in their group have not contributed to this assignment.*
+
+1. (Dis)Agreement between infection models
+    - Previously we saw the infection predictions presented at [OWID](https://ourworldindata.org/covid-models) 
+    - Leverage and make additions and changes to the code provided below to visualize the "degree of (dis)agreement" between THREE of the "prediction models" for a specific country (uniquely chosen by each group member)
+        - E.g., each student will use a different `filter(Country='<pick1>')`
+    - In your comparisons, use `geom_smooth(method='loess')` [as opposed to `geom_smooth(method='lm')`] to help highlight agreement and disagreement between the models
+    - Collect all the "model prediction VS model prediction" plots into a single figure using something like, e.g., `gridExtra::grid.arrange(plotAvsB, plotAvsC, plotBvsC, nrow=2)`
+    - Here [some helpul notes and explanations](http://www.sthda.com/english/articles/24-ggpubr-publication-ready-plots/81-ggplot2-easy-way-to-mix-multiple-graphs-on-the-same-page/) about different ways different plots can be combined into a single figure
+    
+
+2. Each group member will then do the same again, but in an "all at once" manner:
+    - Each student picks a new unique not yet used country 
+    - and uses either [this `ggally::ggpairs` method](https://stackoverflow.com/questions/35085261/how-to-use-loess-method-in-ggallyggpairs-using-wrap-function) or [this `ggforce::facet_matrix` alternative](https://www.data-imaginist.com/2019/a-flurry-of-facets/) to create a "3-by-3" grid for the THREE [predictive models](https://ourworldindata.org/covid-models) you're considering (for their country of choice)
+      - I.e., predictive models 1, 2, and 3 line up along the rows and columns
+        of the figure
+
+    
+
+```{r hw_p1}
+library(tidyverse)
+
+path_1 <- "/Users/gck8gd/Documents/courses/"
+path_2 <- "SDS_3003_Communication_w_Data/ggplot2_2/"
+
+file <- "daily-new-estimated-covid-19-infections-icl-model.csv"
+icl_estimated_infections_totals <- read_csv(paste0(path_1,path_2,file,sep="")) %>%
+  dplyr::select(-`Daily new confirmed cases due to COVID-19 (rolling 7-day average, right-aligned) Annotations`) %>%
+  drop_na() %>%
+  rename(Country=Entity) %>%
+  rename(ICL_upper=`Daily new estimated infections of COVID-19 (ICL, upper)`) %>%
+  rename(ICL_lower=`Daily new estimated infections of COVID-19 (ICL, lower)`) %>%
+  rename(ICL_mean=`Daily new estimated infections of COVID-19 (ICL, mean)`)
+
+file <- "daily-new-estimated-covid-19-infections-yyg-model.csv"
+yyg_estimated_infections_totals <- read_csv(paste0(path_1,path_2,file,sep="")) %>%
+  dplyr::select(-`Daily new confirmed cases due to COVID-19 (rolling 7-day average, right-aligned) Annotations`) %>%
+  drop_na() %>%
+  rename(Country=Entity) %>%
+  rename(YYG_upper=`Daily new estimated infections of COVID-19 (YYG, upper)`) %>%
+  rename(YYG_lower=`Daily new estimated infections of COVID-19 (YYG, lower)`) %>%
+  rename(YYG_mean=`Daily new estimated infections of COVID-19 (YYG, mean)`)
+
+
+# https://stackoverflow.com/questions/29884432/dplyr-integer-sampling-within-mutate
+# a 95% confidence interval means 95% of the time the data will fall within
+# this region; below, we draw a random sample from within this region
+models_estimated_infections_totals <- icl_estimated_infections_totals %>% 
+  inner_join(yyg_estimated_infections_totals) %>%
+  filter(ICL_mean != 0 & YYG_mean != 0) %>%
+  rowwise() %>% mutate(icl_possible = runif(1,ICL_lower,ICL_upper)) %>%
+  rowwise() %>% mutate(yyg_possible = runif(1,YYG_lower,YYG_upper))
+
+models_estimated_infections_totals
+```
+
+
+```{r hw_p2}
+focus <- c('Sweden', 'United States', 'Denmark', 'Finland', 'Norway', 
+           'South Korea', 'Japan', 'China', 'Vietnam', 'New Zealand')
+
+models_estimated_infections_totals %>%
+  filter(Country %in% focus) %>%
+  mutate(log_icl_possible=log(icl_possible),
+         log_yyg_possible=log(yyg_possible))  %>%
+  ggplot(mapping=aes(x=log_icl_possible,y=log_yyg_possible)) + geom_point() +
+  geom_abline(intercept=0, slope=1, color='red') +# geom_smooth(method='loess') +
+  facet_wrap(~ Country, nrow=3, scales='free')
+
+
+```
+
+
+# Resources (from class code and this assignment)
+
+## Code 
+
+### Manual Pages
+
+- [geom_smooth](https://ggplot2.tidyverse.org/reference/geom_smooth.html)
+- [geom_histogram](https://ggplot2.tidyverse.org/reference/geom_histogram.html)
+- [adding text I](https://ggplot2.tidyverse.org/reference/annotate.html)
+- [adding text II](https://ggplot2.tidyverse.org/reference/geom_text.html)
+- [geom_density](https://ggplot2.tidyverse.org/reference/geom_density.html)
+- [Multivariate Normal](https://stat.ethz.ch/R-manual/R-patched/library/MASS/html/mvrnorm.html)
+- [geom_area](https://ggplot2.tidyverse.org/reference/geom_ribbon.html)
+- [sample_n](https://dplyr.tidyverse.org/reference/sample.html)
+
+### One-Off Answers
+
+- [Displaying `.png` Images](https://stackoverflow.com/questions/9319298/preview-a-saved-png-in-an-r-device-window)
+- [Control KDE bandwidth](https://stackoverflow.com/questions/12394321/r-what-algorithm-does-geom-density-use-and-how-to-extract-points-equation-of)
+- [Legend Locations](https://stackoverflow.com/questions/10032513/ggplot2-legend-to-bottom-and-horizontal)
+- [geom_smooth transparency](https://stackoverflow.com/questions/19474552/adjust-transparency-alpha-of-stat-smooth-lines-not-just-transparency-of-confi)
+- [`ggally::ggpairs`](https://stackoverflow.com/questions/35085261/how-to-use-loess-method-in-ggallyggpairs-using-wrap-function) 
+- [Sampling in `mutate`](https://stackoverflow.com/questions/29884432/dplyr-integer-sampling-within-mutate)
+
+
+### General Resources
+
+- [Mulitplot figures](http://www.sthda.com/english/articles/24-ggpubr-publication-ready-plots/81-ggplot2-easy-way-to-mix-multiple-graphs-on-the-same-page/)
+- [`ggforce`](https://www.data-imaginist.com/2019/a-flurry-of-facets/)
+
+
+
+## Data
+
+### Focus Articles
+
+- [Masking and Covid](https://www.ajtmh.org/content/journals/10.4269/ajtmh.20-1015)
+- [Infection Models Predictions](https://ourworldindata.org/covid-models) 
+
+### Generally
+
+- [kaggle](https://www.kaggle.com/) 
+- [seaborn](https://github.com/mwaskom/seaborn-data) 
+- [CMU](http://lib.stat.cmu.edu/datasets/)  
+- [Google Dataset Search](https://datasetsearch.research.google.com/)
+- [data.world](https://data.world/search)
+- [Data Portals](http://dataportals.org/)
+- [UCIML Repo](http://archive.ics.uci.edu/ml/)
+- [OpenDataMonitor](http://opendatamonitor.eu/)
+- [Quandl](http://quandl.com/)
+- [Wikipedia](https://en.wikipedia.org/wiki/List_of_datasets_for_machine-learning_research)
+- [AWS data set](https://registry.opendata.aws/)
+- [Quora.com](https://www.quora.com/Where-can-I-find-large-datasets-open-to-the-public)
+- [The datasets subreddit](https://www.reddit.com/r/datasets)
+- [Tycho](https://www.tycho.pitt.edu)
+- [TFDS](https://www.tensorflow.org/datasets/catalog/overview)
+
+
+

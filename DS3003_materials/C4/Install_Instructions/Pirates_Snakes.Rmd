@@ -1,0 +1,540 @@
+---
+title: "R+Python Intro"
+author: "Schwartz"
+date: "9/19/2020"
+output:
+     html_document:
+          toc: TRUE
+          toc_depth: 4
+          toc_float: true
+          toc_collapsed: true
+          theme: journal
+          code_folding: show
+---
+
+<!--- Change font size for headers --->
+<style>
+h1.title {
+  font-size: 32px;
+}
+h1 {
+  font-size: 28px;
+}
+h2 {
+  font-size: 24px;
+}
+h3 { 
+  font-size: 20px;
+}
+
+</style>
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo=TRUE, warning=FALSE, message=FALSE, 
+                      fig.align = "center",
+                      out.width = "80%")
+```
+
+# Group Homework 
+
+- You will be assigned to a group after class and will work with your group to complete the following steps.
+  - Get Rstudio up and running as a group!
+  - Get conda/jupyter notebook up and running as a group!
+
+## R + Python
+
+1. Use official instructions, documentation or other helpful sources available 
+**online** in order to complete this assignment.
+2. Document and reference **EVERY** resource and step used accomplish the 
+required tasks (and provide links to those resources)
+3. **Install Rstudio.**
+4. Use **`install.packages`** to get everything you need to "knit" the code in 
+"for_pirates.txt", below.
+5. Create a team `.Rmd` file which 
+    - includes (and correctly runs) the code from **"for_pirates.txt"**
+    - contains a **well-organized markdown** file documenting the steps 
+       done to complete this assignment (with headers, outlines, and links) 
+    - and (correctly) **"knits"** to `.html`
+6. *Submit your team's shared `.Rmd` AND "knitted"`.html` files*
+    - Your "knitted .html" submission must be created from your "team .Rmd" 
+     but be created on your own computer
+         - **Confirm this with the following comment included in your submission text box: "Honor Pledge: I have recreated my groups submission using using the tools I have installed on my own computer"**
+    - Name the files with a team name and YOUR name for your submission
+
+*Each group member must be able to submit this assignment as created from their own computer. If only some members of the group submit the required files, those group members must additionally provide a supplemental explanation along with their submission as to why other students in their group have not completed this assignment.*
+
+```{R for_pirates.txt, eval=FALSE}
+# https://www.ted.com/talks/hans_rosling_the_best_stats_you_ve_ever_seen
+# https://www.datanovia.com/en/blog/gganimate-how-to-create-plots-with-beautiful-animation-in-r/
+library('ggplot2')
+library('gganimate')
+theme_set(theme_bw())
+library('gapminder')
+library('gifski')
+
+p <- ggplot(
+  gapminder, 
+  aes(x=gdpPercap, y=lifeExp, size=pop, colour=country)
+  ) +
+  geom_point(show.legend=FALSE, alpha=0.7) +
+  scale_color_viridis_d() +
+  scale_size(range = c(2, 12)) +
+  scale_x_log10() +
+  labs(x = "GDP per capita", y = "Life expectancy")
+
+p + facet_wrap(~continent) +
+  transition_time(year) +
+  view_follow(fixed_y = TRUE) +
+  labs(title = "Year: {frame_time}")
+```
+
+
+1. Use official instructions, documentation or other helpful sources available
+   **online** in order to complete this assignment.   
+2. Document and reference **EVERY** resource and step used accomplish the 
+   required tasks (and provide links to those resources)
+3. **Install Conda**
+4. Use **`conda create --name <name_your_environment>`** (or another means) to 
+   create an environment
+5. Use **`conda activate <name_of_your_environment>`** (or another means) and 
+   **`conda install <package_name>`** (or another means) to install jupyter 
+   notebooks and whatever other libraries you require in order to run the code 
+   in "for_snakes.txt" in a jupyter notebook.
+6. Create a **team** `.ipynb` which
+  - includes (and correctly runs) the code from **"for_snakes.txt"** in a cell
+  - contains **well-organized markdown** documenting the steps 
+    done to complete this assignment (with headers, outlines, and links) 
+7. *Submit your team's shared `.ipynb` "jupyter notebook" file AND and `.html` export of the notebook.*
+    - Your ".html export" submission must be created from your "team .ipynb" 
+       but be created on your own computer
+        - **Confirm this with the following comment included in your submission text box: "Honor Pledge: I have recreated my groups submission using using the tools I have installed on my own computer"**
+    - Name the files with a team name and YOUR name for your submission
+
+*Each group member must be able to submit this assignment as created from their own computer. If only some members of the group submit the required files, those group members must additionally provide a supplemental explanation along with their submission as to why other students in their group have not completed this assignment.*
+
+```{python for_snakes.txt, eval=FALSE, python.reticulate=FALSE}
+# https://matplotlib.org/3.1.0/gallery/animation/unchained.html
+
+import numpy as np
+import matplotlib.pyplot as plt
+from IPython.display import HTML
+from matplotlib import animation, rc
+rc('animation', html='html5')
+%matplotlib notebook
+
+# Fixing random state for reproducibility
+np.random.seed(19680801)
+
+
+# Create new Figure with black background
+fig = plt.figure(figsize=(8, 8), facecolor='black')
+
+# Add a subplot with no frame
+ax = plt.subplot(111, frameon=False)
+
+# Generate random data
+data = np.random.uniform(0, 1, (64, 75))
+X = np.linspace(-1, 1, data.shape[-1])
+G = 1.5 * np.exp(-4 * X ** 2)
+
+# Generate line plots
+lines = []
+for i in range(len(data)):
+    # Small reduction of the X extents to get a cheap perspective effect
+    xscale = 1 - i / 200.
+    # Same for linewidth (thicker strokes on bottom)
+    lw = 1.5 - i / 100.0
+    line, = ax.plot(xscale * X, i + G * data[i], color="w", lw=lw)
+    lines.append(line)
+
+# Set y limit (or first line is cropped because of thickness)
+ax.set_ylim(-1, 70)
+
+# No ticks
+ax.set_xticks([])
+ax.set_yticks([])
+
+# 2 part titles to get different font weights
+ax.text(0.5, 1.0, "MATPLOTLIB ", transform=ax.transAxes,
+        ha="right", va="bottom", color="w",
+        family="sans-serif", fontweight="light", fontsize=16)
+ax.text(0.5, 1.0, "UNCHAINED", transform=ax.transAxes,
+        ha="left", va="bottom", color="w",
+        family="sans-serif", fontweight="bold", fontsize=16)
+
+
+def update(*args):
+    # Shift all data to the right
+    data[:, 1:] = data[:, :-1]
+
+    # Fill-in new values
+    data[:, 0] = np.random.uniform(0, 1, len(data))
+
+    # Update data
+    for i in range(len(data)):
+        lines[i].set_ydata(i + G * data[i])
+
+    # Return modified artists
+    return lines
+
+# Construct the animation, using the update function as the animation director.
+anim = animation.FuncAnimation(fig, update, interval=50)
+#HTML(anim.to_html5_video())
+anim
+```
+
+- **Evaluate your group member's performance (and that of your paired group members if you reach out to them)**
+  1. Communication [poor(1)-excellent(5)]
+  2. Contribution [poor(1)-excellent(5)]
+  3. Agreeableness [poor(1)-excellent(5)]
+  4. Your interest in working with this teammate in the future [poor(1)-excellent(5)]
+
+
+# R
+
+## Base R
+- https://cran.r-project.org/doc/manuals/r-release/R-intro.html
+
+### Data: data.frame, summary
+
+- Clear your R environment: `rm(list=ls())`
+- "Comment out" (ignore) code: `#`
+- Browse and Load data build-ins: `data(<dataset>)`
+  - "Click" data
+  - "Paste/Run" code (e.g., `head()`, `dim()`)
+  - `CMD-RETURN` / `CMD-SHIFT-RETURN`
+  - `CTRL-C`
+  - `?` versus "google searches"
+
+```{r base_r_data}
+# rm(list=ls())
+data()
+data("USArrests")
+head(USArrests) 
+dim(USArrests)
+#?USArrests
+# summary(USArrests)
+```
+
+### Base-R Graphing: plot, barplot, histogram
+
+- "Highlight" + `CMD-ENTER`
+  - switching from in-line to the plotting window is a bit clunky...
+  - need to run it multiple times...
+- Accessing columns with `$`
+- "Joining" data! ("SQL" style... here, with `merge()`!)
+  - `<-` to assign variables
+  - or `->` ...
+  
+
+```{r base_r_graphing}
+
+plot(USArrests)
+pairs(USArrests, panel=function(x,y){smoothScatter(x,y,add=T)})
+
+boxplot(USArrests)
+
+plot(density(USArrests$Murder), xlim=c(min(USArrests),max(USArrests)), 
+     main="KDE")
+polygon(density(USArrests$Murder), lty=1, col='black')
+polygon(density(USArrests$Assault), lty=2, col='red')
+polygon(density(USArrests$UrbanPop), lty=3, col='blue')
+polygon(density(USArrests$Rape), lty=4, col='green')
+legend('topright', legend=c("Murder","Assult","UrbanPop","Rape"), 
+       lty=1:4, col=c('black','red','blue','green'))
+
+data("state")
+state <- data.frame(region=state.region)
+rownames(state) <- state.name
+USArrests.V2 <- merge(USArrests, state, by="row.names")
+library('lattice')
+histogram(~UrbanPop|region, data=USArrests.V2, type="count", layout=c(2,2))
+
+```
+
+### Analysis: t.test, non-parametric, fisher's exact test, chi-squared test
+
+- `factor` data type
+  - `levels()`
+- "indexing"
+- "boolean indexing"
+  
+```{r base_r_statistics}
+NE <- levels(USArrests.V2$region)[1]
+S <- levels(USArrests.V2$region)[2]
+
+# Disclaimer: we're just demonstrating available functionality with all these 
+# tests here -- more advanced relevant considerations are being ignored for now
+
+t.test(USArrests$Assault[USArrests.V2$region==NE],
+       USArrests$Assault[USArrests.V2$region==S])
+
+wilcox.test(USArrests$Assault[USArrests.V2$region==NE],
+            USArrests$Assault[USArrests.V2$region==S])
+
+histogram(~Assault|region, data=USArrests.V2, type="count", layout=c(2,2))
+
+# another version to see if SouthWest differs from the rest
+# won't discuss this one in class for time
+AssultsAboveMed <- USArrests$Assault>median(USArrests$Assault)
+SouthWest <- USArrests.V2$region %in% levels(USArrests.V2$region)[c(2,4)]
+table(SouthWest,AssultsAboveMed)
+fisher.test(SouthWest,AssultsAboveMed)
+```
+
+### Modeling: lm, glm
+
+- Very easy to accessing increasingly sophisticated statistical methodologies in R
+- And as well to begin diagnosing the assumptions of these models
+
+```{r base_r_lm}
+lm.fit <- lm(Rape~region+UrbanPop+Assault+Murder, data=USArrests.V2)
+summary(lm.fit)
+par(mfrow=c(2,2))
+plot(lm.fit)
+car::vif(lm.fit)
+
+glm.fit <- glm(discoveries~LakeHuron+sunspot.year, family=poisson,
+               data=ts.intersect(LakeHuron, discoveries, sunspot.year))
+summary(glm.fit)
+```
+
+## tidyverse
+
+- okay, that's "Base-R"... the "old" style
+  - although much of that is still the standard: e.g., all of the modeling methodologies!
+- But `tidy` is the "new" style (for how you should do *many* [but not all!] things)
+  - https://r4ds.had.co.nz
+  - https://r4ds.had.co.nz/data-visualisation.html
+
+
+### Data: tibble, "SQL", pivot_longer
+
+- You've gotta load the packages you want with `library()`
+  - `rm(list=ls())` doesn't remove loaded packages
+  - "Session"->"Restart R" does that
+- `tibble`s rather than `data.frame`s
+  - shape, type, all a little more integrated... `tibbles` are an improvement
+- Pipes! `%>%` (pass output to the next function!  Very cool.)
+  - The `%>%` "notation/syntax" in R is a bit weird; but, super useful anyway
+  - "Tabbing" for nice spacing and visualization is the standard
+    - You're not "forced" to (like Python)... but you *should* anyway...
+- `dplyr::mutate` is AWESOME
+  - You don't HAVE to add `dplyr::`, but I'm being explicit and doing so
+- `tidyr::pivot_longer` style is quite powerful... tricky to figure out, though
+  
+
+```{r tidy_data}
+library(tidyverse)
+
+# overwrite this
+USArrests.V2 %>% as_tibble() -> USArrests.V2
+# USArrests.V2 <- USArrests.V2 %>% as_tibble()
+USArrests.V2 %>% 
+  dplyr::mutate(sqrtAssault=sqrt(Assault)) %>%
+  tidyr::pivot_longer(cols=c(Murder, sqrtAssault, Rape)) -> USArrests.V2.tall
+USArrests.V2.tall
+```
+
+### Graphing: ggplot2, plotly
+
+- We need that "tall" format to be able to make all these plots!
+- https://ggplot2.tidyverse.org
+  - https://stackoverflow.com/questions/7714677/scatterplot-with-too-many-points
+
+```{r ggplot}
+library(ggplot2)
+
+USArrests.V2.tall %>% ggplot(aes(x=UrbanPop, y=value, color=name)) +
+  geom_point() + facet_wrap(~region) + 
+  stat_smooth(method='loess', formula='y~x', se=FALSE, alpha=0.1)
+
+library(ggbeeswarm)
+USArrests.V2.tall %>%
+  ggplot2::ggplot(aes(x=name, y=value, color=name)) + geom_boxplot() +
+  geom_beeswarm(size = 3, cex = 3)
+
+USArrests.V2.tall %>%
+  ggplot2::ggplot(aes(x=name, y=value, color=name)) + geom_violin() +
+  geom_dotplot(binaxis='y', binwidth=3, stackdir='center', dotsize=.3, fill=NA)
+
+
+library(GGally)
+ggpairs(USArrests.V2 %>% dplyr::select(2:5))
+
+# https://stackoverflow.com/questions/7714677/scatterplot-with-too-many-points
+
+pairwise_density <- function(data, mapping, ...){
+  ggplot(data=data, mapping=mapping) + geom_point() + geom_density_2d()
+}
+ggpairs(USArrests.V2 %>% dplyr::select(2:5),
+        lower=list(continuous=pairwise_density))
+
+pairwise_density <- function(data, mapping, ...){
+  ggplot(data=data, mapping=mapping) + 
+    stat_density_2d(aes(fill = stat(density)), geom='raster', contour=FALSE) +
+    scale_fill_viridis_c() + coord_cartesian(expand=FALSE) +
+    geom_point(shape='.', col='white', size=5)
+}
+ggpairs(USArrests.V2 %>% dplyr::select(2:5),
+        lower=list(continuous=pairwise_density))
+
+pairwise_density <- function(data, mapping, ...){
+  ggplot(data=data, mapping=mapping) + stat_bin_hex(bins=7) +
+    geom_point(shape='.', col='white', size=5)
+}
+ggpairs(USArrests.V2 %>% dplyr::select(2:5),
+        lower=list(continuous=pairwise_density))
+
+library(plotly)
+plot_ly(USArrests.V2, x=~Assault, y=~Murder, z=~Rape, color=~UrbanPop, 
+        type='scatter3d', mode='markers', 
+        hovertext=~paste0(Row.names,' (',region,')'), 
+        hovertemplate = paste('%{hovertext}<br>',
+                              'Assault: %{x}<br>',
+                              'Murder: %{y}<br>',
+                              'Rape: %{z}<br><extra></extra>'))
+```
+
+### Analysis: purrr
+
+- What modern data manipulation looks like
+
+```{r tidy_purr_stats}
+
+# do tests for all region pairs and 3 variables for each
+n_tests <- choose(4,2)*3 
+# factorial(4)/(factorial(2)*factorial(2))
+
+USArrests.V2.tall %>% 
+  dplyr::group_split(name, .keep=FALSE) %>% 
+  purrr::set_names(USArrests.V2.tall %>% 
+                   dplyr::group_keys(name) %>%
+                   as.matrix() %>% as.list()) %>%
+  purrr::map(~ pairwise.t.test(.x$value, .x$region, p.adj='none')) %>%
+  purrr::imap(~ broom::tidy(.x) %>% add_column(outcome=.y)) %>%
+  dplyr::bind_rows() %>%
+  dplyr::mutate(p.value_bonf.adj = p.adjust(p.value, 'bonferroni', n=n_tests))
+
+```
+
+### Machine Learning:s broom, tidy, glance, parsnip (et al.)
+
+- More modeling
+  - Just some examples of a couple standard data science techniques
+
+```{r tidy_modeling}
+
+data('iris')
+library('recipes')
+
+iris_recipe <- recipe(Species~Sepal.Width+Petal.Width, data=iris) %>%
+  step_center(-Species) %>% 
+  step_scale(-Species) %>% 
+  prep()
+#iris_baked <- bake(iris_recipe, iris)
+
+library('parsnip')
+
+random_forest_classifier <- rand_forest(mtry=tune(), trees=tune()) %>% 
+  set_engine("ranger") %>% 
+  set_mode("classification")
+#rf_fit <- random_forest_classifier %>% 
+#  fit(Species~., data = iris_baked)
+
+support_vector_machine_classifier <- svm_rbf(cost=tune(), rbf_sigma=tune()) %>%
+  set_engine("kernlab") %>% 
+  set_mode("classification")
+#svm_fit <- support_vector_machine_classifier %>% 
+#  fit(Species~., data = iris_baked)
+
+library('rsample')
+library('tune')
+library('workflows')
+
+# RF
+iris_rf_workflow <- workflow() %>%
+  add_recipe(iris_recipe) %>%
+  add_model(random_forest_classifier)
+
+rf_search <- iris_rf_workflow %>%
+  tune_grid(resamples=vfold_cv(iris, v=5), grid=7)
+#show_best(search, metric="roc_auc")
+best_rf_params <- rf_search %>% 
+  select_best(metric = "roc_auc")
+
+rf_finalized <- iris_rf_workflow %>%
+  finalize_workflow(best_rf_params) %>%
+  fit(data=iris)
+
+# SVM
+iris_svm_workflow <- workflow() %>%
+  add_recipe(iris_recipe) %>%
+  add_model(support_vector_machine_classifier)
+
+svm_search <- iris_svm_workflow %>%
+  tune_grid(resamples=vfold_cv(iris, v=5), grid=7)
+#show_best(search, metric="roc_auc")
+best_svm_params <- svm_search %>% 
+  select_best(metric = "roc_auc")
+
+svm_finalized <- iris_svm_workflow %>%
+  finalize_workflow(best_svm_params) %>%
+  fit(data=iris)
+
+# grid
+x <- modelr::seq_range(iris$Sepal.Width, n=30)
+y <- modelr::seq_range(iris$Petal.Width, n=30)
+xy <- tidyr::expand_grid(x,y) %>% 
+  purrr::set_names(list('Sepal.Width', 'Petal.Width'))
+```
+
+```{r rf}
+rf_decision_boundary <- predict(rf_finalized, new_data=xy, type='prob') %>%
+  tibble::rowid_to_column() %>%
+  left_join(tibble::rowid_to_column(xy)) %>%
+  rowwise() %>%
+  mutate(max = max(.pred_setosa, .pred_versicolor, .pred_virginica)) 
+
+ggplot() +
+  geom_density_2d(rf_decision_boundary%>%filter(.pred_setosa==max),
+             mapping=aes(x=Sepal.Width, y=Petal.Width, color='setosa'),
+             alpha=0.3)+
+    geom_density_2d(rf_decision_boundary%>%filter(.pred_versicolor==max),
+             mapping=aes(x=Sepal.Width, y=Petal.Width, color='versicolor'),
+             alpha=0.3) +
+    geom_density_2d(rf_decision_boundary%>%filter(.pred_virginica==max),
+             mapping=aes(x=Sepal.Width, y=Petal.Width, color='virginica'),
+             alpha=0.3) +
+ geom_point(tibble(iris),
+            mapping=aes(x=Sepal.Width, y=Petal.Width, color=Species), size=2) +
+ ggtitle('Random Forest Classifier')
+```
+
+```{r svm}
+svm_decision_boundary <- predict(svm_finalized, new_data=xy, type='prob') %>%
+  tibble::rowid_to_column() %>%
+  left_join(tibble::rowid_to_column(xy)) %>%
+  rowwise() %>%
+  mutate(max = max(.pred_setosa, .pred_versicolor, .pred_virginica)) 
+
+ggplot() +
+  geom_density_2d_filled(svm_decision_boundary%>%filter(.pred_setosa==max),
+             mapping=aes(x=Sepal.Width, y=Petal.Width, color='setosa',
+             fill='setosa', alpha= ..level..)) +
+    geom_density_2d_filled(svm_decision_boundary%>%filter(.pred_versicolor==max),
+             mapping=aes(x=Sepal.Width, y=Petal.Width, color='versicolor',
+             fill='versicolor', alpha= ..level..)) +
+    geom_density_2d_filled(svm_decision_boundary%>%filter(.pred_virginica==max),
+             mapping=aes(x=Sepal.Width, y=Petal.Width, color='virginica',
+             fill='virginica', alpha= ..level..)) +
+ geom_point(tibble(iris),
+            mapping=aes(x=Sepal.Width, y=Petal.Width, fill=Species), 
+            size=4, pch=23, color='black') +
+  ggtitle('Support Vector Machine Classifier')
+```
+
+
+
+
+

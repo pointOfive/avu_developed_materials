@@ -1,0 +1,20 @@
+Make one of the following plots using data presented by one of the presentations so far
+
+Submit this in the usual, nicely organized and outlined knitted .Rmd/.html format.
+
+Histogram and KDE Plots
+Box or Violin Plots
+Time Series Plots
+3D scatter plot
+You will make each of these over the four days of the midterm presentations, one on each presentation day; although, you're welcome to choose which one you want to make on any given day according to which presentation's data interests you the most.
+
+1. Each submission will be cumulative, i.e., contain all plots made so far.
+
+2. Code should be well commented in each submission
+
+3. An exposition of the data and explanation of the plot should be included with each figure.
+
+Include either of the following in your submission text box: 
+
+"Honor Pledge: I have [given and/or received] the following help [to and/or from] <student> to complete this submission: <explain help utilized>"
+"Honor Pledge: I have neither given nor received aid on this assignment."

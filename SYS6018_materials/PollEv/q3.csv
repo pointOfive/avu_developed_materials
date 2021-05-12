@@ -1,0 +1,167 @@
+Untitled
+,Activity count,20
+,Participant count,26
+,Average responses,21.45
+
+MODULE 2: Videos+Reading+Lab+HW (no tidyverse) took,Activity type,Multiple choice
+,Total responses,22
+,Unique participants,22
+,Response options,Count,Percent
+,$$<5$$ hrs,1,4.55
+,$$5$$$$-$$$$10$$ hrs,17,77.27
+,$$10$$$$+$$ hrs,4,18.18
+
+MODULE 2: Time Spent on Tidyverse,Activity type,Multiple choice
+,Total responses,22
+,Unique participants,22
+,Response options,Count,Percent
+,$$0$$ hrs,16,72.73
+,$$1$$$$-$$$$2$$ hrs,3,13.64
+,$$3$$$$-$$$$5$$ hrs,2,9.09
+,$$6$$$$-$$$$10$$ hrs,1,4.55
+,$$11$$$$+$$ hrs,0,0.0
+
+MODULE 3: Videos+Reading+Lab+HW (no tidyverse) took,Activity type,Multiple choice
+,Total responses,22
+,Unique participants,22
+,Response options,Count,Percent
+,$$<5$$ hrs,2,9.09
+,$$5$$$$-$$$$10$$ hrs,6,27.27
+,$$10$$$$+$$ hrs,1,4.55
+,$$<5$$  (but I've still got quite a bit to do),12,54.55
+,$$5$$$$-$$$$10$$ hrs (but I've still got quite a bit to do),1,4.55
+,$$10$$$$+$$ hrs (but I've still got quite a bit to do),0,0.0
+
+MODULE 3: Time Spent on Tidyverse,Activity type,Multiple choice
+,Total responses,23
+,Unique participants,23
+,Response options,Count,Percent
+,$$0$$ hrs,19,82.61
+,$$1$$$$-$$$$2$$ hrs,2,8.7
+,$$3$$$$-$$$$5$$ hrs,2,8.7
+,$$6$$$$-$$$$10$$ hrs,0,0.0
+,$$11$$$$+$$ hrs,0,0.0
+
+"In logistic regression, the $$\beta$$ coefficients are",Activity type,Multiple choice
+,Total responses,23
+,Unique participants,23
+,Response options,Count,Percent
+,the amount of change in probability for a single unit increase in their associated feature $$X$$,11,47.83
+,"interpreted on a $$log$$-$$odds$$ scale; or, a $$multiplicative$$ $$odds$$ scale",9,39.13
+,$$log\left(\frac{Pr(Y=1)}{1-Pr(Y=1)}\right)$$,1,4.35
+,not anything we care about in the way we care about  $$\beta$$ coefficients in a linear model regression context,2,8.7
+
+I find linear model regression and logistic regression similar,Activity type,Multiple choice
+,Total responses,24
+,Unique participants,24
+,Response options,Count,Percent
+,True,17,70.83
+,False,7,29.17
+
+I find regression and classification similar,Activity type,Multiple choice
+,Total responses,20
+,Unique participants,20
+,Response options,Count,Percent
+,True,3,15.0
+,False,17,85.0
+
+$$Pr(Y=1) = \frac{1}{1+e^{X\beta}}$$ is a,Activity type,Multiple choice
+,Total responses,36
+,Unique participants,25
+,Response options,Count,Percent
+,_logit_ $$link$$ function,10,27.78
+,"$$inver$$$$se$$-$$logit$$, or $$logistic$$ function",22,61.11
+,$$linear$$ $$model$$ form,4,11.11
+
+$$logit$$,Activity type,Multiple choice
+,Total responses,23
+,Unique participants,23
+,Response options,Count,Percent
+,is the log odds function: $$\;\log\left( \frac{p}{1-p}\right)$$,23,100.0
+,in large quantities means you can't quit,0,0.0
+,is a blood type... a typo,0,0.0
+,The answer option that's available for me to choose when it's trying to trick me,0,0.0
+
+"Multicollinearity, transformations, all that sort of stuff",Activity type,Multiple choice
+,Total responses,24
+,Unique participants,24
+,Response options,Count,Percent
+,is not applicable to the logistic regression context,0,0.0
+,matters for logistic regression just like in linear model regression,22,91.67
+,kill me,2,8.33
+
+Classification only pertains to problems with binary class outcomes,Activity type,Multiple choice
+,Total responses,24
+,Unique participants,24
+,Response options,Count,Percent
+,True,2,8.33
+,False,22,91.67
+
+Logistic regression can only be used for binary classification problems,Activity type,Multiple choice
+,Total responses,17
+,Unique participants,17
+,Response options,Count,Percent
+,True,6,35.29
+,False,11,64.71
+
+LDA and QDA are examples of generative models,Activity type,Multiple choice
+,Total responses,15
+,Unique participants,15
+,Response options,Count,Percent
+,True,11,73.33
+,False,4,26.67
+
+Using Bayes Theorem on $$p(x|y)$$ is the _________ modeling approach; Estimating $$p(y|x)$$ directly is the _________ modeling approach,Activity type,Multiple choice
+,Total responses,21
+,Unique participants,21
+,Response options,Count,Percent
+,Generative; Discriminative,12,57.14
+,Discriminative; Generative,9,42.86
+
+LDA assumes the covariance matrix/structure/parameter is _________ across classes; QDA assumes the covariance matrix/structure/parameter is _________ across classes,Activity type,Multiple choice
+,Total responses,18
+,Unique participants,18
+,Response options,Count,Percent
+,Shared; Unique,15,83.33
+,Unique; Shared,3,16.67
+
+We choose tuning parameters,Activity type,Multiple choice
+,Total responses,18
+,Unique participants,18
+,Response options,Count,Percent
+,using the training data because that's the fastest and easiest way,0,0.0
+,using a train-test (or cross-validation) framework so they're not overfit to the data we have,14,77.78
+,"In Soviet Russia, you don't chooses tuning parameters; tuning parameters chooses you",3,16.67
+,The answer option that's available for me to choose when it's trying to trick me,1,5.56
+
+"(A) Model Fitting, (B) Model Tuning, and (C) Threshold Selection & Metrics",Activity type,Multiple choice
+,Total responses,19
+,Unique participants,19
+,Response options,Count,Percent
+,are distinct stages of the model building process,17,89.47
+,are NOT distinct stages of the model building process,2,10.53
+
+ROC is,Activity type,Multiple choice
+,Total responses,21
+,Unique participants,21
+,Response options,Count,Percent
+,a way to examine model performance tradeoffs,12,57.14
+,an aggregate measure of general model performance capability,7,33.33
+,a musical genre,1,4.76
+,a geological byproduct,1,4.76
+
+AUC is,Activity type,Multiple choice
+,Total responses,19
+,Unique participants,19
+,Response options,Count,Percent
+,a way to examine model performance tradeoffs,2,10.53
+,an aggregate measure of general model performance capability,16,84.21
+,a west coast school,1,5.26
+,"a way to ask someone if they ""get it""",0,0.0
+
+False Negatives are worse than False Positives,Activity type,Multiple choice
+,Total responses,18
+,Unique participants,18
+,Response options,Count,Percent
+,Positively True,2,11.11
+,Negative: False,16,88.89

@@ -1,0 +1,174 @@
+---
+title: "Mod_1_Live"
+author: "Schwartz"
+date: "8/30/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      fig.align = "center",
+                      out.width = "80%")
+
+```
+
+# HIT RECORD
+# HIT RECORD
+# HIT RECORD
+
+## Time Demands
+
+## Module Section Prefaces
+
+## Project Collaboration Rules
+
+## Demos
+
+# HIT RECORD
+# HIT RECORD
+# HIT RECORD
+
+
+## College Data
+```{r college, fig.width = 5}
+library("tidyverse")
+library("modelr")
+url <- "http://faculty.marshall.usc.edu/gareth-james/ISL/College.csv"
+college <- read_csv(url, col_types = cols()) %>% 
+  rename(college=X1) %>%
+  mutate(Accept.Rate = Accept/Apps)
+
+set.seed(10)
+college.train <- college %>% 
+  filter(Private!="Yes") %>% dplyr::select(-Private) %>% 
+  sample_n(100, replace=FALSE)
+college.test <- college %>% 
+  filter(Private=="Yes") %>% dplyr::select(-Private) %>%
+  sample_n(100, replace=FALSE)
+
+# grepl(pattern, x)
+college.train %>% filter(str_detect(college, 'Virginia') | 
+                         str_detect(college, 'George') |
+                         str_detect(college, 'James'))
+```
+
+## Model Complexity
+```{r complexity}
+p='7'
+```
+
+## Training Data Set I
+```{r ds1, fig.width = 3}
+my_plot <- college.train %>% 
+  ggplot(mapping=aes(x=Outstate, y=Accept.Rate)) +
+  geom_point(color='forestgreen') 
+my_plot
+```
+
+## Model Fit I (Training Data Set I)
+```{r mf1, fig.width = 3}
+my_plot + stat_smooth(method="lm", formula=paste0('y~poly(x,', p, ')'), 
+                      se=FALSE, color='forestgreen')
+```
+
+## Training Data Set II
+```{r ds2, fig.width = 4}
+my_plot + stat_smooth(method="lm", formula=paste0('y~poly(x,', p, ')'), 
+                      se=FALSE, color='forestgreen') + 
+  geom_point(data=college.test, color='purple', size=2)
+```
+
+
+## Model Fit II (Training Data Set II)
+```{r mf2, fig.width = 4}
+my_plot + stat_smooth(method="lm", formula=paste0('y~poly(x,', p, ')'), 
+                      se=FALSE, color='forestgreen') + 
+  geom_point(data=college.test, color='purple') + 
+  stat_smooth(data=college.test, method="lm", 
+              formula=paste0('y~poly(x,', p, ')'), se=FALSE, color='purple')
+```
+
+
+## Confidence Intervals
+```{r ci, fig.width = 4}
+my_plot <- 
+my_plot + stat_smooth(method="lm", formula=paste0('y~poly(x,', p, ')'), 
+                      se=TRUE, color='forestgreen') + 
+  geom_point(data=college.test, color='purple') + 
+  stat_smooth(data=college.test, method="lm", 
+              formula=paste0('y~poly(x,', p, ')'), se=TRUE, color='purple')
+my_plot
+```
+
+## Prediction Intervals I: (Model Fit I)
+```{r pi1, fig.width = 4}
+mod1 <- lm(Accept.Rate~poly(Outstate, strtoi(p)), data=college.train) 
+mod1.support <- college.train %>% dplyr::select(Outstate) %>% seq_range(n=20)
+mod1.prediction_interval <- tibble(Outstate=mod1.support)
+mod1.prediction_interval <- 
+predict(mod1, newdata=mod1.prediction_interval, interval="predict") %>%
+  as_tibble() %>% add_column(mod1.prediction_interval) %>%
+  rename(Accept.Rate=fit)
+my_plot + geom_ribbon(data=mod1.prediction_interval, 
+                      aes(x=Outstate, ymin=lwr, ymax=upr), 
+                      fill = "black", alpha = 0.2)
+```  
+
+## Prediction Intervals II: (Model Fit II)
+```{r pi2, fig.width = 4}
+mod2 <- lm(Accept.Rate~poly(Outstate, strtoi(p)), data=college.test) 
+mod2.support <- college.test %>% dplyr::select(Outstate) %>% seq_range(n=20)
+mod2.prediction_interval <- tibble(Outstate=mod2.support)
+mod2.prediction_interval <- 
+predict(mod2, newdata=mod2.prediction_interval, interval="predict") %>%
+  as_tibble() %>% add_column(mod2.prediction_interval) %>%
+  rename(Accept.Rate=fit)
+my_plot + geom_ribbon(data=mod2.prediction_interval, 
+                      aes(x=Outstate, ymin=lwr, ymax=upr), 
+                      fill = "black", alpha = 0.2)
+```
+
+## Plot Clean-Up
+```{r clean-up, fig.width = 4}
+my_plot$layers[[1]] <- NULL
+my_plot$layers[[2]] <- NULL
+```
+
+## Resample Training Data Sets I & II
+```{r college, fig.width = 4}
+resample <- function(college){
+  college.train.2 <- college %>% 
+    filter(Private!="Yes") %>% dplyr::select(-Private) %>% 
+    sample_n(100, replace=FALSE)
+  college.test.2 <- college %>% 
+    filter(Private=="Yes") %>% dplyr::select(-Private) %>%
+    sample_n(100, replace=FALSE)
+  list(college.train.2, college.test.2)
+}
+```
+
+# new model fits
+```{r re-fits, fig.width = 4}
+parallel_universe <- resample(college)
+
+mod1.2 <- lm(Accept.Rate~poly(Outstate, strtoi(p)), data=parallel_universe[[1]]) 
+mod1.2.support <- college.train %>% dplyr::select(Outstate) %>% seq_range(n=20)
+mod1.2.fit <- mod1.2 %>% augment(newdata=tibble(Outstate=mod1.2.support))
+
+mod2.2 <- lm(Accept.Rate~poly(Outstate, strtoi(p)), data=parallel_universe[[2]])
+mod2.2.support <- college.test %>% dplyr::select(Outstate) %>% seq_range(n=20)
+mod2.2.fit <-  mod2.2 %>% augment(newdata=tibble(Outstate=mod2.2.support))
+
+my_plot + geom_line(data=mod1.2.fit, mapping=aes(x=Outstate, y=.fitted),
+                    size=1, linetype='dotdash') +
+          geom_line(data=mod2.2.fit, mapping=aes(x=Outstate, y=.fitted),
+                    size=1, linetype='dotdash') 
+```
+
+
+
+## *My* Questions
+https://pollev.com/scottschwart658
+
+## *Your* Questions
+

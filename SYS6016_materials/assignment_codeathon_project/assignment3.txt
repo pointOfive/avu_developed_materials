@@ -1,0 +1,26 @@
+
+Assignment 3 (OPTIONAL): Music Generation
+Due: 4/12 3:30PM EST (before Class 21)
+Late: 0 (after 3:30PM EST beginning with the start of Class 21)
+Value: +20 extra credit bonus points (2% of class grade added to current grade)
+Charles Darwin once said, “If I had my life to live over again, I would have made a rule to read some poetry and listen to some music at least once every week.” As humans, we all like to listen to music to relax, destress, and recreate. Essentially, music consists of a sequence of musical notes. This assignment focuses on automatically generating a sequence of music using an RNN.  
+
+DIRECTIONS
+
+A Colab template to guide you through the process of creating an RNN to generate music is available here. 
+
+Design: Your task is to take some existing music data and train a recurrent model to learn the patterns in music that humans would be most likely to enjoy. You are not expected to create a model to generate professional-quality music. Still, your model should produce a piece of quality music that is harmonious and an easy listen.  
+
+Instead of representing music as traditional sheet music, music is described in this assignment by a sequence of musical notes; each musical note is separated by a space, using the ABC-notation. Your key task is to represent music as a sequence of events. Your RNN model will take sequences as inputs and then outputs a new sequence of musical notes.
+
+Implementation: To get you started, the provided code is already capable of preparing your input data, feeding them into mini-batches. You will need to implement a deep RNN that uses sequence-to-sequence architecture potentially with LSTM units. You may also consider implementing some regularization such as Dropout, as well as select an optimization approach such as RMSProp to train your network. Your model is expected to take a sequence of 87 unique characters and generate 87 probability values through a softmax layer. This assignment will be limited to a single instrument, but you may extend it to multiple instruments.
+
+All of your code must be in the Jupyter Notebook format. If you use Github, please include a zip file or, preferably, a link to a Github repository with the code for your final project. You do not have to include the data or additional libraries.
+ 
+SUBMISSION INSTRUCTIONS
+
+Submit the .ipynb file via UVA Collab with the following naming convention: yourcomputingID_assignment_3.ipynb. 
+
+ Assignment 3 (OPTIONAL): Music Generation
+
+ SYS 6016 Programming Assignment Rubric.pdf

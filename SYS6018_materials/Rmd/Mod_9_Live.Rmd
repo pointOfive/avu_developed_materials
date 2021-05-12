@@ -1,0 +1,215 @@
+---
+title: "Mod_9_Live"
+author: "Schwartz"
+date: "10/24/2020"
+output: html_document
+---
+
+
+## Announcements
+
+- general questions to end; topical questions as they arise
+
+- Motivation
+  - trying to highlight and make support vector machine components intuitive
+
+- what we need to talk about:
+  - separating hyperplane: w^Tx+b=0
+  - "w"
+    - defines hyperplane: w^Tx+b=0
+      - perpendicular
+    - width: 2/||w||
+    - maximization
+  - margin: w^Tx+b=+/-1
+  - support vectors: y_i* (w^Tx_i*+b) <= 1
+    - complexity
+      - regularization
+      - model size
+  - "alpha_i": : w=sum_i* y_i alpha_i* x_i*
+  - slack: (1 - y_i* (w^Tx_i*+b))
+  - maximization
+  - C: cost
+  - gotchas:
+    - imbalanced classes
+    - feature scale
+  - inner product/dot product
+  - kernel trick
+  - radial basis function (rbf)
+    - gamma/sigma
+  - polynomial kernel
+    - degree
+    - coef0
+
+
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      fig.align = "center",
+                      out.width = "80%")
+```
+
+
+```{r shiny}
+# https://stackoverflow.com/questions/49190820/create-data-set-from-clicks-in-shiny-ggplot
+library(shiny)
+library(ggplot2)
+library(latex2exp)
+
+#https://stats.stackexchange.com/questions/74499/what-is-the-loss-function-of-hard-margin-svm
+ui <- pageWithSidebar(
+    headerPanel("Support Vector Machines"),
+    sidebarPanel(
+        radioButtons("color", "Pick Class", c("Class0", "Class1")),
+        h5(withMathJax("\\( \\LARGE C: \\frac{1}{2}||w||^2 + C \\)")),
+        h5(withMathJax("\\( \\LARGE \\quad\\quad\\quad - C \\sum_{i^*} y_{i^*}(w^Tx_{i^*}+b), \\)")),
+        sliderInput(inputId="cost", label=withMathJax("\\( \\LARGE \\quad\\quad\\quad \\sum_{i^*} \\alpha_i \\leq C \\)"), 
+                min=-5, max=10, value=7, step=0.01),
+        h5(withMathJax("\\( \\LARGE \\textrm{Kernel}\\; \\phi: w^Tx_{0}+b \\)")),
+        h5(withMathJax("\\( \\LARGE = \\left(\\sum_{i^*}y_{i^*}\\alpha_{i^*}x_{i^*}\\right)^Tx_{0}+b \\)")),
+        radioButtons("kernel", label=withMathJax("\\( \\LARGE = \\sum_{i^*}y_{i^*}\\alpha_{i^*}\\phi(x_{i^*},x_{0})+b \\)"), 
+                     c("linear", "radial", "polynomial")), 
+        sliderInput(inputId="gamma", label=withMathJax("\\( \\LARGE \\gamma: exp\\left(-\\gamma||u-v||^2\\right)\\)"), 
+                min=-3, max=7, value=1, step=0.01),
+        sliderInput(inputId="degree", label=withMathJax("\\( \\LARGE p: \\left(\\gamma\\cdot u^Tv + \\beta_0\\right)^p\\)"), 
+                min=1, max=7, value=2, step=0.1),
+        sliderInput(inputId="coef0", label=withMathJax("\\( \\LARGE \\beta_0 \\)"), 
+                min=-100, max=100, value=0, step=0.01),
+        sliderInput(inputId="scale", label=withMathJax("\\( \\LARGE \\sigma_x \\)"), 
+                min=1, max=100, value=1, step=1)),
+    mainPanel(
+        fluidRow(column(width = 6,
+                        h4("Click plot to add points"),
+                        actionButton("rem_point", "Remove Last Point"),
+                        plotOutput("plot1", click = "plot_click")),
+                 column(width = 6,
+                        h4("Table of points on plot"),
+                        tableOutput("table")))
+    )
+)
+
+server = function(input, output){
+
+    ## 1. set up reactive dataframe ##
+    values <- reactiveValues()
+    values$DT <- data.frame(x = numeric(),
+                            y = numeric(),
+                            color = factor())
+
+    ## 2. Create a plot ##
+    output$plot1 = renderPlot({
+      
+      
+        plot <- ggplot(values$DT, aes(x = x, y = y, color=color)) +
+            geom_point(aes(fill=color), color="black", shape=21, size=5) +
+            lims(x = c(-3*input$scale, 3*input$scale), y = c(-3, 3)) +
+            theme(legend.position = "bottom") +
+            scale_fill_manual(values=c('forestgreen','purple')) 
+
+        ## 3. Fit SVM ##
+        if(nrow(values$DT)>2 & input$kernel=="linear"){
+        svmfit <- e1071::svm(color~., data=values$DT, 
+                             kernel="linear", scale=FALSE,
+                             cost=10^input$cost)
+        w <- t(svmfit$coefs) %*% svmfit$SV
+        b <- svmfit$rho
+        #https://scikit-learn.org/stable/auto_examples/svm/plot_svm_margin.html
+        #http://www.sthda.com/english/wiki/ggplot2-line-types-how-to-change-line-types-of-a-graph-in-r-software
+
+        plot + geom_abline(mapping=aes(intercept=b/w[2], slope=-w[1]/w[2]),
+                                       color='black') +
+          geom_abline(mapping=aes(intercept=b/w[2]+
+                                            (1+(w[1]/w[2])^2)^0.5/sqrt(sum(w^2)), 
+                                  slope=-w[1]/w[2]), color='black',
+                                  linetype='dashed')+
+          geom_abline(mapping=aes(intercept=b/w[2]-
+                                            (1+(w[1]/w[2])^2)^0.5/sqrt(sum(w^2)), 
+                                  slope=-w[1]/w[2]), color='black',
+                                  linetype='dashed') +
+          geom_point(as_tibble(values$DT[svmfit$index,]),
+                     mapping=aes(x=x,y=y), 
+                     color='black', shape=1, size=8, stroke=3) +
+          geom_segment(tibble(x=0, y=b/w[2], xend=w[1], yend=w[2]+b/w[2]), 
+                       mapping=aes(x=x,y=y,xend=xend,yend=yend), 
+                       color='black', arrow=arrow(length=unit(0.5, "cm")))
+        
+        #print(values$DT[svmfit$index,])
+        
+        }else{
+          if(nrow(values$DT)>2 & input$kernel!="linear"){
+            svmfit <- e1071::svm(color~., data=values$DT, 
+                                 kernel=input$kernel, 
+                                 cost=10^input$cost, 
+                                 gamma=10^input$gamma,
+                                 degree=input$degree,
+                                 coef0=input$coef0,
+                                 probability=TRUE)
+
+            support <- expand.grid(x=modelr::seq_range(c(-3,3),100),
+                                   y=modelr::seq_range(c(-3,3),100))
+            preds <- predict(svmfit, newdata=support, probability=TRUE)
+
+            invert_kernel <- as_tibble(attr(preds,"probabilities")) %>% 
+              rowid_to_column() %>%
+              inner_join(support%>%rowid_to_column())
+
+
+            plot + geom_contour(data=invert_kernel,
+                     mapping=aes(x=x,y=y,z=Class1,color=..level..)) +
+              scale_colour_viridis_c() +
+              geom_point(as_tibble(values$DT[svmfit$index,]),
+                         mapping=aes(x=x,y=y), 
+                         color='black', shape=1, size=8, stroke=3)
+
+              #scale_color_continuous(low='white', high='red') 
+
+            #print(summary(invert_kernel))
+          }else{
+            plot
+        }}
+        
+      
+
+      
+    })
+
+    ## 4. add new row to reactive dataframe upon clicking plot ##
+    observeEvent(input$plot_click, {
+        # each input is a factor so levels are consistent for plotting characteristics
+        add_row <- data.frame(x = input$plot_click$x,
+                              y = input$plot_click$y,
+                              color = factor(input$color, 
+                                             levels = c("Class0", "Class1")))
+        # add row to the data.frame
+        values$DT <- rbind(values$DT, add_row)
+        if(nrow(values$DT)>2){
+          values$DT$x <- input$scale*(values$DT$x-mean(values$DT$x))/sd(values$DT$x)
+          values$DT$y <- (values$DT$y-mean(values$DT$y))/sd(values$DT$y)
+        }
+    })
+
+    ## 5. remove row on actionButton click ##
+    observeEvent(input$rem_point, {
+        rem_row <- values$DT[-nrow(values$DT), ]
+        values$DT <- rem_row
+    })
+    
+
+    ## 6. render a table of the growing dataframe ##
+    output$table <- renderTable({
+        values$DT
+    })
+}
+
+shinyApp(ui, server)
+```
+
+
+
+## My questions
+
+- https://www.youtube.com/watch?v=3liCbRZPrZA
+- what does multicollinearity do in random forests?
+
+PollEv.com/scottschwart658
+

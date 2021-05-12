@@ -1,0 +1,36 @@
+
+CODEATHON 1: REAL ESTATE PRICING PREDICTION
+
+Due: 3/22 3:30PM EST (before Class 15)
+Late: -10/day (after 3:30PM EST beginning with the start of Class 15)
+Value: 80 points (8% of class grade)
+DIRECTIONS:
+
+You are in charge of building a system to predict housing prices in Boston, MA. You need to find the best model given the Boston Housing dataset, and then see if you can improve its performance further by tuning its hyperparameters. You must evaluate your model using RMSE on a test set as follows:
+
+The test data will be 10% of the data created with the `shuffle/take/skip` tools demonstrated here: https://stackoverflow.com/questions/48213766/split-a-dataset-created-by-tensorflow-dataset-api-in-to-train-and-test
+Right before you create the test set, set the global seed at the top of the code to 49 as shown in the final code of the answer from the TF_Support answer here: https://stackoverflow.com/questions/61078946/how-to-get-reproducible-results-keras-tensorflow
+## GLOBAL SEED ##
+tf.random.set_seed(49)
+
+We must be able to recreate your results and score when we replace your test set creation code with our own and run your notebook, which we indeed will be able to do if you (a) set the global seed as described above and then (b) immediately execute your `shuffle/take/skip` (which is how our own test set creation code will work).
+Note that the stack overflow example also creates a `val` set -- our test creation code just drops that part.
+Each student must submit their own Jupyter Notebook. The top 10 submissions that achieve the lowest RMSE will be awarded 5, 4.5, 4, 3.5, 3, 2.5, 2, 1.5, 1, and 0.5 bonus points, respectively. Use your own neural nets and present your solution and performance to your peers using Google Colab.
+
+SPECIFICATIONS:
+
+The Data API must be used to process your dataset
+A neural network must be utilized to find a solution.
+The submission must contain the RMSE of the test set. 
+HOW TO GET STARTED:
+
+As this may be your first codeathon, just do the best you can!
+Understand the context of your problem and its motivation.
+Explore the data and show some visualization, select which attribute for which you will make a prediction, and split the data for training/testing.
+Make sure the data are clean before applying any regression models.
+Use RMSE as the performance measure (tune params to get better results).
+Ask TAs and the instructor if you have any questions. We are here to help!
+SUBMISSION INSTRUCTIONS:
+
+Submit your Jupyter Notebook through Collab. 
+Ensure to include your UVA ID and submit your file under this format: uvaID_codeathon_1.ipynb.

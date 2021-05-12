@@ -1,0 +1,7 @@
+evaluate the performance of your group members (and that of your paired group members if you reach out to them)
+
+1. Score each of your teammates 1-5 (low to high) on their performance in the following dimensions:
+Communication [poor(1)-excellent(5)]
+Contribution [poor(1)-excellent(5)]
+Agreeableness [poor(1)-excellent(5)]
+Your interest in working with this teammate in the future [poor(1)-excellent(5)]

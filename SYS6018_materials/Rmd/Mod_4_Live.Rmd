@@ -1,0 +1,381 @@
+---
+title: "Mod_4_Live"
+author: "Schwartz"
+date: "09/19/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      fig.align = "center",
+                      out.width = "80%")
+```
+
+## Announcements
+- Project (due soon... you should be working on it...)
+- PCA (why now?)
+  - regularization (big Mod 5/Ch 6)
+- Seminar on Friday (Mod 5 discussion boards)  
+- office hours (Thursdays now -- no more Monday OHs)
+
+- trust us!
+- live session motivations
+  - demonstrate (yet again) how much variability there is in data with K-Folds
+    - 5.1.1, 177-178, point 1, and all associated content, including, but 
+      not limited to
+      - Figure 5.2
+      - 5.1.2
+      - Figure 5.4
+      - 5.1.3
+      - 5.1.4
+  - demonstrate how incredible general bootstrap is using the upcoming topic
+    of regularization
+    - all of 5.2 attempts to emphasize this point with a fairly wild example
+      - I do the same thing but with another example that's even wilder 
+      - but this one is super meta/immediately relevant to the chapter 
+        - i.e., K-folds, and using it (to select model tuning parameters...)
+          - (what else is K-folds for?)
+          - and the tuning parameters under consideration are ones that will 
+            soon become extremely relevant, i.e, *regularization* parameters
+  - what I will show you is not normally/traditionally done; but it can be
+    - that's the point: the bootstrap is incredibly general and can be used
+      basically everywhere...
+
+## Demo
+
+### setup
+```{r data}
+library(tidyverse)
+default <- ISLR::Default %>% tibble::as_tibble() 
+
+# obviously, step zero, I *ALWAYS* shuffle my data
+# why EVER worry about order bias if you never have to with one simple step?
+set.seed(1)
+default <- dplyr::slice_sample(default, n=nrow(default)) %>% 
+  tibble::rowid_to_column()
+
+# obviously, I *ALWAYS* set aside my final hold out test data set
+default_FHO <- dplyr::slice_sample(default, prop=0.2)
+default <- default[-default_FHO$rowid,]
+# shuffle just to be safe
+```
+
+- simple rule and never worry about it again: always shuffle
+- ALWAYS keep a final hold out data set... why would you NOT do this???
+
+### data
+```{r data_bad}
+wo_student <- default %>% ggplot(aes(y=balance, x=income)) 
+wo_student+geom_point()
+```
+
+- So we could kinda fit a line to this
+
+```{r data_good}
+
+w_student <- default %>% ggplot(aes(color=student, y=balance, x=income)) + 
+  geom_point()
+
+#stat_density_2d(aes(fill=stat(density)), geom='raster', contour=FALSE) +       
+#  scale_fill_viridis_c() 
+
+#https://stackoverflow.com/questions/7714677/scatterplot-with-too-many-points
+gridExtra::grid.arrange(grobs=list(wo_student+geom_point(),
+                                   w_student+geom_point(),
+                                   wo_student+stat_binhex(),
+                                   wo_student+
+                                     stat_density_2d(aes(fill=stat(density)),
+                                                     geom='raster', 
+                                                     contour=FALSE) + 
+                                     scale_fill_viridis_c() +
+                                     coord_cartesian(expand = FALSE) +
+                                     geom_density_2d(color='white',
+                                                     alpha=0.2)), ncol=2)
+```
+
+- be careful about the "rule of proportional ink" 
+  - watch out for the "hidden points fallacy"
+- and, always of course, be wary of confounding variables
+
+### Sampling Variation
+```{r clear_results}
+hypothetical_universes <- list()
+```
+```{r sample_uncertainty}
+n <- 500
+
+n_str <- as.character(n)
+n_hypothetical_universes <- 2500
+n_hypothetical_universes_str <- as.character(n_hypothetical_universes)
+
+purrr::set_names(1:n_hypothetical_universes) %>% 
+  purrr::map(~ lm(balance~student+poly(income,2),
+                  data=dplyr::slice_sample(default, n=n))) -> lm.fits
+
+hypothetical_universes[[n_str]] <- lm.fits %>% 
+  purrr::map(~ .x %>% broom::tidy() %>% dplyr::select(estimate)) %>%
+  purrr::map(~ .x %>% t() %>% tibble::as_tibble()) %>%
+  dplyr::bind_rows() 
+names(hypothetical_universes[[n_str]]) <- names(coef(lm.fits[[1]]))
+hypothetical_universes[[n_str]] <- hypothetical_universes[[n_str]] %>%
+  tibble::add_column(tibble::tibble(n=rep(n_str,
+                                          n_hypothetical_universes)))
+```
+
+- run this multiple times to fill up our values
+  - 500, 1000, 2500
+
+```{r sample_uncertainty_plots}
+# https://stackoverflow.com/questions/35372365/how-do-i-generate-a-histogram-for-each-column-of-my-table/35373419
+# https://ggplot2.tidyverse.org/reference/geom_density.html
+hypothetical_universes %>% dplyr::bind_rows() %>% 
+  tidyr::pivot_longer(names(hypothetical_universes[[1]])[1:4]) %>%
+  ggplot(aes(x=value, color=n, fill=n)) + geom_density(alpha=0.3) +
+  facet_wrap(~name, scales='free')
+```
+- We're pretending the original "sample" is the "population"
+- And then we're taking hypothetical "parallel universe" samples and seeing
+  what the variability is in coefficients between the "parallel universes"
+- What's happening here with n?
+
+### Bootstrap
+
+```{r lm}
+classical <- lm(balance~student+poly(income,2), data=default) %>% broom::tidy()
+classical
+```
+
+- Do I need a FHO (final hold out set here?)
+
+```{r bootstrap}
+n_hypothetical_universes <- 1000
+default %>% rsample::bootstraps(times=n_hypothetical_universes) ->
+  my_bootstrapped_parallel_universes
+
+my_bootstrapped_parallel_universes$splits %>%
+  purrr::map(~ lm(balance~student+poly(income,2), 
+                  data=rsample::analysis(.x))) -> my_bspu.fits
+
+my_bspu.fits %>%
+  purrr::map(~ .x %>% broom::tidy() %>% dplyr::select(estimate)) %>%
+  purrr::map(~ .x %>% t() %>% tibble::as_tibble()) %>%
+  dplyr::bind_rows() -> my_bspu.fits.coefs 
+names(my_bspu.fits.coefs) <- names(coef(my_bspu.fits[[1]]))
+```
+
+```{r bootstrap_plot}
+my_bspu.fits.coefs %>% 
+  tidyr::gather() %>%
+  ggplot(aes(x=value, color=n, fill=n)) + geom_density(alpha=0.3) +
+  facet_wrap(~key, scales='free')
+```
+
+- so this is distribution of coefficient estimates over bootstrapped samples
+- this was *just like* above when we were taking "random samples" for the sample 
+  - i.e., pretending the original "sample" was the "population"
+- we can get *point estimates* and *uncertainties* based on this
+
+```{r approx}
+#https://dplyr.tidyverse.org/reference/summarise_all.html
+means <- dplyr::summarize_all(my_bspu.fits.coefs, mean)
+std.errors <- dplyr::summarize_all(my_bspu.fits.coefs, sd)
+p.values <- dplyr::mutate_all(my_bspu.fits.coefs, ~ .x<0) %>%
+            dplyr::summarize_all(~ min(mean(.x),1-mean(.x)))
+tibble::tibble(term=names(means),
+               estimate=as.numeric(means),
+               std.error=as.numeric(std.errors),
+               statistic=as.numeric(means/std.errors),
+               p.value=as.numeric(2*p.values))
+```
+
+- Another way to get p-values is called a *permutation* test...
+  - that's my favorite hypothesis testing tool of *ALL time*...
+
+```{r classical}
+classical
+```
+
+- So bootstrapping can provide the same kind of uncertainty characterization 
+  as classical/distributional analytical statistical inference procedures
+
+### confidence intervals
+```{r bootstrap_confidence_interval}
+lower <- my_bspu.fits.coefs %>% 
+  dplyr::summarize_all(function(x) quantile(x, 0.025))
+upper <- my_bspu.fits.coefs %>% 
+  dplyr::summarize_all(function(x) quantile(x, 0.975))
+
+bind_rows(list(lower,upper)) %>% tibble::add_column(CI95=c('lower','upper'))
+
+```
+
+- and it can do confidence intervals, too
+  - just take the middle 95% of the bootstrap samples for a 
+    "95% bootrapped confidence interval"
+    
+### math
+
+- What is this?
+
+$$\Large \color{black}{\overset{\text{SQUARED LOSS}}{\text{Cost Function}}} \quad \huge \underset{\boldsymbol{\beta}}{\min} \left[ \sum_{i=1}^n (y_i - \textbf{x}_i\boldsymbol{\beta})^2 \right]$$
+
+- What is this doing?
+
+$$\Large \color{blue}{\overset{\text{RIDGE}}{\text{Regularization}}} \quad \huge \underset{\boldsymbol{\beta}}{\min} \left[ \sum_{i=1}^n (y_i - \textbf{x}_i\boldsymbol{\beta})^2 + \lambda \sum_{k=1}^p \beta_k^2\right]$$
+
+- What is this doing?
+
+$$\Large \color{red}{\overset{\text{LASSO}}{\text{Regularization}}} \quad \huge \underset{\boldsymbol{\beta}}{\min} \left[ \sum_{i=1}^n (y_i - \textbf{x}_i\boldsymbol{\beta})^2 + \lambda \sum_{k=1}^p |\beta_k|\right]$$
+
+- What's the difference between them?
+
+```{r data}
+tibble::tibble(ridge_coeficient=c(2,1,0.2),
+               ridge_shrinkage=c(0.1,0.1,0.1),
+               ridge_math=c("2^2-1.9^2", "1^2-0.9^2", "0.2^2-0.1^2"),
+               ridge_penalty=c(2^2-1.9^2, 1^2-0.9^2, 0.2^2-0.1^2),
+               lasso_coeficient=c(2,1,0.2),
+               lasso_shrinkage=c(0.1,0.1,0.1),
+               lasso_math=c("|2-1.9|", "|1-0.9|", "|0.2-0.1|"),
+               lasso_penalty=c(0.1,0.1,0.1))
+```
+
+- Ridge penalty degrades as coefficients get smaller
+  - Ridge stops caring about small coefficients
+- Lasso penalty remains constant regardless of coefficient size
+  - Lasso can actually push coefficients to zero 
+    when that's the biggest bang for the buck
+  - https://www.youtube.com/watch?v=4THFRpw68oQ
+
+
+### Scaling 
+
+- What happens if our features are on different scales?
+
+```{r scaling}
+#https://stackoverflow.com/questions/27879638/use-dplyrs-summarise-each-to-return-one-row-per-function
+
+default %>% dplyr::select(student, income) %>% 
+  dplyr::mutate(student=as.numeric(student)) %>% 
+  dplyr::summarize_all(list("min"=min,"max"=max,"sd"=sd)) %>%
+  tidyr::gather(variable, value) %>%
+  separate(variable, c("var", "stat"), sep = "\\_") %>%
+  spread(var, value)
+```
+
+$$\huge x\beta = \frac{x}{\text{scale}}(\text{scale} \times \beta)$$
+
+- Just scale your feature $x$ to be really small then $\beta$ will be big
+  = really big -- as artificially big as you would like...
+- So, YOU *MUST* (scale) standardize your features when you use Ridge/Lasso
+  Regularization *OR YOU WILL BREAK IT*
+  - This is similar/analogous to how we REALLY NEED to (scale) standardize 
+    features for KNN
+    
+
+### K-Folds Cross-Validation
+
+1. We don't get statistical uncertainty characterizations from these
+   regularization procedures
+2. But of course that's quite true because the procedure is very involved, i.e.
+   - we have to *tune* lambda as part of the procedure!!
+3. But we can wrap this whole process up in a bootstrap procedure in order to 
+   get uncertainty characterizations!
+
+```{r kfolds}
+set.seed(1)
+fixed_data <- dplyr::slice_sample(default, n=n)
+
+elastic_net <- function(alpha, data){
+  n <- 500
+  caret::train(balance~student+poly(income,2), data=data, method="glmnet", 
+               tuneGrid=data.frame(alpha=rep(alpha,100),
+                                   lambda=10^seq(2,-2,length=100)),
+               trControl=trainControl("cv", number=5, returnResamp='all'))
+}
+ridgeCV <- function(data){ elastic_net(alpha=0, data=data) }
+lassoCV <- function(data){ elastic_net(alpha=1, data=data) }
+
+
+n_hypothetical_universes <- 100
+
+lassoCV.fits <- purrr::set_names(1:n_hypothetical_universes) %>% 
+  purrr::map(~ lassoCV(fixed_data))
+lassoCV.fits %>% purrr::map(~ coef(.x$finalModel, .x$bestTune$lambda)) %>%
+  purrr::map(~ .x %>% as.matrix() %>% t() %>% tibble::as_tibble()) %>%
+  dplyr::bind_rows() -> lassoCV.fits.coefs
+
+lassoCV.bootstrap.fits <- purrr::set_names(1:n_hypothetical_universes) %>% 
+                          purrr::map(~ dplyr::slice_sample(fixed_data, n=n,
+                                                           replace=TRUE)) %>%
+                          purrr::map(~ lassoCV(.x))
+lassoCV.bootstrap.fits %>% 
+  purrr::map(~ coef(.x$finalModel, .x$bestTune$lambda)) %>%
+  purrr::map(~ .x %>% as.matrix() %>% t() %>% tibble::as_tibble()) %>%
+  dplyr::bind_rows() -> lassoCV.bootstrap.fits.coefs
+
+ridgeCV.fits <- purrr::set_names(1:n_hypothetical_universes) %>% 
+  purrr::map(~ ridgeCV(fixed_data))
+ridgeCV.fits %>% purrr::map(~ coef(.x$finalModel, .x$bestTune$lambda)) %>%
+  purrr::map(~ .x %>% as.matrix() %>% t() %>% tibble::as_tibble()) %>%
+  dplyr::bind_rows() -> ridgeCV.fits.coefs
+
+ridgeCV.bootstrap.fits <- purrr::set_names(1:n_hypothetical_universes) %>% 
+                          purrr::map(~ dplyr::slice_sample(fixed_data, n=n,
+                                                           replace=TRUE)) %>%
+                          purrr::map(~ ridgeCV(.x))
+ridgeCV.bootstrap.fits %>% 
+  purrr::map(~ coef(.x$finalModel, .x$bestTune$lambda)) %>%
+  purrr::map(~ .x %>% as.matrix() %>% t() %>% tibble::as_tibble()) %>%
+  dplyr::bind_rows() -> ridgeCV.bootstrap.fits.coefs
+
+```
+
+#### Uncertainty JUST from K-Folds (on a single sample!)
+
+```{r ridge_kfolds_uncertainty}
+ridgeCV.fits.coefs %>% 
+  tidyr::gather() %>%
+  ggplot(aes(x=value, color=n, fill=n)) + geom_density(alpha=0.3) +
+  facet_wrap(~key, scales='free')
+```
+
+#### Now actually adding Sampling Uncertainty characterization with Bootstrap
+
+
+```{r ridge_uncertainty}
+list(ridgeCV.fits.coefs %>% tibble::add_column(uncertainty="k-folds on sample"),
+     ridgeCV.bootstrap.fits.coefs %>% 
+       tibble::add_column(uncertainty="plus bootstrapping sample")) %>%
+  dplyr::bind_rows() %>%
+  tidyr::pivot_longer(names(lassoCV.fits.coefs)) %>%
+  ggplot(aes(x=value, color=uncertainty, fill=uncertainty)) + 
+  geom_density(alpha=0.3) + facet_wrap(~name, scales='free')
+```
+
+#### Uncertainty JUST from K-Folds (on a single sample!)
+
+```{r lasso_kfolds_uncertainty}
+lassoCV.fits.coefs %>% 
+  tidyr::gather() %>%
+  ggplot(aes(x=value, color=n, fill=n)) + geom_density(alpha=0.3) +
+  facet_wrap(~key, scales='free')
+```
+
+#### Now actually adding Sampling Uncertainty characterization with Bootstrap
+
+```{r lasso_uncertainty}
+list(lassoCV.fits.coefs %>% tibble::add_column(uncertainty="k-folds on sample"),
+     lassoCV.bootstrap.fits.coefs %>% 
+       tibble::add_column(uncertainty="plus bootstrapping sample")) %>%
+  dplyr::bind_rows() %>%
+  tidyr::pivot_longer(names(lassoCV.fits.coefs)) %>%
+  ggplot(aes(x=value, color=uncertainty, fill=uncertainty)) + 
+  geom_density(alpha=0.3) + facet_wrap(~name, scales='free')
+```
+
+## My questions
+
+PollEv.com/scottschwart658
+
+## Your questions

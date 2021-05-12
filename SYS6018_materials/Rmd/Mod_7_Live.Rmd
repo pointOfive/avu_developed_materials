@@ -1,0 +1,148 @@
+---
+title: "Mod_7_Live"
+author: "Schwartz"
+date: "10/10/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      fig.align = "center",
+                      out.width = "80%")
+```
+
+## Announcemetns
+0. 18/32 midterms are done
+1. We are going to change *ROC curves* out for *Recall/Precision curves* for
+   part 2 of the project 
+2. Reusable Code will make your lives easier in part 2 of the project...
+   you're going to be doing *a lot* of the "same thing" over and over.
+3. "Extra Credit Saftey Buffer" offer:
+
+   +10 points on part 2 of the project (but you can't score more than 100%) if:
+  
+   - You ballpark yourself (aka make up) a "resources budget" 
+     for this disaster relief setting, as well as some guesstimates of 
+     the cost of making FP/FN errors in this setting.
+     - Then tell me what your optimal threshold is to minimize that FP+FN cost 
+       (and what the budget requirements would be, if they exceed yours).
+     - The "Risk Matrix" thread in Module 3 discusses how this can be done  
+     
+4. Let me show off a great presentation... this is portfolio level stuff 
+   that can be shown off in job applications... 
+
+## Primary comment on the project
+
+### data/fits
+
+```{r data_fit}
+weekly <- ISLR::Weekly
+
+set.seed(1)
+classifier.knn <- caret::train(Direction~Lag2, data=weekly, method="knn", 
+                    preProcess=c("center","scale"), 
+                    tuneGrid=data.frame(k=seq(1,51,2)),
+                    trControl = caret::trainControl("cv", number=10, 
+                      returnResamp='all', savePredictions='final',
+                      classProbs=TRUE))
+
+
+set.seed(1)
+classifier.glm <- caret::train(Direction~Lag2, data=weekly, method="glm", 
+                    family='binomial',
+                    trControl = caret::trainControl("cv", number=10, 
+                      returnResamp='all', savePredictions='final',
+                      classProbs=TRUE))
+
+classifier.knn$pred
+classifier.glm$pred
+```
+
+### K-folds confusion matrices
+
+```{r data_fit}
+# we should usually be setting this differently for each classifier 
+# but just for the sake of the example, let's not focus on thresholds
+THRESHOLD <- sum(weekly$Direction=='Up')/nrow(weekly) 
+
+#out_of_folds_CM.glm <- classifier.glm$pred %>%
+out_of_folds_CM.knn <- classifier.knn$pred %>%
+  dplyr::mutate(pred2 = ifelse(Up > THRESHOLD, 'Up', 'Down')) %>%
+  dplyr::mutate(pred2 = factor(pred2, levels = c('Down', 'Up'))) %>%
+  dplyr::group_split(Resample) %>%
+  purrr::map( ~ caret::confusionMatrix(data=.x$pred2, reference=.x$obs, 
+                                       positive='Up'))
+
+#out_of_folds_CM.glm
+out_of_folds_CM.knn
+```
+
+### Comparisons
+
+```{r uncertianty}
+
+out_of_folds_CM.knn[[1]] %>% broom::tidy() %>% 
+  dplyr::filter(term=='sensitivity') %>%
+  dplyr::select(estimate) %>% pull()
+
+get_metric <- function(caret_CM_object, metric){
+  caret_CM_object %>% broom::tidy() %>% 
+    dplyr::filter(term==metric) %>%
+    dplyr::select(estimate) %>% pull()
+}
+
+get_metric(out_of_folds_CM.knn[[1]], 'sensitivity')
+
+get_metrics_func <- function(caret_CM_objects, metric, func){
+  caret_CM_objects %>% 
+    purrr::map( ~ get_metric(.x, 'sensitivity')) %>%
+    unlist() %>% func
+}
+
+get_metrics_func(out_of_folds_CM.glm, 'sensitivity', mean)
+get_metrics_func(out_of_folds_CM.knn, 'sensitivity', mean)
+get_metrics_func(out_of_folds_CM.glm, 'sensitivity', sd)
+get_metrics_func(out_of_folds_CM.knn, 'sensitivity', sd)
+
+```
+
+```{r other_estimadns}
+caret::confusionMatrix(classifier.knn)
+
+out_of_folds_CM.knn %>% 
+  purrr::map( ~ .x$table) %>% 
+  purrr::map( ~ .x/sum(.x)) %>% 
+  (function(x) Reduce('+',x) )/length(out_of_folds_CM.knn) -> mean_normCM.knn
+mean_normCM.knn
+
+out_of_folds_CM.knn %>% 
+  purrr::map( ~ .x$table) %>% 
+  purrr::map( ~ .x/sum(.x)) %>% 
+  purrr::map( ~ (.x - mean_normCM.knn)) %>% 
+  purrr::map( ~ .x^2) %>% 
+  (function(x) Reduce('+',x)/length(out_of_folds_CM.knn) ) %>% 
+  sqrt() -> sd_normCM.knn
+sd_normCM.knn
+
+```
+- of course this is a simplex, but at least we're appreciating the variance 
+  from K-folds...
+- so we can appreciate k-folds variability in confusion matrices...
+- and we could also do this for ROC curves (as I've previously shown)...
+- ... 
+- and none of this is appreciating sample to sample variation...
+- how could we start assessing that? 
+  - if this was done on the next project it would very much bias me *in favor*
+    of the student I was grading... in a HUGE kind of way...
+  
+## My questions
+
+- we'll do things a little bit different for this live session...
+- for next live session I promise a lot of great code and visualizations
+- for this live session let's take a bit of a breather
+  - enjoy that part 1 of the project is done
+  - we've hit a very good landmark in the class
+  - and just try to relax and have a bit of fun as a reward!
+
+PollEv.com/scottschwart658
+

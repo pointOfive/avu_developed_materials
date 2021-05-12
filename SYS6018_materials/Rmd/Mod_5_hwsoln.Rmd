@@ -1,0 +1,436 @@
+---
+title: "Some tidyverse solutions for ISLR chapter 6"
+author: "**Schwartz**"
+date: "09/18/2020"
+output: html_document
+---
+
+<!--- Below are global settings for knitr. You can override any of them by adding the changes to individual chunks --->
+```{r global_options, include=FALSE}
+knitr::opts_chunk$set(error=TRUE,        # Keep compiling upon error
+                      collapse=FALSE,    # collapse by default
+                      echo=TRUE,         # echo code by default
+                      comment = "#>",    # change comment character
+                      fig.width = 5.5,     # set figure width
+                      fig.align = "center",# set figure position
+                      out.width = "80%", # set width of displayed images
+                      warning=FALSE,     # do not show R warnings
+                      message=FALSE)     # do not show R messages
+```
+
+<!--- Change font size for headers --->
+<style>
+h1.title {
+  font-size: 28px;
+}
+h1 {
+  font-size: 22px;
+}
+h2 {
+  font-size: 18px;
+}
+h3 { 
+  font-size: 14px;
+}
+
+</style>
+
+
+## 8. Simulation {.tabset}
+
+### (a) Fixed+RV
+
+```{r 8_setup}
+set.seed(11)
+n <- 100
+x <- rnorm(n, sd=5)
+epsilon <- rnorm(n, sd=2000)
+```
+
+### (b) RHS
+
+```{r 8_rhs}
+library(tidyverse)
+
+y <- 10 + 11*x + 20*x^2 + 19*x^3 + epsilon
+
+# this is a fairly strong signal to noise ratio
+true_model_fit <- lm(y~poly(x,3)) 
+true_model_fit %>% broom::augment() %>% ggplot(aes(x=y, y=.fitted)) +
+  geom_point()
+
+# the model can do fairly well
+true_model_fit %>% broom::glance()
+```
+
+### (c) search 
+
+Exhaustive search over the model space of size $2^{10}$.
+
+```{r 8_model_space_exhaustive_search}
+xy <- tibble::tibble(x=x, y=y)
+best_for_each_p <- leaps::regsubsets(y~poly(x,10), data=xy, nvmax=10)
+
+metrics <- best_for_each_p %>% 
+  broom::tidy() %>% 
+  dplyr::select(adj.r.squared:mallows_cp)
+  #tibble::add_column(RSS=best_for_each_p$rss[2:11]) %>%
+  #dplyr::select(r.squared:RSS)
+
+# https://dplyr.tidyverse.org/articles/colwise.html
+metrics %>% summarize(adj.r.squared=which.max(adj.r.squared),
+                      BIC=which.min(BIC),
+                      mallows_cp=which.min(mallows_cp)) %>%
+  tidyr::pivot_longer(cols=c(adj.r.squared, BIC, mallows_cp), 
+                      names_to="variable", values_to="value") %>%
+  dplyr::rename(model_size=value) -> bests
+bests
+
+# https://stackoverflow.com/questions/29375169/highlight-minimum-and-maximum-points-in-faceted-ggplot2-graph-in-r
+plot_format <- function(x){
+  x %>% tibble::rowid_to_column() %>% 
+  dplyr::rename(model_size=rowid) %>%
+  tidyr::pivot_longer(cols=c(adj.r.squared, BIC, mallows_cp), 
+                      names_to="variable", values_to="value") 
+}
+
+plot_format(metrics) %>%
+  ggplot2::ggplot(aes(x=model_size, y=value)) + geom_path() + 
+  geom_point(dplyr::left_join(bests, plot_format(metrics)), 
+             mapping=aes(x=model_size, y=value), color='red') +
+  facet_wrap(vars(variable), nrow=3, scale='free')
+```
+
+### (d) for/backward 
+
+In this case all model selection methods followed the exact same search
+paths in terms of their selection at each model size $p$. 
+
+I do not at all feel confident that this coincident behavior is anything I would
+remotely be comfortable relying upon in general.  But I guess it's nice in this
+super easy and super simple synthetic contrived toy problem situation that it 
+that these methods are able to agree on things.
+
+```{r 8_forward_backward_search}
+
+best_forward <- leaps::regsubsets(y~poly(x,10), data=xy, nvmax=10, 
+                                  method='forward')
+best_backward <- leaps::regsubsets(y~poly(x,10), data=xy, nvmax=10,
+                                   method='backward')
+
+set_names(1:10) %>% purrr::map(~ rbind(coef(best_for_each_p, .x),
+                                       coef(best_forward, .x),
+                                       coef(best_backward, .x)))
+
+```
+
+### (e) lasso 
+
+Re-running this produces very different selections for the $\lambda$ tuning
+parameter... The first 3 powers of x are always kept by lasso, though.
+There is more regularization/shrinkage for larger $\lambda$, so if I was actually
+doing this I would look at the uncertainty in the out of sample scores from
+k-folds and then prefer a larger value for $\lambda$. 
+
+
+```{r 8_lasso}
+
+# data MUST be standardized (centered and scaled)
+# happily for us, glmnet does this automatically, so thus caret does as well
+# and actually, in this case, poly is ALSO outputing standardized X...
+# so we're quite good!  Like triplely good haha
+set.seed(2)
+lassoCV <- caret::train(y~poly(x,10), data=xy, method="glmnet", 
+                        tuneGrid=data.frame(alpha=rep(1,100), 
+                        lambda=10^seq(3.1,0.5,length=100)),
+           trControl=caret::trainControl("cv", number=5, returnResamp='all'))
+
+lassoCV$bestTune
+
+# https://ggplot2.tidyverse.org/reference/annotation_logticks.html
+tuning_pars <- lassoCV$results$lambda
+lassoCV$results %>% ggplot(mapping=aes(x=lambda, y=RMSE)) + 
+  geom_point() + scale_x_log10()
+
+coef(lassoCV$finalModel, lassoCV$bestTune$lambda)
+```
+
+Here's what I would actually do...
+```{r 8_lasso_fixed}
+lassoCV$resample %>% tibble() %>%
+  ggplot(aes(lambda, RMSE)) + geom_point() +
+  geom_smooth(formula='y~x', method='loess', span=.5) #+ scale_x_log10() 
+    
+different_best <- 500
+coef(lassoCV$finalModel, different_best)
+```
+
+
+### (f) lasso v2 
+
+```{r 8_lasso_v2}
+xy_v2 <- xy
+xy_v2$y <- 10 + 11*x^7 + epsilon
+
+exhastive_search_best_fits <- leaps::regsubsets(y~poly(x,10), 
+                                                data=xy_v2, nvmax=10)
+exhastive_search_best_fits %>%
+  broom::tidy() %>% select(adj.r.squared:mallows_cp) %>%
+  summarize(adj.r.squared=which.max(adj.r.squared),
+            BIC=which.min(BIC),
+            mallows_cp=which.min(mallows_cp))
+
+# https://stackoverflow.com/questions/40306280/how-to-transpose-a-dataframe-in-tidyverse
+exhastive_search_best_fits %>% broom::tidy() %>% dplyr::slice(1:3) %>%
+  tibble::rownames_to_column() %>%  
+  pivot_longer(-rowname) %>% 
+  pivot_wider(names_from=rowname, values_from=value) %>%
+  dplyr::slice(1:11)
+
+# again, always MAKE SURE you're standardizing your features when using lasso...
+lassoCV_v2 <- caret::train(y~poly(x,10), data=xy_v2, method="glmnet", 
+                           tuneGrid=data.frame(alpha=rep(1,100), 
+                           lambda=10^seq(8, 4 ,length=100)), 
+              trControl=caret::trainControl("cv", number=5, returnResamp='all'))
+
+lassoCV_v2 %>% ggplot(aes(x=lambda, x=RMSE)) + scale_x_log10()
+
+coef(lassoCV_v2$finalModel, lassoCV_v2$bestTune$lambda)
+```
+
+
+## 9. College {.tabset}
+
+### (a) college
+
+There are `r nrow(ISLR::College)` observations which isn't alot considering we 
+have `r ncol(ISLR::College)` predictors. That is 
+`r {nrow(ISLR::College)/ncol(ISLR::College)} %>% round(1)` observations per 
+parameter (if one parameter per predictor). I'll reserve 50 
+(`r 100*round(50/nrow(ISLR::College), 3)`%) 
+observations for a final hold out test and use the rest for training. 
+
+```{r 9_college}
+n <- nrow(ISLR::College)
+
+set.seed(61)
+college <- ISLR::College %>% 
+  tibble::as_tibble(rownames = "college") %>%
+  dplyr::sample_n(n)
+
+n.test <- 50
+n.train <- n-n.test
+train <- c(rep(TRUE, n.train), rep(FALSE, n.test)) %>% sample()
+
+```
+
+### (b) lm
+
+```{r 9_lm}
+
+apps_saturated <- formula(Apps~.)
+set.seed(11)
+apps_saturated.lm_fit <- caret::train(apps_saturated, data=college[train,-1], 
+                         method='lm', 
+                         trControl=caret::trainControl("cv", number=5))
+# average test RMSE
+apps_saturated.lm_fit
+# FHO test RMSE
+apps_saturated.lm_fit.yhat <- predict(apps_saturated.lm_fit, 
+                                      newdata=college[!train,-1])
+sqrt(mean((apps_saturated.lm_fit.yhat-college$Apps[!train])^2))
+```
+
+### (c) ridge
+
+```{r 9_ridge}
+
+# glmnet will standardize (scale and center) the data automatically
+# that's good, because we must standardize (scale) data for ridge regression
+# to work properly
+set.seed(11)
+apps_saturated.ridge_fit <- caret::train(apps_saturated, data=college[train,-1], 
+                            method='glmnet', 
+                            tuneGrid=data.frame(alpha=0, 
+                                                lambda=10^seq(5,1,length=100)),
+                            trControl=caret::trainControl("cv", number=10))
+
+# comparison
+apps_saturated.lm_fit$finalModel %>% broom::tidy() %>% dplyr::select(1:2) %>%
+  dplyr::rename(lm=estimate) %>%
+  tibble::add_column(ridge = coef(apps_saturated.ridge_fit$finalModel,
+                                  apps_saturated.ridge_fit$bestTune$lambda) %>%
+                             as.vector())
+
+# average test RMSE ("best" model)
+min(apps_saturated.ridge_fit$results$RMSE)
+# FHO test RMSE
+apps_saturated.ridge_fit.yhat <- predict(apps_saturated.ridge_fit, 
+                                         newdata=college[!train,-1])
+sqrt(mean((apps_saturated.ridge_fit.yhat-college$Apps[!train])^2))
+```
+
+### (d) lasso
+
+```{r 9_lasso}
+set.seed(11)
+# glmnet will standardize (scale and center) the data automatically
+# that's good, because we must standardize (scale) data for ridge regression
+# to work properly
+apps_saturated.lasso_fit <- caret::train(apps_saturated, data=college[train,-1], 
+                            method='glmnet', 
+                            tuneGrid=data.frame(alpha=1, 
+                                                lambda=10^seq(3,1,length=100)),
+                            trControl=caret::trainControl("cv", number=10))
+
+# comparison
+apps_saturated.lm_fit$finalModel %>% broom::tidy() %>% dplyr::select(1:2) %>%
+  dplyr::rename(lm=estimate) %>%
+  tibble::add_column(ridge = coef(apps_saturated.ridge_fit$finalModel,
+                                  apps_saturated.ridge_fit$bestTune$lambda) %>%
+                             as.vector()) %>%
+  tibble::add_column(lasso = coef(apps_saturated.lasso_fit$finalModel,
+                                  apps_saturated.lasso_fit$bestTune$lambda) %>%
+                             as.vector())
+
+# average test RMSE ("best" model)
+min(apps_saturated.lasso_fit$results$RMSE)
+# FHO test RMSE
+apps_saturated.lasso_fit.yhat <- predict(apps_saturated.lasso_fit, 
+                                         newdata=college[!train,-1])
+sqrt(mean((apps_saturated.lasso_fit.yhat-college$Apps[!train])^2))
+
+```
+
+
+### (e) pcr
+
+```{r 9_pcr}
+set.seed(11)
+# we need to set `scale=True`
+apps_saturated.pcr_fit <- caret::train(apps_saturated, data=college[train,-1], 
+                            method='pcr', 
+                            tuneGrid=data.frame(ncomp=seq(1,ncol(college)-2)),
+                            scale=TRUE, 
+                            trControl=caret::trainControl("cv", number=10))
+
+# comparison
+apps_saturated.lm_fit$finalModel %>% broom::tidy() %>% dplyr::select(1:2) %>%
+  dplyr::rename(lm=estimate) %>%
+  tibble::add_column(ridge = coef(apps_saturated.ridge_fit$finalModel,
+                                  apps_saturated.ridge_fit$bestTune$lambda) %>%
+                             as.vector()) %>%
+  tibble::add_column(lasso = coef(apps_saturated.lasso_fit$finalModel,
+                                  apps_saturated.lasso_fit$bestTune$lambda) %>%
+                             as.vector()) %>%
+  tibble::add_column(pcr = coef(apps_saturated.pcr_fit$finalModel,
+                                  apps_saturated.pcr_fit$bestTune$ncomp,
+                                  intercept=TRUE) %>%
+                             as.vector())
+
+# average test RMSE ("best" model)
+min(apps_saturated.pcr_fit$results$RMSE)
+# FHO test RMSE
+apps_saturated.pcr_fit.yhat <- predict(apps_saturated.pcr_fit, 
+                                         newdata=college[!train,-1])
+sqrt(mean((apps_saturated.lasso_fit.yhat-college$Apps[!train])^2))
+```
+
+### (f) pls
+
+```{r 9_pls}
+set.seed(11)
+# we need to set `scale=True`
+apps_saturated.pls_fit <- caret::train(apps_saturated, data=college[train,-1], 
+                            method='pls', 
+                            tuneGrid=data.frame(ncomp=seq(1,ncol(college)-2)),
+                            scale=TRUE, 
+                            trControl=caret::trainControl("cv", number=10))
+
+# comparison
+apps_saturated.lm_fit$finalModel %>% broom::tidy() %>% dplyr::select(1:2) %>%
+  dplyr::rename(lm=estimate) %>%
+  tibble::add_column(ridge = coef(apps_saturated.ridge_fit$finalModel,
+                                  apps_saturated.ridge_fit$bestTune$lambda) %>%
+                             as.vector()) %>%
+  tibble::add_column(lasso = coef(apps_saturated.lasso_fit$finalModel,
+                                  apps_saturated.lasso_fit$bestTune$lambda) %>%
+                             as.vector()) %>%
+  tibble::add_column(pcr = coef(apps_saturated.pcr_fit$finalModel,
+                                  apps_saturated.pcr_fit$bestTune$ncomp,
+                                  intercept=TRUE) %>%
+                             as.vector()) %>%
+  tibble::add_column(pls = coef(apps_saturated.pls_fit$finalModel,
+                                  apps_saturated.pls_fit$bestTune$ncomp,
+                                  intercept=TRUE) %>%
+                             as.vector())
+
+# average test RMSE ("best" model)
+min(apps_saturated.pls_fit$results$RMSE)
+# FHO test RMSE
+apps_saturated.pls_fit.yhat <- predict(apps_saturated.pls_fit, 
+                                         newdata=college[!train,-1])
+sqrt(mean((apps_saturated.pls_fit.yhat-college$Apps[!train])^2))
+```
+
+### (g) results (read this first)
+
+Some dimensionality reduction, as given by `lasso` and `pls` appears to be
+effective for this data, relative to a saturated `lm` fit.  The `ridge`
+regularization/shrinkage did not prove beneficial, however, as it (evidently) 
+was not large magnitude coefficients that proved most problematic for out of
+sample predictive performance.  Finally, it was (evidently) not the largest 
+variance directions in the rotated feature space produced by `pcr` that drove 
+predictive signal, as it was the saturated `pcr` model (equivalent to the 
+saturated `lm` model) that was able to produce the best cross-validation 
+performance.  
+
+```{r compare}
+sqrt(mean((apps_saturated.lm_fit.yhat-college$Apps[!train])^2))
+sqrt(mean((apps_saturated.ridge_fit.yhat-college$Apps[!train])^2))
+sqrt(mean((apps_saturated.lasso_fit.yhat-college$Apps[!train])^2))
+sqrt(mean((apps_saturated.pcr_fit.yhat-college$Apps[!train])^2))
+sqrt(mean((apps_saturated.pls_fit.yhat-college$Apps[!train])^2))
+```
+
+Just checking best principal components, so, `pcr` but not just taking them in
+strict "variance explained" order. And here you can see that (at least judged
+by BIC) it is indeed the case the the smaller variance principal components are
+in fact more predictive of the outcome.  If we were to fit a model with these
+principal components I would expect it to perform on par with `pls`.  
+
+```{r check}
+XY <- prcomp(data.matrix(college[,-1][,-2]), scale=TRUE, retx=TRUE)$x %>% 
+  tibble::as_tibble() %>% tibble::add_column(Apps=college$Apps)
+best_PCs <- leaps::regsubsets(Apps~., data=XY, nvmax=17) %>% broom::tidy()
+best_PCs %>% dplyr::filter(BIC == min(best_PCs$BIC)) %>% 
+  tibble::rownames_to_column() %>%  
+  pivot_longer(-rowname) %>% 
+  pivot_wider(names_from=rowname, values_from=value) %>% dplyr::filter(`1`==1)
+```
+
+Oh, look at that. *Even* better. Best model yet.  And by quite a bit.
+So what happened?  Well, `pls` is also stuck on it's sequential search path.
+It does not by default exhaustively explore all the different principal 
+component combinations that could be used, but instead just sequentially 
+tries to greedily add a next principal component that helps the most *now*.
+But this type of greedy search can get stuck in corners by making decisions
+that look good early but don't actually pan out that well later on.  
+
+```{r confirm}
+apps_goodPCs.fit <- lm(Apps~PC1+PC2+PC4+PC5+PC7+PC8+PC9+PC10+PC15+PC16+PC17, 
+             data=XY[train,])
+
+apps_goodPCs.fit.yhat <- predict(apps_goodPCs.fit, newdata=XY[!train,])
+sqrt(mean((apps_goodPCs.fit.yhat-college$Apps[!train])^2))
+```
+
+As far as the second question goes, compare the RMSE of around ~1100 
+(which is on the same scale) to this in order to get an idea of how well 
+we're predicting on average.  
+
+```{r final}
+college %>% ggplot(aes(x=Apps)) + geom_histogram()
+```
+
+Yeah, not bad.

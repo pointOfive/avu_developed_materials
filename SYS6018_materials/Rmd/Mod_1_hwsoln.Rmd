@@ -1,0 +1,434 @@
+
+
+---
+title: "Some tidyverse solutions for ISLR chapter 2"
+author: "**Schwartz**"
+date: "08/25/2020"
+output: html_document
+---
+
+<!--- Below are global settings for knitr. You can override any of them by adding the changes to individual chunks --->
+```{r global_options, include=FALSE}
+knitr::opts_chunk$set(error=TRUE,        # Keep compiling upon error
+                      collapse=FALSE,    # collapse by default
+                      echo=TRUE,         # echo code by default
+                      comment = "#>",    # change comment character
+                      fig.width = 5.5,     # set figure width
+                      fig.align = "center",# set figure position
+                      out.width = "49%", # set width of displayed images
+                      warning=FALSE,     # do not show R warnings
+                      message=FALSE)     # do not show R messages
+```
+
+<!--- Change font size for headers --->
+<style>
+h1.title {
+  font-size: 28px;
+}
+h1 {
+  font-size: 22px;
+}
+h2 {
+  font-size: 18px;
+}
+h3 { 
+  font-size: 14px;
+}
+
+</style>
+
+## Conceptual Questions {.tabset}
+
+### 1. Flexible versus inflexible models 
+   a. Flexible is better when n is large (*so long as the sample is unbiased*) 
+   since larger (*unbiased*) samples are more representative of a population and  
+   sampling-based idiosynchrosies are less likely in larger samples.  
+   b. A less flexible model is better in "large p relative to n" contexts 
+   because with an increasing number of predictors there is an increasing 
+   number of chances to observe spurious associations that result from the
+   "multiple testing problem" if the sample size n does not grow sufficiently 
+   proportionally to combat the random appearance of chance associations.  
+   A more flexible model is going to encode and reflect associations observed
+   in the data, and it will do this regardless of whether or not these 
+   associations represent actual or spurious (sample-specific) structure in the
+   data.   
+   c.  Here we would like a (more flexible) method which can cope with (i.e., 
+   model and represent) non-linear structures present in the data.
+   d.  Variance in data *per se* is not a bad thing -- it's just the way the
+   world is -- and statistics as a discipline exists *exactly* for the purpose 
+   of addressing, accomodating and dealing with "noise" in data. The real issue
+   is "signal to noise".  If the irreducible error in a data set is so great
+   that it's very hard to demonstrate observable trends (statistically
+   speaking) then we're going to want a less flexible model that doesn't attempt
+   to "over interpret" patterns in the data, all the real ones of which are 
+   incredibly difficult to elucidate anyway. 
+ 
+### 2. What problem type is this?
+   a. This is a regression problem since (we'll assume) the outcome, 
+   "CEO salary", is a continuous rather than a categorical variable. 
+   And this is an *inference* problem, since "We are interested in 
+   *understanding* which factors affect CEO salary". Finally, n=500 and 
+   p=4 (profit, number of employees, industry). 
+   b. Success or failure is a (binary) categorical outcome, so this is a 
+   classification problem, with n=20 and p=13 (price charged, marketing budget, 
+   competition price, and ten other variables).  Since we simply need to make
+   a decision about if we should launch our new product we are interested here
+   in the *prediction* problem.
+   c. There are 52 weeks in a year, so n=52; our outcome (a ratio) is a 
+   continuous number, so this is a regression; and we have the changes in the
+   US, UK, and German markets, so p=3; and we are interested in understanding
+   the associations/trends present in this data, so this is an inference 
+   problem.  You likely remember that the coefficients in logistic regression
+   capture "rate of change" in terms of (log) odds ratios, but in the logistic
+   regression context the outcome is binary, whereas here, again, we are 
+   considering a continuous, real-valued outcome.
+   
+### 6. Parametric versus non-parametric models
+In non-parametric approaches, the "size" of the model -- the number of things
+it needs to keep track of -- grows as the size of the data (n) grows. In 
+contrast, parametric approaches, since they are structurally stable (i.e., the
+number of parameters remains constant and fixed), can be 
+interpreted in a consistent way regardless of the data set they are applied to.
+This "structural stability" also has the (potential) benefit of being limited
+and constrained in terms of the potential actualizations of fitted models 
+that can be realized by the model. In effect, the model is "regularized" by
+being forced to be intentionally biased towards it's parametric form.  And this
+of course can be very useful for avoiding over-interpretting (overfitting) data
+sets.  This can be a double-edged sword, too, though, as it may be that the 
+parametric form is not sufficiently flexible to accurately represent the 
+true structure present in the data.  In this case, the variance-bias tradeoff
+is being un-optimally managed, with too much model bias adversely affecting
+the potential performance of the model.
+
+## 8. College.csv Analysis Questions {.tabset} 
+
+### a/b. rename  
+```{r rename}
+library(tidyverse) # readr... ggplot2, dplyr, etc.
+
+# Note: if you don't have a package installed on your machine you will need to install them. In RStudio, to to Tools->Install Packages... or just run `install.packages()`. For example: install.packages("tidyverse")
+
+# `read_csv()` from the `readr` package (part of the `tidyverse` package). 
+url <- "http://faculty.marshall.usc.edu/gareth-james/ISL/College.csv"
+college <- read_csv(url)
+
+# Use `View()` instead of `fix()` for viewing the data. 
+# In Rstudio, you can also click on the name of the variable in the Environment Tab. 
+View(college)
+college
+
+# Tidyverse suggests you avoid rownames and leave this as a regular column. 
+# Just give it a proper name
+
+college <- college %>% rename(college=X1)
+college
+```
+
+
+### c.(i) summary  
+
+```{r summary}
+summary(college)
+```
+
+### c.(ii) ggpairs
+
+```{r ggpairs, fig.width=8, fig.height=8, out.width="80%", cache=TRUE}
+
+library(GGally) # ggpairs() is from the GGally package
+
+college %>% 
+  select(Private:Room.Board) %>%  # select first 10
+  ggpairs(axisLabels="none",
+          upper = list(continuous=wrap("cor", size=3)))
+```
+
+### c.(iii) geom_boxplot
+
+```{r geom_boxplot}
+college %>% 
+  ggplot(aes(Private, Outstate)) +
+  geom_boxplot(fill="orange", width=c(.3)) +
+  labs(title="Out of State Tuition at Private vs. Public Schools", 
+       x="Private School?", 
+       y="Out of State Tuition ($)") 
+```
+
+
+### c.(iv) mutate 
+
+```{r mutate}
+# Add Elite
+college = college %>% 
+  mutate(Elite=ifelse(Top10perc>50, "Yes", "No"))
+
+# table
+college %>% 
+  count(Elite) %>% 
+  mutate(p=round(n/sum(n), 3)) %>% 
+  knitr::kable()   # nice format for printed table
+
+# Boxplot
+ggplot(data=college, aes(Elite, Outstate)) +
+  geom_boxplot(fill="orange", width=c(.3)) +
+  labs(title='Out of State Tuition at "Elite" vs. "Non-Elite" Schools', 
+       x="Elite School?", 
+       y="Out of State Tuition ($)")
+```
+
+### c.(v) geom_histogram
+
+```{r geom_histogram}
+college %>% 
+  pivot_longer(cols=c(Grad.Rate, Top10perc, Outstate, S.F.Ratio),
+               names_to="variable", values_to="value") %>% 
+  ggplot(aes(value)) + 
+  geom_histogram(fill="orange", color="black") + 
+  facet_wrap(~variable, scales="free")
+```
+
+### c.(vi) more 
+
+```{r finding, fig.width=8, fig.height=8, out.width="65%"}
+
+# Add new variable for acceptance rate
+college = college %>% 
+  mutate(Accept.Rate=Accept/Apps)
+
+# Exploring Acceptance Rate
+college %>% 
+ggplot(aes(perc.alumni, Accept.Rate, label=college, 
+           color=Private, size=Enroll)) +
+  geom_jitter() + 
+  labs(title="\nAcceptance Rate vs. Percent of Alumni Who Donate",
+       x="% of Alumni Who Donate", 
+       y="Acceptance Rate", 
+       size="Enrollment", color="Private School?")
+
+college %>% 
+  pivot_longer(cols=c(Grad.Rate, perc.alumni,
+                      Outstate, S.F.Ratio),
+               names_to="xvalue", values_to="x") %>% 
+  ggplot(aes(x, Accept.Rate, color=Private, size=Enroll)) + 
+  geom_jitter(alpha=.5) + 
+  facet_wrap(~xvalue, scales="free_x") +
+  labs(y="Acceptance Rate", 
+       size="Enrollment")
+
+college %>% 
+  ggplot(aes(Outstate, Accept.Rate)) + 
+  geom_jitter() + 
+  facet_grid(Elite~Private, labeller=label_both) + 
+  labs(x="Out of State Tuition", y="Acceptance Rate")
+
+college %>% 
+  ggplot(aes(Accept.Rate, Outstate)) + 
+  geom_smooth() +
+  geom_point() + 
+  labs(y="Out of State Tuition", 
+       x="Acceptance Rate")
+
+
+#http://www.sthda.com/english/wiki/ggplot2-barplots-quick-start-guide-r-software-and-data-visualization
+college %>% dplyr::select(college,Apps,Accept,Enroll) %>% head() %>%
+  pivot_longer(cols=Apps:Enroll) %>%
+  ggplot(aes(x=college, y=value, fill=name)) +
+  geom_bar(stat="identity", position=position_dodge()) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+#https://www.datanovia.com/en/blog/ggplot-axis-ticks-set-and-rotate-text-labels/
+```
+
+Based on this exploration, here are a few takeaways: 
+
+1. Private schools tend to have higher tuition, higher graduation rates, 
+fewer students per faculty member, and more alumni who donate
+2. Public schools tend to be larger
+3. It doesn't appear there is a strong relationship between the acceptance rate 
+and the students per faculty member or % of donating alumni. 
+However, higher acceptance rates are correlated with lower tuition. 
+4. There aren't many elite public universities, but those that do exist 
+tend to have lower tuition than elite private universities.  
+
+
+## 10. Boston.csv Analysis Questions {.tabset}
+
+### (a) data
+
+The Boston data frame has 506 rows (towns) and 14 columns:
+
+|crim|zn|indus|chas|nox|rm|age|dis|rad|tax|ptratio|black|lstat|medv|
+|----|--|-----|----|---|--|---|---|---|---|-------|-----|-----|----|
+|per capita crime rate|prop. residential land zoned for lots >25k sqft|prop. non-retail business acres/town|Charles River indicator|nitrogen oxides pp10m|average rooms/dwelling|prop. owner-occupied built <1940|weighted ave. distances to 5 employment centers|radial highways accessibility index|full-value property-tax rate/\$10k|pupil-teacher ratio|1000(Bk - 0.63)^2 (Bk is prop. black)|% population lower status|owner-occupied homes median value (\$1000s)|
+
+
+```{r data}
+library(MASS)
+?Boston
+View(Boston)
+```
+
+
+
+### (b) ggpairs
+
+Of the features that firstly peaked my interest, and given below, 
+the most clear structures in the data are:
+ - the (curvilinear) association between `nox` and `dis` (which makes sense as 
+ employment centers might be assumed to involve an increasing automobile prevalence)
+ - home size `rm` versus home value `medv`, which serves as a good sanity check
+ of expected data behavior
+ - `nox` looks like it may also have some associations with `ptratio` and `medv`
+
+```{r ggpairs-Boston, fig.width=8, fig.height=8, out.width="80%", cache=TRUE}
+
+library(GGally) # ggpairs() is from the GGally package
+
+# https://stackoverflow.com/questions/44961437/how-to-include-density-coloring-in-pairwise-correlation-scatter-plot
+# this is SO much better for understanding where the data mass actually sits
+# because just having points obscures *how many* points are actually there
+# if the points start to overlap and just cover each other up...
+pairwise_density <- function(data, mapping, ...){
+      p <- ggplot(data=data, mapping=mapping) + 
+        stat_density2d(aes(fill=..density..), 
+                       geom="tile", contour=FALSE) + 
+        scale_fill_gradientn(colours=gray.colors(100, gamma=-2, rev=TRUE)) 
+      p
+}        
+# Generally, I prefer viridis(100) via
+# install.packages('viridisLite') + libaray(viridisLite)
+# but rainbow(100) can be  more visually clear at times, too
+# but for these plots I thought I could see things best with gray.colors
+
+Boston %>% 
+  dplyr::select(crim, zn, nox, rm, dis, rad, ptratio, black, medv) %>% 
+  ggpairs(lower=list(continuous=pairwise_density),
+          upper=list(continuous=wrap("cor", colour="white", size=3))) +
+  theme(axis.text.x=element_text(colour="white", angle=90),
+        axis.text.y = element_text(colour="white"),
+        axis.line = element_line(colour="black"),
+        axis.ticks = element_line(colour="black"),
+        plot.background=element_rect(fill="black"))
+```
+
+### (c) crim
+
+Crime rate is a challenging variable to assess because the extreme outliers 
+present in this variable pose visualization difficulties. To address this I
+did two things:
+1. I filtered out 5% of the most outlying data
+2. I applied a log transformation to the `crim` variable
+
+With these visibility enchancements in place, it's very clear to see how strong
+(and interesting) the associations resent in the data are.  And take care again
+to doubly note how the obvious associations that are present in the data were 
+not really observable in the previous plots due to scalling and long tail 
+issues...
+
+```{r crim, fig.width=8, fig.height=8, out.width="80%", cache=TRUE}
+library(viridisLite)
+
+# https://drsimonj.svbtle.com/plot-some-variables-against-many-others
+Boston %>% 
+  filter( percent_rank(crim) > .05 ) %>%
+  mutate(log_crim = log(crim)) %>%
+  gather(-crim, -log_crim, key="var", value="value") %>%
+  ggplot(aes(x=value, y=log_crim)) +
+  geom_point() + 
+  facet_wrap(~var, scales="free") +
+  theme_bw()
+```
+
+### (d) support
+
+*Hover over the points in the plots below to see that*
+the `CRIM` feature is a right-skewed distribution with nearly all rates <1
+except for the increasingly large-valued outliers contributed primarily by 
+Charlestown, South Boston, Roxbury; the `PTRATIO` feature has  a left skewed 
+range from 20 down to about 13; and the `TAX` feature has a multimodal 
+distribution with the primary mode located at 200-400 (for towns outside of the 
+Boston city limits), and the secondary mode around 700 (for towns within the 
+Boston city limits, and Chealsea).  This "Boston city limits" dichotomy can be
+seen form the print out at the bottom of this tab, but it's not quite clear from
+the hover tool since many points overlap and cannot be distinguished via hovering.
+
+
+```{r outlers-support, fig.width=8, fig.height=8, out.width="80%", cache=TRUE}
+library(readr)
+B2 = read_tsv("http://lib.stat.cmu.edu/datasets/boston_corrected.txt", skip=8)
+library(plotly)
+# https://rdrr.io/cran/plotly/man/ggplotly.html
+B2 %>% dplyr::select(CRIM, TAX, PTRATIO, TOWN) %>% highlight_key() %>%
+  ggpairs(aes(label=TOWN), columns=1:3,
+          upper=list(continuous="points")) %>%
+  ggplotly(tooltip = c("label")) %>% highlight(on="plotly_hover")
+
+B2 %>% filter( TAX > 650 ) %>% dplyr::select(TOWN) %>% unique()
+```
+
+### (d) Charles
+
+```{r charles}
+
+B2 %>% filter( CHAS == 1 ) %>% dplyr::select( TOWN ) %>% 
+   unique()
+```
+
+### (f) median
+
+```{r median}
+
+B2 %>% dplyr::select( PTRATIO ) %>% summary()
+```
+
+### (g) medv
+
+The town with the lowest `MEDV` values is South Boston, and (unsurprisingly),
+it has poor values for undesirable characteristics such as `CRIM`, `NOX`, and 
+`LSTAT`; slightly higher than average `PTRATIO` values and distances to
+radial highways (`RAD`); for better or worse, has the oldest (by `AGE`) 
+residential units with the smallest averaage size (by `RM`); but, on the plus
+side, has a low (27th percentile) `TAX` burden , and has extremely short 
+distances to Boston's employment centers (`DIS`).  Of additional note is that
+the town of South Boston itself is somewhat segregated with different sections 
+of the town have substantially different rates in black population 
+representation.
+
+```{r lowest-medv}
+# http://haozhu233.github.io/kableExtra/awesome_table_in_html.html
+# install.packages("kableExtra")
+library(kableExtra)
+B2 %>% filter( MEDV == min(MEDV) ) %>% knitr::kable() %>% 
+   kable_styling() %>% scroll_box(width="100%")
+
+B2 %>% dplyr::select(MEDV, CRIM:LSTAT) %>%
+   mutate_all(percent_rank) %>% filter( MEDV == 0 ) %>% knitr::kable() %>% 
+   kable_styling() %>% scroll_box(width="100%")
+```
+
+
+### (h) burbs
+
+Towns with >8 rooms/dwelling (on average) generally "affluent", and have,
+as expected, the most expensive `MEDV` values and very low `LSTAT` rates; 
+generally good (near 33rd percentile) performance in `NOX`, `TAX` and `PTRATIO` 
+values; typically have middle of the pack (near 50th percentile)  `CRIM`, `DIS`, 
+and `AGE` values; and have slightly high (near 66th percentile) radial highway 
+access (`RAD`) values.  Finally, these towns are somewhat diverse, but have 
+slightly less representation in their black populations than many towns, with
+these towns black representation often ranking in the 66th percentile of all 
+towns.
+
+```{r burbs}
+
+dplyr::select(B2, MEDV, RM) %>% rename(N_RM=RM, MEDV_=MEDV) %>% 
+   add_column(mutate_all(B2, percent_rank)) %>% filter( N_RM > 8 ) %>%
+   dplyr::select(N_RM, MEDV_, MEDV:LSTAT) %>%
+   knitr::kable() %>% kable_styling() %>% scroll_box(width="100%")
+
+B2 %>% filter( RM > 7) %>% dplyr::select( TOWN ) %>% dim()
+B2 %>% filter( RM > 7) %>% dplyr::select( TOWN ) %>% unique() %>% dim()
+B2 %>% filter( RM > 8) %>% dplyr::select( TOWN ) %>% dim()
+B2 %>% filter( RM > 8) %>% dplyr::select( TOWN ) %>% unique() %>% dim()
+```
+
+

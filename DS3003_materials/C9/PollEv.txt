@@ -1,0 +1,71 @@
+These are questions from the figurs make in the last class (c8)
+
+q1. What is this? [q1.png]
+Uncertainty in an association
+*Uncertainty in a proportion
+*A characterization of uncertainty
+It's not an uncertainty characterization
+
+q2. What is this? [q2.png]
+Uncertainty in an association
+Uncertainty in a proportion
+*A characterization of uncertainty
+It's not an uncertainty characterization
+
+q3. What is this? [q3.png]
+*Uncertainty in an association
+Uncertainty in a proportion
+*A characterization of uncertainty
+It's not an uncertainty characterization
+
+q4. What is this? [q4.png]
+*Uncertainty in an association
+Uncertainty in a proportion
+*A characterization of uncertainty
+It's not an uncertainty characterization
+
+q5. What is this? [q5.png]
+*Uncertainty in an association
+Uncertainty in a proportion
+*A characterization of uncertainty
+It's not an uncertainty characterization
+
+q6. What is this? [q6.png]
+*Uncertainty in an association
+Uncertainty in a proportion
+*A characterization of uncertainty
+It's not an uncertainty characterization
+
+I like [q7.png]
+histograms better
+KDE (kernel densityestimation) better
+
+q8. What is this? [q8.png]
+*Uncertainty in an association
+Uncertainty in a proportion
+*A characterization of uncertainty
+It's not an uncertainty characterization
+
+q9. These "distributions" show the potential variability of "reasonably observable correlation at the current sample sizes if there was in fact no correlation in the data" and thus characterize "plausible statistical uncertainty" under that assumption. [q8.png again]
+
+*These thus represent the "Null Distributions" under the "Null Hypothesis" of "no correlation in the data".
+These are not useful as tools to give statistical evidence regarding the strength of actual observed correlation.
+Help! I don't understand enough of what is being described here to know how to answer this question!!
+
+q10. Observing a sample from this distribution at the position of the red * would be "unusual"... how could you quantify the "degree of unusualness"? (referring again to q8.png, open response and upvote)
+
+q11. These are the "Null Distributions" under the "Null Hypothesis" of "no correlation in the data (at the given sample size)". A p-value is [again, referring to q8.png]
+the probability that the Null Hypothesis is true
+the chance that the Null Hypothesis is true this time around -- next time it could‎be different
+*the probably of seeing something "as or more extreme" than what we observed "if the Null Hypothesis is true"
+
+q12. 
+The definition of a p-value (i.e., "the probably of seeing something as or more extreme than what we observed if the Null Hypothesis is true") can be mis-remembered or not correctly known... probably because it's a bit strange/confusing as a concept... [referring to q6.png]
+*Confidence intervals are a great alternative because they're more natural to‎interpret (as they just give you a "plausible" range for your estimate)!
+That's why no one ever uses p-values
+You're wrong: a p-value is the probability that the Null Hypothesis is true! --That's easy!
+
+q13. But confidence intervals are too hard to compute and use... [referrring to q4.png]
+Which is why no one ever uses‎them!
+And anyway, it's better to just give people a single point estimate so the answer is simpler
+*False: bootstrapping can give you good confidence interval approximations using a very general and simple recipe!

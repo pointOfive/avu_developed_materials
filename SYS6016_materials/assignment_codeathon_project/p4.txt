@@ -1,0 +1,31 @@
+
+Project Part 4: Model Design and Implementation
+Due: 4/5 3:30PM EST (before Class 19)
+Late: -10/day (after 3:30PM EST beginning with the start of Class 19)
+Value: 50 points (5% of class grade)
+By now you have settled on a dataset, and it's time to start applying machine learning and deep learning techniques to it, and compare their performance with a well-known solution.   As your team works on your project, be sure you are addressing the following questions:
+
+Technicality: Does the technical material make sense? Are the things tried reasonable? Are the proposed algorithms or applications clever and interesting? Do the team members convey novel insights about the problem or algorithms?
+Significance: Did the team members choose an interesting or “real” problem to work on, or only a small “toy” problem? Is this work likely to be useful and have an impact on UVA or the state of Virginia?
+Novelty: Is this project applying a common technique to a well-studied problem, or is the problem or method relatively unexplored?
+
+Directions
+
+Describe the experiments that you’ve run, the outcomes, and any error analysis that you’ve done. You should have tried at least one baseline. You should focus only on results that are directly related to the problem. Leaving out your personal opinion, detail your results, and provide solid evidence. Graphs and tables should only be used when there are too much data to efficiently include within the text. If you have a code repository and Jupyter Notebook, make sure you include the URL or supplementary files.
+
+Design: In order to highlight these components, it is important that you present a solid discussion regarding the learning from the development of your method: What machine learning techniques have you tried and why? The methods will describe the design and methodology used to complete the study. The general rule of thumb is that readers should be provided with enough detail to replicate the study.
+
+ 
+
+SUBMISSION INSTRUCTIONS
+
+Your submission for this portion of the project should be in the form of a PDF document, describing the model architecture design and a section detailing your experiment on the real dataset. Refer to the rubric for specific details.
+
+Be sure to include the following in your team document:
+
+The title of the project
+The full names and UVA IDs of team members
+Designate a single team member to submit your document titled as: 
+
+"projectTitle_teamMemberComputingIDs_designImplementation.pdf"
+

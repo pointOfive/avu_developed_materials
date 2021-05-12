@@ -1,0 +1,30 @@
+
+Project Part 5: Checkpoint and Break Down of Contribution
+Due: 4/12 3:30PM EST (before Class 21)
+Late: -10/day (after 3:30PM EST beginning with the start of Class 21)
+Value: 50 points (5% of class grade)
+The checkpoint will help you make sure you’re on track, should describe what you’ve accomplished so far, and very briefly say what else you plan to do. You should continue to use the same proposal document and write it as if it’s an “early draft” of what will turn into your final project. You can write it as if you’re writing the first few pages of your final project report, so that you can re-use most of the text in your final report. Please keep in mind that the intended audience is Prof. Nguyen and the TAs. Thus, for example, you should not spend two pages explaining what the function of softmax is. Also, we will expect your final write up to be on the same topic as your checkpoint.
+
+DIRECTIONS
+
+Your milestone should include the full names of all your team members and state the full title of your project. Your milestone should be at most three pages, excluding references. Similar to the proposal, it should include:
+
+Abstract: A short summary describing your project.
+Motivation: What problem are you tackling, and what’s the setting you’re considering?
+Method: What machine learning techniques have you tried and why?
+Preliminary Experiments: Describe the experiments that you’ve run, the outcomes, and any error analysis that you’ve done. You should have tried at least one baseline.
+Next Steps: Given your preliminary results, what are the next steps that you’re considering?
+Member Contribution: Please include a section that describes what each team member worked on and contributed to the project. This is to make sure team members are carrying a fair share of the work for the project.
+Each team needs to submit one PDF on Collab. It is mostly intended to get feedback from TAs to make sure you’re making reasonable progress. As long as your milestone follows the instructions above and you seem to have tested any assumptions that might prevent your team from completing the project, you should do well on the milestone.
+
+ 
+
+SUBMISSION INSTRUCTIONS
+
+Be sure to include the following in your team document:
+
+The title of the project
+The full names and UVA IDs of team members
+Designate a single team member to submit your document titled as: 
+
+"projectTitle_teamMemberComputingIDs_checkpoint.pdf"

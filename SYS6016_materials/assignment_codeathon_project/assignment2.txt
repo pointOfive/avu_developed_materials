@@ -1,0 +1,34 @@
+
+Introducing Assignment 2 and the UVA Historical Landmark app
+
+In this session, you will learn about how an exciting crowd-sourcing project captures the historical landmarks around the UVA grounds. We want a similar distribution across all specified buildings. The dataset excludes images that contain an identifiable person. If an image can be used to identify a person, that image is likely to constitute personal data. We have developed the UVA Historical Landmark app with the links below:
+https://apps.apple.com/us/app/uva-landmark-recognition/id1485524207
+https://play.google.com/store/apps/details?id=com.ericstein.uvalandmarkrecognition&hl=en_US
+
+
+ASSIGNMENT 2: DESIGNING AN ARCHITECTURE FOR RECOGNIZING UVA HISTORICAL LANDMARKS
+
+Due: 4/5 3:30PM EST (before Class 19)
+Late: -10/day (after 3:30PM EST beginning with the start of Class 19)
+Value: 100 points (10% of class grade)
+The UVA grounds are known for their Jeffersonian architecture and place in US history as a model for college and university campuses throughout the country. Throughout its history, the University of Virginia has won praises for its unique Jeffersonian architecture.
+
+The video below covers the usage policy of the UVA Landmark Dataset for the purposes of the course. It is applied to images stored on the course Firebase server, as well as to images captured in the future. The full dataset is huge (+37 GB) with +13,000 HD-resolution images of 18 classes. Thus, it will take time to download, extract, and process. To save you time and effort, the data have been resized and compressed to only 379 MB and stored in my Google Firebase server.
+
+DIRECTIONS
+
+In this assignment, you will attempt to build an image recognition system to classify different buildings/landmarks on the grounds. You will earn 100 points for this assignment plus 10 bonus points if your classifier performance exceeds 94% accuracy. To make it easier for you, some codes have been provided to help you process the data; you may modify it to fit your needs. 
+
+Click the link below to download and complete the Designing an Architecture for Recognizing UVA Historical Landmarks Assignment.
+
+
+ M6.7_UVA Historical Landmark Dataset.pdf
+
+ Template for Assignment 2
+SUBMISSION INSTRUCTIONS
+
+Submit the .ipynb file via UVA Collab with the following format: yourcomputingID_assignment_2.ipynb.
+
+ Assignment 2: Designing an Architecture for Recognizing UVA Historical Landmarks
+
+ SYS 6016 Programming Assignment Rubric.pdf

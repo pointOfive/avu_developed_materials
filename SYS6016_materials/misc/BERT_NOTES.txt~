@@ -1,0 +1,23 @@
+Note how word2vec and GloVe word embedding models are context-independent
+They assign the same pre-trained vector to the same word regardless of the context of the word. Given the abundance of polysemy and complex semantics in natural languages, context-independent representations have apparent limitations. For instance, the word “crane” in contexts “a crane is flying” and “a crane driver came” has completely different meanings; thus, the same word may be assigned different representations, depending on contexts. This example motivates the development of context-sensitive word representations, where representations of words depend on their contexts. 
+And how the most important advances in NLP tools based on transformers, such as BERT (Bidirectional Encoder Representations from Transformers), improve upon this by using context-sensitive representations 
+Other examples (not discussed) are TagLM (language-model-augmented sequence tagger), CoVe (Context Vectors), and ELMo (Embeddings from Language Models)
+BERT provides a "best of both worlds" approach by using both task-agnostic architecture AND task-specific word representations 
+PE review of BERT
+PollEverywhere on all previous stuff (RNNs, LSTM, Embeddings, Transformers)
+BERT demo?
+a real-world scenario of a problem in which you might want to use this representation to solve
+https://d2l.ai
+
+
+Review the training of GANs and its difficulties
+GANs are composed of two neural networks: a generator that tries to generate data that look similar to the training data, and a discriminator that tries to tell real data from fake data. This architecture is very original in deep learning in that the generator and discriminator compete against each other in a zero-sum game. In 2016, Yann LeCun even said that it was “the most interesting idea in the last 10 years in machine learning.” While the dynamics of GANs are still not perfectly understood, they have progressed rapidly with many successful architectures.  
+
+Here's an optional exercise to consider if you're interested in exploring this further:
+
+An previous assignment of this course that we're skipping was to do some research on recent architectures of GANs, including DC-GANs (deep convolutional GANs), CycleGANs (for domain transformation), PG-GANs (progressively growing GANs), and StyleGANs (style-based generators); then, select one architecture and answer the following questions:
+
+Describe in 2–3 sentences how this architecture works.
+Explain why this architecture works better than original GANs.
+Discuss whether this architecture solves any difficulties of training a GAN, including mode collapse, hyperparameter tuning, experience replay, mini-batch discrimination, and others.
+Describe a real-world scenario of a problem in which you might want to use this architecture.

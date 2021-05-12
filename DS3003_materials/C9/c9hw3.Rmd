@@ -1,0 +1,57 @@
+
+```{r setup}
+library(tidyverse)
+```
+
+
+```{r stats_guys}
+#https://dplyr.tidyverse.org/reference/across.html
+#https://stackoverflow.com/questions/47126197/how-to-transpose-t-in-the-tidyverse-using-tidyr
+
+#load("/path/to/what/you/downloaded/above/and/in/it/bayes_recon.R")
+path <- "/Users/gck8gd/Documents/courses/SDS_3003_Communication_w_Data/L10/" 
+file <- "bayes_recon.R"
+load(paste0(path,file,sep=''))
+all_idxD <- c(in_idxD, out_idxD)
+
+
+plot_build_for_stats_guys_version <- t(yhat3) %>% as_tibble() %>% 
+  summarise_all(~ quantile(.x, probs=c(0.025,0.5,0.975))) %>%
+  rownames_to_column() %>% pivot_longer(-rowname, 'variable', 'value') %>%
+  pivot_wider(variable, rowname) %>% 
+  rename(lower=`1`, median=`2`, upper=`3`) %>% dplyr::select(-variable) %>%
+  add_column(year=as.numeric(all_idxD)) %>% 
+  ggplot() + 
+  geom_ribbon(aes(ymin=lower, ymax=upper, x=year, fill='Stats Guys Reconstruction'), 
+              alpha=0.5) + 
+  geom_path(aes(x=<?>,y=<?>), color="blue") +
+  theme(legend.position="bottom") + ylab("Temerature Anomaly (Celcius)") +
+  ggtitle("Pages 2K: degree C anomaly relative to 1961-1990... maybe that's different?")
+
+plot_build_for_stats_guys_version
+```
+
+
+```{r pages_2k}
+
+
+file <- "Reconstruction_Arc2kv1.1.1.xlsx"
+pages_2k_data <- readxl::read_excel(paste0(path,file,sep='')) %>% 
+  filter(`Year AD`>=998) %>%
+  rename(pred=`Temperature (deg C anomaly wrt 1961-1990)...2`, 
+         lower=`2 sigma unc. low`, upper=`2 sigma unc. high`, year=`Year AD`)
+
+#install.packages('tibbletime')
+rolling_mean <- tibbletime::rollify(mean, window = 10)#10 years... good choice?
+
+plot_build_for_stats_guys_version + 
+  geom_ribbon(data=pages_2k_data, 
+              aes(x=<?>, ymin=<?>, ymax=<?>, 
+                  fill='Pages 2k Reconstruction'), alpha=0.5) +
+  geom_path(data = pages_2k_data %>% mutate(pred=rolling_mean(pred)), 
+            aes(x=year,y=pred), color="purple")
+```
+
+
+
+

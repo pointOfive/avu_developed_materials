@@ -1,0 +1,25 @@
+[GROUP ASSIGNMENT]: get Rstudio up and running as a group
+
+You will be assigned to a group after class and will work with your group to complete the following steps.
+
+Download and knit `DS3003_syllabus.Rmd` from Class 1 or `ggplot2.Rmd` from Class 6 for examples of how the "markdown outline" that you submit for this homework should look
+
+1. Use official instructions, documentation or other helpful sources available online in order to complete this assignment.
+
+2. Document and reference EVERY resource and step used accomplish the required tasks (and provide links to those resources)
+
+3. Install Rstudio.
+
+4. Use `install.packages` to get everything you need to "knit" the code in "for_pirates.txt", below.
+
+5. Create a team `.Rmd` file which  
+   a. includes (and correctly runs) the code from "for_pirates.txt"
+   b. contains a well-organized markdown file documenting the steps done to complete this assignment (with headers, outlines, and links) 
+   c. and (correctly) "knits" to `.html`
+
+6. Submit your team's shared `.Rmd` AND "knitted" `.html` files
+Your "knitted .html" submission must be created from your "team .Rmd" but be created on your own computer
+Confirm this with the following comment included in your submission text box: "Honor Pledge: I have recreated my groups submission using using the tools I have installed on my own computer"
+Name the files with a team name and YOUR name for your submission
+
+Each group member must be able to submit this assignment as created from their own computer.  If only some members of the group submit the required files, those group members must additionally provide a supplemental explanation along with their submission as to why other students in their group have not completed this assignment.

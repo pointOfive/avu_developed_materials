@@ -1,0 +1,120 @@
+---
+title: "Animations"
+author: "Schwartz"
+date: "12/07/2020"
+output:
+     html_document:
+          toc: TRUE
+          toc_depth: 4
+          toc_float: true
+          toc_collapsed: true
+          theme: journal
+          code_folding: hide
+---
+
+<!--- Change font size for headers --->
+<style>
+h1.title {
+  font-size: 28px;
+}
+h1 {
+  font-size: 22px;
+}
+h2 {
+  font-size: 18px;
+}
+h3 { 
+  font-size: 14px;
+}
+
+</style>
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo=TRUE, warning=FALSE, message=FALSE, 
+                      fig.align="center", out.width="80%")
+```
+
+# Deaths from Covid
+
+[Our World in Data](https://ourworldindata.org/) (OWID) is a very cool news
+organization that seeks to produce data driven reporting and knowledge 
+sharing. OWID's work is actually the original inspiration for this course;
+and, as such, their work provides an outstanding template for our courses final 
+project: their reporting is the kind of *Communicating WITH Data* that this 
+course tries to foster! Some of their most recent reporting on covid can be 
+found [here](https://ourworldindata.org/coronavirus#deaths-due-to-covid-19) and
+[here](https://ourworldindata.org/covid-deaths), and notice how they are 
+constantly making their data available! We'll remake [this plot from OWID](https://ourworldindata.org/covid-deaths#total-confirmed-deaths-how-rapidly-have-they-increased-compared-to-other-countries).
+
+## Initialization
+
+- Loading tidyverse and data
+  - Data is just an easy download from [OWID](https://ourworldindata.org/covid-deaths)!
+ 
+```{r data}
+library(tidyverse)
+
+d1 <- "PLAY_BUTTON/owid-covid-data.csv"
+OWID_covid <- read_csv(d1)
+
+OWID_covid
+```
+## Europe and NA
+
+- We restrict to countries in  Europe and North America which have population 
+greater than 10M people and have the largest the number of deaths per day 
+*per capita*.
+
+```{r focus}
+
+focus <- OWID_covid %>% filter(population > 10000000) %>%
+  filter(location != 'World') %>%
+  filter(continent %in% c('Europe', 'North America')) %>%
+  mutate(per_capita_deaths = total_deaths/population) %>%
+  dplyr::select(location, per_capita_deaths) %>% #
+  # https://stackoverflow.com/questions/24237399/how-to-select-the-rows-with-maximum-values-in-each-group-with-dplyr
+  group_by(location) %>% top_n(n=1) %>% 
+  # https://dplyr.tidyverse.org/reference/arrange.html
+  arrange(-per_capita_deaths) %>%
+  # https://dplyr.tidyverse.org/reference/distinct.html
+  distinct()  
+  
+focus
+```
+## Covid Curves
+
+- We examine the number of deaths per 100,000 individuals in the population
+  for the European and North American countries with the top 10 highest 
+  mortality rates.
+
+```{r static_plot}
+
+covid_per_capita_fig <- OWID_covid %>% 
+  filter(location %in% focus$location[1:10]) %>%
+  # http://www.sthda.com/english/wiki/ggplot2-line-types-how-to-change-line-types-of-a-graph-in-r-software
+  ggplot(mapping=aes(x=date, y=100000*new_deaths_smoothed/population,
+                     color=location, linetype=continent)) + 
+  geom_line() + 
+  # https://stackoverflow.com/questions/52060601/ggplot-multiple-legends-arrangement
+  theme(legend.position="top", legend.title=element_blank(), 
+        legend.direction="horizontal", legend.box="vertical") +
+  ggtitle("Covid Deaths Each Day Per 100,000 People in a Country")
+
+covid_per_capita_fig
+```
+
+
+## Animated
+
+- And now we watch these countries daily covid mortality rates over time
+  
+```{r animate}
+
+# https://www.datanovia.com/en/blog/gganimate-how-to-create-plots-with-beautiful-animation-in-r/
+library(gganimate)
+
+covid_per_capita_fig + geom_point() + transition_reveal(date)    
+
+```
+
+

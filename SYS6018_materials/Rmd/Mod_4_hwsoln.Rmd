@@ -1,0 +1,428 @@
+---
+title: "Some tidyverse solutions for ISLR chapter 5"
+author: "**Schwartz**"
+date: "09/06/2020"
+output: html_document
+---
+
+<!--- Below are global settings for knitr. You can override any of them by adding the changes to individual chunks --->
+```{r global_options, include=FALSE}
+knitr::opts_chunk$set(error=TRUE,        # Keep compiling upon error
+                      collapse=FALSE,    # collapse by default
+                      echo=TRUE,         # echo code by default
+                      comment = "#>",    # change comment character
+                      fig.width = 5.5,     # set figure width
+                      fig.align = "center",# set figure position
+                      out.width = "80%", # set width of displayed images
+                      warning=FALSE,     # do not show R warnings
+                      message=FALSE)     # do not show R messages
+```
+
+<!--- Change font size for headers --->
+<style>
+h1.title {
+  font-size: 28px;
+}
+h1 {
+  font-size: 22px;
+}
+h2 {
+  font-size: 18px;
+}
+h3 { 
+  font-size: 14px;
+}
+
+</style>
+
+
+
+# 3. Conceptual {.tabset}
+
+## (a) K-Folds Cross-Validation
+
+1. Randomly separate the data into $k$ groups
+2. Fit the model using data from $k-1$ of the groups
+3. Score the model on the grouop not included in the above $k-1$
+4. Return to step 2 above, but use a combination of $k-1$ of the groups that 
+you've not yet used, unless you've already done all possible $k-1$ combinations
+5. You now have $k$ "out of training" scores!
+
+## (b) Versus Train/Test and LOOCV
+
+1. The Train/Test (i.e., *validation* approach) doesn't use all the data to 
+produce a "test score".
+2. LOOCV requires $n$ model fits, not $k$, so it's computationally more 
+expensive; and, if you're fitting a high variance model then the estimation
+of the test error will also very likely be high variance (since all models
+fit on $n-1$ data points will essentially be the same as the model fit on $n$
+data points, which will be high variance) (although if you're really short on 
+data then fitting with $n(k-1)/k$ data points might lead to worse model fits 
+than what you could get with the full data and hence *overestimate* the test 
+error).
+
+# Applied 
+
+## 5. Default K-Folds {.tabset}
+
+### (a). LR
+
+```{r default_lr}
+library(ISLR)
+library(tidyverse)
+library(broom)
+n <- dim(ISLR::Default)[1]
+default = ISLR::Default %>% as_tibble() %>% sample_n(size=n)
+
+model5a <- glm(default~balance+income, data=default, family=binomial)
+beta = broom::tidy(model5a)
+signif = which(beta$p.value <= .05) 
+
+library(kableExtra)
+beta %>% knitr::kable(digits=5) %>%
+  kableExtra::kable_styling(full_width=FALSE) %>%
+  row_spec(signif, bold=TRUE, background="#D3D3D3") 
+```
+
+
+
+### (b). Train/Test
+
+#### i.
+
+```{r train_test}
+set.seed(2887)
+fold <- sample(rep(1:4, length=nrow(default))) 
+val_nums <- which(fold==1) #selecting fold #1 as my validation fold
+val <- default[val_nums,]
+train_nums <- which(fold!=1) #selecting all other folds as training data
+train <- default[train_nums,]
+```
+
+#### ii.
+
+```{r default_lr_train}
+model5b <- glm(default~balance+income, data=train, family=binomial)
+beta5b <- broom::tidy(model5b) 
+
+beta5b %>%
+  knitr::kable(digits=5) %>%
+  kableExtra::kable_styling(full_width = FALSE) 
+```
+
+#### iii.
+
+```{r predictions}
+table5b <- augment(model5b, newdata = val, type.predict = "response") %>% 
+  mutate(pred = ifelse(.fitted > .5, "Yes", "No")) 
+```
+
+#### iv.
+
+The error rate is 1-accuracy, so in this case it's 2.28%
+
+```{r error}
+
+#Part (iv) - Error Rate
+library(caret)
+caret::confusionMatrix(factor(table5b$pred), table5b$default) 
+```
+
+
+### (c). k-folds 
+
+The error rates  are generally between 2.2% and 3.2%. Interestingly, we got our best performance on the first validation set, with an error rate of 2.28%. It definitely shows there is some variability based on which fold is chosen as the validation fold. 
+
+```{r kfolds}
+
+frame5c <- tibble(Folds=2:4,Error.Rate=0)
+
+set.seed(2887)
+for(i in 2:4){ 
+  val_nums <- which(fold==i) 
+  val <- default[val_nums,]
+  train_nums <- which(fold!=i) 
+  train <- default[train_nums,]
+  
+  model5c <- glm(default~balance+income, data=train, family=binomial)
+  table5c = augment(model5c, newdata=val, type.predict="response") %>% 
+    mutate(pred = ifelse(.fitted > .5, "Yes", "No")) 
+  
+  error <- 1- mean(table5c$pred==table5c$default)
+  frame5c[i-1,2] <- error
+}
+frame5c
+```
+
+### (d). +student 
+
+It does not appear as though student contributes any meaningful improvement.
+
+```{r add_student}
+
+set.seed(2887)
+n <- dim(default)[1]
+folds <- caret::createFolds(1:n, 4)
+error <- function(fold, data, formula){
+  glm(as.formula(formula), family=binomial, data=data, subset=-fold) %>%
+    predict(data[fold,]) %>% tibble() %>% rename(.pred='.') %>%
+    mutate(.pred = factor(ifelse(.pred > .5, "Yes", "No"))) %>%
+    add_column(.y = data[[strsplit(formula,'~')[[1]][1]]][fold]) %>% 
+    mutate(error = .pred!=.y) %>% dplyr::select(error) %>% colMeans()
+}
+library(purrr)
+kfolds.test_error.full <- folds %>% purrr::map(error, default, 'default~.')
+kfolds.test_error.orig <- folds %>% 
+  purrr::map(error, default, 'default~balance+income')
+
+out_of_sample_errors <- as_tibble(kfolds.test_error.orig) %>% 
+  add_row(as_tibble(kfolds.test_error.full)) %>%
+  add_column(model=c('balance+income','balance+income+student'))
+out_of_sample_errors
+```
+
+## 6. Default Bootstrapping {.tabset}
+
+### (a). classic
+```{r classic}
+classic <- glm(default~balance+income, data=default, family=binomial) %>% tidy()
+classic
+```
+
+### (b). bootstrap
+```{r 6_bootstrap}
+# rsample::bootstraps
+boot.fn <- function(r, data){
+  bootstrapped_sampled <- sample(1:dim(data)[1], replace=TRUE)
+  glm(default~balance+income, data=data[bootstrapped_sampled,], 
+      family=binomial) %>% 
+    tidy() %>% dplyr::select(estimate) 
+}
+boot.fn(1,default)
+```
+
+### (c). bootstrapping
+```{r 6_bootstrapping}
+
+r <- 1000
+bootstrapped_coefficients <- seq(r) %>% 
+  purrr::map(boot.fn, default) %>% bind_cols() 
+
+bootstrapped_coefficients.means <- bootstrapped_coefficients %>% 
+  t() %>% colMeans()
+
+library(matrixStats)
+bootstrapped_coefficients.stds <- bootstrapped_coefficients %>% 
+  t() %>% colSds()
+
+bootstrapped <- tibble(estimate=bootstrapped_coefficients.means,
+                       std.error=bootstrapped_coefficients.stds)
+```
+
+
+### (d). comparision
+
+The results are extremely similar, with the bootstrapped standard errors being
+ever so slightly tighter than their parametric counter parts.  This is likely
+do to outliers slightly inflating the parametric estimation.  
+
+```{r 6_comparision}
+classic
+bootstrapped
+```
+
+## 7. Smarket {.tabset}
+
+### (a). fit
+
+```{r Smarket}
+set.seed(1)
+n <- dim(ISLR::Smarket)[1]
+smarket <- ISLR::Smarket %>% as_tibble() %>% sample_n(size=n)
+
+fit.lr <- function(data, formula){
+  glm(as.formula(formula), data=data, family=binomial)
+}
+
+lr.fit <- fit.lr(smarket, 'Direction~Lag1+Lag2')
+lr.fit 
+```
+
+### (b). loo
+
+```{r loo}
+lr.loo.fit <- fit.lr(smarket[-1,], 'Direction~Lag1+Lag2')
+lr.loo.fit 
+```
+
+### (c). oob
+
+Yes -- correctly predicted!
+
+```{r oob}
+lr.loo.fit %>% augment(newdata=smarket[1,]) %>% 
+  mutate(Direction_hat = ifelse(.fitted>0, "Up", "Down")) %>% 
+  dplyr::select(Direction_hat)
+smarket[1,'Direction']
+```
+
+### (d). loocv
+
+#### i.
+
+```{r loocv_i}
+library(rsample)
+lr.fits <- rsample::loo_cv(smarket)$splits %>% 
+  purrr::map(analysis) %>%
+  purrr::map(fit.lr, 'Direction~Lag1+Lag2')
+
+```
+
+#### ii.
+
+```{r loocv_ii}
+inverse_logit <- function(x) {
+  1 / (1 + exp(-x))
+}
+
+fit.lr.oos_prediction <- function(data, formula){
+  fit.lr(analysis(data), formula) %>% augment(newdata=testing(data)) %>%
+    mutate(.prob = inverse_logit(.fitted)) 
+}
+lr.fits.oos_predictions <- rsample::loo_cv(smarket)$splits %>% 
+  purrr::map(fit.lr.oos_prediction, 'Direction~Lag1+Lag2') 
+lr.fits.oos_predictions[1:3]
+```
+
+#### iii.
+
+```{r loocv_iii}
+lr.fits.oos_predictions <- lr.fits.oos_predictions %>% 
+  purrr::map((function(x) x %>% 
+                mutate(.call = factor(ifelse(.prob>0.5, "Up", "Down"))) ))
+lr.fits.oos_predictions[1:3]
+```
+
+#### iv.
+
+```{r loocv_iv}
+lr.fits.oos_predictions <- lr.fits.oos_predictions %>% 
+  purrr::map((function(x) x %>% mutate(error = .call!=Direction)))
+lr.fits.oos_predictions[1:3]
+```
+
+### (d). error
+
+This is in line, albeit slightly worse, than the train/test performance we 
+observed in the module 3 lab using this same data set.  While `Lag1+Lag2` seems
+to be a simple, high bias model; in fact, the coefficient estimates are quite
+unstable (i.e., non-significant).  So in fact this is still a high variance 
+model, despite being so simple.  But the same issue is at play when fit (with
+less data) in a train/test framework.  The train/test validation performance
+estmiate then might be thought of as being overly pessimistic, while our current 
+error rate estimates likely have high variance.  So, we do seem to be picking
+better than 50-50, but we should be very cautious about trusting the degree to 
+which we believe we're performing (both in a good, and in a bad sense).  
+We certainly haven't cracked the stock market at this point.  
+
+```{r loocv_conclusion}
+lr.fits.oos_predictions %>% 
+  purrr::map((function(x) x %>% dplyr::select(error))) %>% 
+  bind_rows() %>% colMeans()
+```
+
+
+## 8. Synthetic {.tabset}
+
+### (a). data
+
+$y_i = \beta_1x_i - \beta_2 x_i^2 +\epsilon_i, i=1,\cdots n=100, p=|\boldsymbol{\beta}|=2$, 
+where $|.|$ indicates cardinality and $\boldsymbol{\beta}$ is the set of all
+model coefficients. 
+
+```{r 8_synthetic_data}
+generate_synthetic_data <- function(){
+  n <- 100
+  x <- rnorm(n)
+  y <- x - 2*x^2 + rnorm(100)
+  synth <- tibble(y=y, x=x)
+}
+set.seed(1)
+synth <- generate_synthetic_data()
+```
+
+### (b). data
+
+Highly nonlinear association!
+
+```{r 8_nonlinearity}
+synth %>% ggplot(aes(x,y)) + geom_point()
+```
+
+### (c). loocv
+
+Highly nonlinear association!
+
+```{r 8_loocv}
+
+pth_order_lm <- function(p){
+  as.formula(paste0('y~poly(x,',as.character(p),')'))
+}
+loo_squared_error <- function(data, formula){
+  lm(formula, data=analysis(data)) %>% 
+    augment(newdata=testing(data)) %>%
+    dplyr::mutate(squared_error = (.resid)^2)
+}
+
+loo_MSE <- function(p, data){
+  formula <- pth_order_lm(p)
+  rsample::loo_cv(data)$splits %>% 
+    purrr::map(loo_squared_error, formula) %>%
+    dplyr::bind_rows() %>% dplyr::select(squared_error) %>% colMeans()
+}
+
+set.seed(1)
+observed_mse <- purrr::set_names(1:4, paste0("order", 1:4, "polynomial")) %>% 
+  purrr::map(loo_MSE, synth)
+observed_mse
+```
+
+### (d). again
+
+Not the same... LOOCV is known to be a high variance estimator in the case
+of high variance models, which in our case can be seen to be the case by the 
+fact that `lm(y~poly(x,1), synth) %>% tidy()` shows an ($\alpha$-level$=0.05$) 
+significant, but not miniscule, p-value for `x`. 
+
+```{r 8_loocv_repeat}
+
+set.seed(2)
+synth_parallel_universe <- generate_synthetic_data()
+
+set.seed(2)
+observed_mse_parallel_universe <- 
+  purrr::set_names(1:4, paste0("order", 1:4, "polynomial")) %>% 
+  purrr::map(loo_MSE, synth_parallel_universe)
+
+dplyr::bind_rows(dplyr::bind_cols(observed_mse),
+                 dplyr::bind_cols(observed_mse_parallel_universe))
+```
+
+### (e). best
+
+The second order polynomial seems to be performing the best as judged by 
+relative LOOCV. While the generating model does not have an intercept, and all
+the models we considered did have intercepts, we would nonetheless expect that
+getting the order of the model correct would be beneficial in terms of model
+out-of-sample (here LOO) performance.  And indeed this seems to be the case. 
+
+### (f). classic
+
+As we can see, the second order terms are all *highly* significant in ALL
+examined models.  This seems to be a quite clear indication of the reliability
+of the best performance of the second order model as judged by LOOCV. 
+
+```{r 8_classic}
+purrr::set_names(1:4, paste0("order", 1:4, "polynomial")) %>% 
+  purrr::map( (function(p) lm(pth_order_lm(p), synth) %>% tidy() ) )
+```

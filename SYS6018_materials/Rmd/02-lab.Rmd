@@ -1,0 +1,48 @@
+---
+title: "Chapter 2 Lab Notes"
+author: "Name Here"
+date: "Date Here"
+output: html_notebook
+---
+
+
+The textbook and datasets are hosted online at <https://faculty.marshall.usc.edu/gareth-james/ISL/>. 
+You will find that the `Auto.csv` data is at the following link <https://faculty.marshall.usc.edu/gareth-james/ISL/Auto.csv>. 
+
+
+
+Load tidyverse packages
+```{r}
+
+```
+
+Load the `Auto` data using the `read_csv()` function (from `readr` package).
+```{r}
+
+```
+
+Note: some value of `horsepower` are missing, and represented with `?`. We need to make this explictly missing (represent with an `NA`).
+```{r}
+
+```
+
+Preview the data
+```{r}
+
+```
+
+Summarize the data
+```{r}
+
+```
+
+Boxplots. We will use the `ggplot2` package (part of tidyverse so its already loaded)
+```{r}
+
+```
+
+Histogram of mpg
+```{r}
+
+```
+

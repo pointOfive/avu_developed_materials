@@ -1,0 +1,95 @@
+Untitled
+,Activity count,10
+,Participant count,57
+,Average responses,56.6
+
+Choose one of the following:,Activity type,Multiple choice
+,Total responses,49
+,Unique participants,49
+,Response options,Count,Percent,Correctness
+,"I pledge that all Poll Everywhere answers I submit today will (a) be my own and represent my own understandings, and (b) I will not contribute to other students' answers while the poll is active.",44,89.8,Correct
+,I will not be taking this quiz for credit.,5,10.2,Incorrect
+
+The hierarchical structure of the gray emphasized nodes of the following plot primarily demonstrates,Activity type,Multiple choice
+,Total responses,57
+,Unique participants,57
+,Response options,Count,Percent,Correctness
+,Sparse Connectivity,15,26.32,Incorrect
+,Shared Parameters,14,24.56,Incorrect
+,Composition (higher order connectivity),27,47.37,Correct
+,Invariance,0,0.0,Incorrect
+,Zero-Padding,1,1.75,Incorrect
+
+"If colors represent parameters, then the colors in the top of the following plot demonstrate",Activity type,Multiple choice
+,Total responses,57
+,Unique participants,57
+,Response options,Count,Percent,Correctness
+,Sparse Connectivity,20,35.09,Incorrect
+,Shared Parameters,37,64.91,Correct
+,Composition (higher order connectivity),0,0.0,Incorrect
+,Invariance,0,0.0,Incorrect
+,Zero-Padding,0,0.0,Incorrect
+
+The grey emphasis in the top of the following plot is meant to demonstrate,Activity type,Multiple choice
+,Total responses,57
+,Unique participants,57
+,Response options,Count,Percent,Correctness
+,Sparse Connectivity,54,94.74,Correct
+,Shared Parameters,1,1.75,Incorrect
+,Composition (higher order connectivity),0,0.0,Incorrect
+,Invariance,2,3.51,Incorrect
+,Zero-Padding,0,0.0,Incorrect
+
+The difference between the top and bottom plots demonstrates,Activity type,Multiple choice
+,Total responses,57
+,Unique participants,57
+,Response options,Count,Percent,Correctness
+,Sparse Connectivity,0,0.0,Incorrect
+,Shared Parameters,0,0.0,Incorrect
+,Composition (higher order connectivity),0,0.0,Incorrect
+,Invariance,1,1.75,Incorrect
+,Zero-Padding,56,98.25,Correct
+
+The following plot demonstrates,Activity type,Multiple choice
+,Total responses,57
+,Unique participants,57
+,Response options,Count,Percent,Correctness
+,Sparse Connectivity,0,0.0,Incorrect
+,Shared Parameters,0,0.0,Incorrect
+,Composition (higher order connectivity),0,0.0,Incorrect
+,Invariance,57,100.0,Correct
+,Zero-Padding,0,0.0,Incorrect
+
+"After applying activation functions to the output of this network, the top layer is a",Activity type,Multiple choice
+,Total responses,57
+,Unique participants,57
+,Response options,Count,Percent,Correctness
+,stride length of 3,4,7.02,Incorrect
+,max pooling layer,46,80.7,Incorrect
+,pool width of 3,5,8.77,Incorrect
+,director layer,2,3.51,Correct
+
+The max pooling layer here has a,Activity type,Multiple choice
+,Total responses,61
+,Unique participants,57
+,Response options,Count,Percent,Correctness
+,stride length of 3,0,0.0,Incorrect
+,max pooling layer,2,3.28,Incorrect
+,pool width of 3,57,93.44,Correct
+,director layer,2,3.28,Incorrect
+
+The middle panel of this plot demonstrates,Activity type,Multiple choice
+,Total responses,57
+,Unique participants,57
+,Response options,Count,Percent,Correctness
+,Unshared Convolutions,9,15.79,Incorrect
+,Tiled Convolutions,45,78.95,Correct
+,Permutation Invariance,3,5.26,Incorrect
+
+The bottom panel of this plot demonstrates,Activity type,Multiple choice
+,Total responses,57
+,Unique participants,57
+,Response options,Count,Percent,Correctness
+,Unshared Convolutions,21,36.84,Incorrect
+,Tiled Convolutions,0,0.0,Incorrect
+,Permutation Invariance,36,63.16,Correct

@@ -1,0 +1,330 @@
+---
+title: "ISLR Problem 2.8"
+author: "**SOLUTIONS**"
+#author: "**Your Name Here**"
+#date: "May 16, 2020"
+output: html_document # uncomment and comment the following line to switch
+#output: html_notebook  # notebooks may be a better option for homework
+---
+
+<!--- Below are global settings for knitr. You can override any of them by adding the changes to individual chunks --->
+
+
+```{r global_options, include=FALSE}
+knitr::opts_chunk$set(error=TRUE,        # Keep compiling upon error
+                      collapse=FALSE,    # collapse by default
+                      echo=TRUE,         # echo code by default
+                      comment = "#>",    # change comment character
+                      fig.width = 5.5,     # set figure width
+                      fig.align = "center",# set figure position
+                      out.width = "49%", # set width of displayed images
+                      warning=FALSE,     # do not show R warnings
+                      message=FALSE)     # do not show R messages
+```
+
+<!--- Change font size for headers --->
+<style>
+h1.title {
+  font-size: 28px;
+}
+h1 {
+  font-size: 22px;
+}
+h2 {
+  font-size: 18px;
+}
+h3 { 
+  font-size: 14px;
+}
+
+</style>
+
+
+
+**SYS 6018 | Summer 2020 | University of Virginia **
+
+Solutions to the homework problems in [Introduction to Statistical Learning (ISLR)](https://faculty.marshall.usc.edu/gareth-james/ISL/).
+
+*******************************************
+
+Solutions will be shown using Base R (following the textbook) and the [Tidyverse](https://www.tidyverse.org/learn/) dialect of R. Either (or a mix of both) is acceptable, but I encourage tidyverse for those who can take the extra time to deviate from the textbook. It is well worth the investment.
+
+To use tidyverse solutions, we will need to load the following packages:
+```{r}
+library(tidyverse) # ggplot2, dplyr
+library(GGally)    # ggpairs() 
+
+# Note: if you don't have a package installed on your machine you will need to install them. In RStudio, to to Tools->Install Packages... or just run `install.packages()`. For example: install.packages("tidyverse")
+```
+
+
+
+## a. Load the `College.csv` data into R {.tabset}
+
+Load the `College.csv` data into R and name the resulting data frame `college`.
+
+### Tidyverse
+
+Use the `read_csv()` function from the `readr` package (part of the `tidyverse` package). 
+
+```{r}
+url = "http://faculty.marshall.usc.edu/gareth-james/ISL/College.csv"
+college = read_csv(url)
+```
+
+
+### Base R
+
+Use the read.csv() function to read the data into R. Call the loaded data college. Make sure that you have the directory set to the correct location for the data.
+
+```{r}
+url = "http://faculty.marshall.usc.edu/gareth-james/ISL/College.csv"
+college = read.csv(url)
+```
+
+
+## b. Fixing the first column {.tabset}
+
+The first column of the data contains the college name, but there is no column name (header). This could be treated as a column name (attribute) or made explictly into a column. 
+
+Use `View()` instead of `fix()` for viewing the data. In Rstudio, you can also click on the name of the variable in the Environment Tab. 
+
+
+### Tidyverse
+
+Tidyverse suggests you avoid rownames and leave this as a regular column. Just give it a proper name
+
+```{r}
+college = college %>% rename(college = 1)
+```
+
+
+### Base R
+
+Make the first column into a row.names attribute and remove the first column. 
+
+```{r}
+rownames(college) = college[,1]
+college = college[,-1]
+```
+
+## c. (i) Summarize the data  {.tabset}
+
+Use the summary() function to produce a numerical summary of the variables in the data set. 
+
+```{r}
+summary(college)
+```
+
+## c. (ii) Pairs Plot {.tabset}
+
+Produce a pairs plot of the first 10 columns of the data. 
+
+### Tidyverse
+
+```{r, fig.width=8, fig.height=8, out.width="80%", cache=TRUE}
+library(GGally)
+college %>% 
+  select(Private:Room.Board) %>%  # select first 10
+  ggpairs(axisLabels="none",
+          upper = list(continuous = wrap("cor", size = 4)))
+# ggpairs() is from the GGally package; the second term is to change the font size for readibility
+```
+
+
+### Base R 
+
+Use the pairs() function to produce a scatterplot matrix of the first ten columns or variables of the data. Recall that you can reference the first ten columns of a matrix A using A[,1:10]
+
+```{r, fig.width=8, fig.height=8, out.width="80%"}
+pairs(college[,1:10])
+```
+
+
+## c. (iii) Side-by-side boxplots of Outstate versus Private  {.tabset}
+
+### Tidyverse
+
+```{r}
+college %>% 
+  ggplot(aes(Private, Outstate)) +
+  geom_boxplot(fill="orange", width=c(.3)) +
+  labs(title="Out of State Tuition at Private vs. Public Schools", 
+       x="Private School?", 
+       y="Out of State Tuition ($)") 
+#labs() lets you add all of the labels in one function; the width adjustment is just stylistic
+```
+
+
+### Base R
+
+Use the plot() function to produce side-by-side boxplots of Outstate versus Private.
+
+```{r}
+boxplot(Outstate ~ Private, 
+        data=college, 
+        main="Out of State Tuition by School Type",
+        col="orange", border="black", 
+        xlab="Private School?", 
+        ylab="Out of State Tuition ($)")
+```
+
+## c. (iv) Binning {.tabset}
+
+Create a new qualitative variable, called Elite, by binning the `Top10perc` variable. We are going to divide universities into two groups based on whether or not the proportion of students coming from the top 10% of their high school classes exceeds 50%.
+
+### Tidyverse
+
+```{r}
+# Add Elite
+college = college %>% 
+  mutate(Elite = ifelse(Top10perc > 50, "Yes", "No"))
+```
+
+```{r}
+# table
+college %>% 
+  count(Elite) %>% 
+  mutate(p = round(n/sum(n), 3)) %>% 
+  knitr::kable()   # nice format for printed table
+```
+
+```{r}
+# Boxplot
+ggplot(data=college, aes(Elite, Outstate)) +
+  geom_boxplot(fill="orange", width=c(.3)) +
+  labs(title='Out of State Tuition at "Elite" vs. "Non-Elite" Schools', 
+       x="Elite School?", 
+       y="Out of State Tuition ($)")
+```
+
+
+
+### Base R
+
+```{r}
+# Add Elite
+college$Elite = ifelse(
+  college$Top10perc > 50, "Yes", "No")
+```
+
+```{r}
+# table
+table(college$Elite)
+```
+
+```{r}
+boxplot(Outstate ~ Elite, data=college, main="Out of State Tuition by Elite Status", ylab="Out of State Tuition ($)", col="orange", border="black")
+```
+
+## c. (v) Histograms {.tabset}
+
+### Tidyverse
+
+```{r}
+college %>% 
+  pivot_longer(cols = c(Grad.Rate, Top10perc, Outstate, S.F.Ratio),
+               names_to = "variable", 
+               values_to = "value"
+              ) %>% 
+  ggplot(aes(value)) + 
+  geom_histogram(fill="orange", color="black") + 
+  facet_wrap(~variable, scales="free")
+```
+
+
+### Base R
+
+```{r}
+par(mfrow=c(2,2))
+hist(college$Grad.Rate, main="Grad. Rate Distribution", xlab="Graduation Rate (%)", col="orange")
+
+hist(college$Top10perc, main="% of Class in Top 10% of HS", xlab="% in Top 10% of High School", col="orange")
+
+hist(college$Outstate, main="Dist. of Out of State Tuition", xlab="Out of State Tuition", col="orange")
+
+hist(college$S.F.Ratio,main="Dist. of Student Faculty Ratio", xlab="Student Faculty Ratio", col="orange")
+```
+
+## c. (vi) Continue exploring the data, and provide a brief summary of what you discover. {.tabset}
+
+### Tidyverse
+```{r, fig.width=8, fig.height=8, out.width="65%"}
+# Add new variable for acceptance rate
+college = college %>% 
+  mutate(Accept.Rate = Accept/Apps)
+
+# Exploring Acceptance Rate
+
+ggplot(data=college,
+       aes(perc.alumni, Accept.Rate, 
+           color=Private, size=Enroll)) +
+  geom_jitter() + 
+  labs(title = "Acceptance Rate vs. Percent of Alumni Who Donate",
+       x = "% of Alumni Who Donate", 
+       y="Acceptance Rate", 
+       size="Enrollment", color="Private School?")
+
+
+
+college %>% 
+  pivot_longer(cols=c(Grad.Rate, perc.alumni,
+                      Outstate, S.F.Ratio),
+               names_to="xvalue", values_to="x") %>% 
+  ggplot(aes(x, Accept.Rate, color=Private, size=Enroll)) + 
+  geom_jitter(alpha=.5) + 
+  facet_wrap(~xvalue, scales="free_x") +
+  labs(y = "Acceptance Rate", 
+       size="Enrollment")
+
+
+college %>% 
+  ggplot(aes(Outstate, Accept.Rate)) + 
+  geom_jitter() + 
+  facet_grid(Elite~Private, labeller = label_both) + 
+  labs(x="Out of State Tuition", y="Acceptance Rate")
+
+
+college %>% 
+  ggplot(aes(Accept.Rate, Outstate)) + 
+  geom_smooth() +
+  geom_point() + 
+  labs(x="Out of State Tuition", 
+       y="Acceptance Rate")
+
+```
+
+Based on this exploration, here are a few takeaways: 
+
+1.  Private schools tend to have higher tuition, higher graduation rates, fewer students per faculty member, and more alumni who donate
+
+2. Public schools tend to be larger
+
+3. It doesn't appear there is a strong relationship between the acceptance rate and the students per faculty member or % of donating alumni. However, higher acceptance rates are correlated with lower tuition. 
+
+4. There aren't many elite public universities, but those that do exist tend to have lower tuition than elite private universities.  
+
+
+### Base R
+
+
+```{r}
+college$Accept.Rate = college$Accept / college$Apps #creating a variable for acceptance rate
+par(mfrow=c(2,2)) #doing scatter plots of the acceptance rate vs. other variables
+attach(college) #this makes it easier to access all of the variables without typing  out the full names
+
+plot(x=Accept.Rate, Outstate, main="Accept % vs. Tuition", xlab="Acceptance Rate", ylab="Out of State Tuition")
+abline(lm(Outstate ~ Accept.Rate), col="red") #the abline adds a regression line to the plot
+
+plot(x=Accept.Rate, S.F.Ratio, main="Accept % vs. Student/Faculty ", xlab="Acceptance Rate", ylab="Students per Faculty Member")
+abline(lm(S.F.Ratio ~ Accept.Rate), col="red") 
+
+plot(x=Accept.Rate, Grad.Rate, main="Accept % vs. Graduation Rate", xlab="Acceptance Rate", ylab="Graduation Rate")
+abline(lm(Grad.Rate ~ Accept.Rate), col="red") 
+
+plot(x=Accept.Rate, perc.alumni, main="Accept % vs. % of Alum Donations", xlab="Acceptance Rate", ylab="% of Donating Alumni")
+abline(lm(perc.alumni ~ Accept.Rate), col="red") 
+
+```
+```
+

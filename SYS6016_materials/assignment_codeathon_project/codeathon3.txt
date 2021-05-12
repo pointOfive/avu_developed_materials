@@ -1,0 +1,33 @@
+
+Codeathon 3: There’s an App for That Deep Learning Model!
+Due: 5/5 3:30PM EST (before Class 28)
+Late: 0 (after 3:30PM EST beginning with the start of Class 28)
+Value: 80 points (8% of class grade)
+Mobile phones are already a huge part of our lives and combining them with the power of machine learning is something that, in theory, can create user experiences that delight and impress users. In terms of computational resources, making predictions is less costly than training. On-device inference means that the models need to be loaded into RAM, which also requires significant computational time on the GPU or CPU.  
+
+In this codeathon, you will investigate TensorFlow Lite, Google’s machine learning platform that enables developers to run TensorFlow models on mobile, embedded, and IoT devices. You will pick a model, convert it to a compressed and efficient model using the TensorFlow Lite Converter, deploy it on a mobile device of your choice, and make sure it is successfully executed.
+
+ 
+
+DIRECTIONS
+
+Read and understand the guide to TensorFlow Lite. 
+Read the Firebase Machine Learning Documentation.
+Pick a model to deploy on the mobile platform. 
+Choose your platform: iOS or Android.
+Deploy your model on the chosen platform and test its capabilities.
+SUBMISSION INSTRUCTIONS
+
+Submit a PDF file via UVA Collab with the following format: yourcomputingID_codeathon_3.pdf.
+Your PDF needs to indicate the link to your mobile app (on the App Store or Google Play).
+Your app needs to be functional (at least on a simple example output) in order to get credit.
+Submit a slide deck with screenshots/pictures and descriptions of your app demo process.
+This can be done in demo mode on a phone or emulator: you don't necessarily need to access your app through and App Store; though, certainly you are welcome to take your App as far along that path as you're interested and able. 
+What you create should be a tutorial or "how to" demonstrating how to do what you've been able to do in terms of the above directions.
+
+https://www.tensorflow.org/lite
+https://firebase.google.com/docs/ml
+https://www.tensorflow.org/lite/models
+https://github.com/tensorflow/examples/tree/master/lite/examples/bert_qa/ios
+https://github.com/tensorflow/examples/tree/master/lite/examples/bert_qa/android
+

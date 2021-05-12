@@ -1,0 +1,320 @@
+---
+title: "Mod_3_Live"
+author: "Schwartz"
+date: "09/12/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      fig.align = "center",
+                      out.width = "80%")
+```
+
+## Announcements
+- tablet
+- office hours
+- lecture intention
+- lecture length
+
+## Data
+
+### setup
+```{r setup}
+weekly <- ISLR::Weekly
+# A *Final* hold out data test set 
+# not used for train-test/cross-validation tuning selection
+# is a really, very good idea... why?
+library(tidyverse)
+weekly_FHO <- weekly %>% dplyr::filter(Year >= 2005)
+weekly <- weekly %>% dplyr::filter(Year < 2005)
+# shuffle just to be safe
+weekly <- dplyr::sample_n(weekly, nrow(weekly))
+```
+
+- keep a final holdout set
+  - why?
+- shuffle your data
+  - why?
+
+### caret
+```{r caret}
+#library(caret)
+# ?train
+# ?trainControl
+set.seed(1)
+# https://blog.revolutionanalytics.com/2016/05/using-caret-to-compare-models.html
+classifier <- caret::train(Direction~Lag2, data=weekly, method="knn", 
+              preProcess=c("center","scale"), 
+              tuneGrid=data.frame(k=seq(1,355,2)),
+              trControl = caret::trainControl("cv", number=4, 
+                          returnResamp='all', savePredictions='final',
+                          classProbs=TRUE))
+```
+
+- caret/parsnip is really great
+- k=4 folds cross-validation over *EVERY* k under consideration
+
+### Model Tuning Parameters: train-test plot
+
+```{r caret2}
+classifier %>% ggplot(aes(x=seq_along(Accuracy), y=Accuracy)) + 
+  geom_line(size=2, color='red')
+```
+
+- what value of k?
+  - what could have gone wrong?
+
+
+### what's really going on with train-test frameworks
+```{r k_folds_truth}
+
+classifier$resample %>% 
+  dplyr::group_split(Resample) %>% 
+  purrr::map(rowid_to_column) %>%
+  dplyr::bind_rows() %>%
+  ggplot(aes(rowid, Accuracy)) + geom_point() +
+  geom_smooth(formula='y~x', method='loess', span=.03) +
+  geom_line(classifier$results, mapping=aes(seq_along(Accuracy), Accuracy),
+            size=2, color='red')
+```
+
+- what is this plot showing?
+- what do you think about that?
+- which will you choose?
+
+### It's worse than that
+
+```{r worse}
+# https://stackoverflow.com/questions/55033695/x-axis-labels-illegible-display-every-other-label-on-x-axis-ggplot2
+classifier$resample %>% 
+  dplyr::mutate(k_group=factor(k)) %>%
+  ggplot(aes(x=k_group, y=Accuracy)) + geom_boxplot() + 
+  scale_x_discrete(breaks=seq(1, max(classifier$resample$k), 20))
+```
+
+- you're not going to be getting "the average score" when you do this...
+- now which will you choose?
+
+### **The Confusion Matrix**
+```{r confusionMatrix}
+# ?confusionMatrix
+# and also, someitmes even nicer/easier to use:
+# ?yardstick::conf_mat
+# e.g., it has a `ggplot2::autoplot()` method
+# e.g., and it plays nicely with yardstick::roc_curve
+#library(purrr)
+THRESHOLD <- 0.53
+out_of_folds_CM <- classifier$pred %>%
+  dplyr::mutate(pred2 = ifelse(Up > THRESHOLD, 'Up', 'Down')) %>%
+  dplyr::mutate(pred2 = factor(pred2, levels = c('Down', 'Up'))) %>%
+  dplyr::group_split(Resample) %>%
+  purrr::map( ~ caret::confusionMatrix(data=.x$pred2, reference=.x$obs))
+
+# try these!
+# `?confusionMatrix`
+#caret::confusionMatrix(classifier)
+#caret::confusionMatrix(predict(classifier, newdata=weekly),reference=weekly$Direction)
+#caret::confusionMatrix(predict(classifier, newdata=weekly_FHO),reference=weekly_FHO$Direction)
+
+thresholded_predictions <- factor(ifelse(predict(classifier, newdata=weekly_FHO, type='prob')$Up>.55, 'Up', 'Down'))
+caret::confusionMatrix(data=thresholded_predictions,reference=weekly_FHO$Direction, positive='Up')
+
+# `?confusionMatrix`
+
+# https://www.r-graph-gallery.com/79-levelplot-with-ggplot2.html
+# https://stackoverflow.com/questions/45146315/ggplot-add-text-inside-each-tile-of-geom-tile/45146593
+# https://stackoverflow.com/questions/39602828/changing-background-color-for-a-text-annotation-to-increase-contrast-and-visibil
+
+out_of_folds_CM_vis <- out_of_folds_CM %>% 
+  purrr::map(~ .x$table %>% broom::tidy() %>%
+                 ggplot(aes(x=Reference, y=Prediction, fill=n, label=n)) +
+                 geom_tile() + geom_text(aes(label=n), size=5, color='white'))
+ 
+#library(gridExtra)
+gridExtra::grid.arrange(grobs=out_of_folds_CM_vis, ncol=2)
+```
+
+- what is one of these?
+- why are there *four* of these?
+- what it a little bit strange about each of these?
+- why is that happening? 
+- what if we do something about that...
+- what do you think about that?
+- what's the difference between these types of errors being made?
+- which is better/worse?
+
+### **ROC curve**
+```{r roc}
+#library(yardstick)
+# https://github.com/tidymodels/yardstick/issues/13
+options(yardstick.event_first=FALSE)
+
+# https://stackoverflow.com/questions/60123746/how-to-set-the-estimate-argument-correctly-for-roc-auc-function-in-yardstick-p
+
+ROC_curve <- predict(classifier, type='prob') %>% 
+  yardstick::roc_curve(truth=weekly$Direction, estimate=Up) %>%
+  dplyr::mutate(one_minus_specificity = 1-specificity)
+
+# try this:
+# `?yardstick::roc_curve`
+#tibble(predict(classifier, type='prob')) %>% add_column(truth=weekly$Direction) %>% yardstick::roc_curve(truth, Up)
+
+# Sensitivity: TP/(TP+FN)
+# 1-Specificity: FP/(TN+FP)
+
+ROC_curve_plot <- ROC_curve %>%
+  ggplot(aes(x=one_minus_specificity, y=sensitivity)) + 
+  geom_line() + geom_point() +
+  geom_abline(slope=1, intercept=0, linetype='dashed', color='red') +
+  xlab("one_minus_specificity\n(false positive rate)") +
+  ggtitle('ROC curve')
+
+plotly::ggplotly(ROC_curve_plot)
+
+predict(classifier, type='prob') %>% 
+  yardstick::roc_auc(truth=weekly$Direction, Up) 
+
+# try this:
+# `?yardstick::roc_auc`
+# tibble(predict(classifier, type='prob')) %>% add_column(truth=weekly$Direction) %>% yardstick::roc_auc(truth, Up)
+# tibble(predict(classifier, type='prob')) %>% add_column(truth=weekly$Direction) %>% yardstick::roc_auc(truth=truth, Up)
+# yardstick::roc_auc_vec(truth=weekly$Direction, estimate=predict(classifier, type='prob')$Up)
+
+```
+
+- sensitivity
+- specificity & false positive rate (1-specificity) 
+- thresholds control this
+  - so what are the points?
+- what do you think of this ROC curve?
+- what's the red curve?
+- what's an ideal curve look like on this plot?
+
+
+### What... is this?
+```{r roc_is_what}
+ROC_curve %>% head()
+predict(classifier, type='prob') %>% head()
+```
+
+- review what thresholds are
+- review what an ROC curve is
+
+### **ROC curve(S)**
+```{r thresholds}
+
+ROC_curveS <- classifier$pred %>%
+  dplyr::group_split(Resample) %>% 
+  purrr::map(~ yardstick::roc_curve(.x, truth=obs, Up)) %>%
+  purrr::map(~ dplyr::mutate(.x, one_minus_specificity = 1-specificity)) %>%
+  purrr::map(~ geom_line(.x, mapping=aes(one_minus_specificity, sensitivity)))
+
+ROC_curveS[[1]] <- ggplot() + ROC_curveS[[1]]
+Reduce("+", ROC_curveS) + 
+  geom_abline(slope=1, intercept=0, linetype='dashed', color='red') +
+  xlab("one_minus_specificity\n(false positive rate)") +
+  ggtitle('ROC curveSSSSS')
+```
+- what is this?
+- what does this mean?
+
+### **Thresholds**
+
+`install.packages('shiny')`
+
+
+```{r thresholds}
+preds <- predict(classifier, type='prob')[,2]
+
+tuned_call <- function(preds, decision_rule_threshold){
+  calls <- rep('Down', length(preds))
+  calls[preds>decision_rule_threshold]='Up'
+  factor(calls, levels=c('Down','Up'))
+}
+
+# https://shiny.rstudio.com/tutorial/written-tutorial/lesson1/
+library(shiny)
+
+ui <- fluidPage(
+  titlePanel("Change Yo Threshold Yo"),
+  sidebarLayout(sidebarPanel(sliderInput(inputId="threshold",
+                                         label="Decision Rule / Threshold:",
+                                         min=0, max=1, value=0.5)),
+                mainPanel(plotOutput(outputId="confMat"))))
+
+server <- function(input, output) {
+  output$confMat <- renderPlot({
+    y <- weekly$Direction
+    yhat <- tuned_call(preds, input$threshold)
+    one_minus_specificity <- mean(yhat[y=='Down']=='Up')
+    sensitivity <- mean(yhat[y=='Up']=='Up')
+    results <- tibble::tibble(y=y, yhat=yhat)
+    cm <- results %>%
+      yardstick::conf_mat(truth=y, yhat) %>% autoplot(type='heatmap') +
+      geom_text(aes(label=Freq), size=15) + theme(text=element_text(size=20))
+    cm$layers[[2]] <- NULL
+    roc <- results %>% tibble::add_column(p=preds) %>% 
+      yardstick::roc_curve(truth=y, p) %>% 
+      dplyr::mutate(one_minus_specificity = 1-specificity) %>%
+      ggplot(aes(x=one_minus_specificity, y=sensitivity)) +
+      geom_line() + geom_point() + theme(text=element_text(size=20)) +
+      geom_point(tibble::tibble(one_minus_specificity=one_minus_specificity,
+                                sensitivity=sensitivity),
+                 mapping=aes(x=one_minus_specificity, y=sensitivity), 
+                 color='red', size=5) +
+      xlab("one_minus_specificity\n(false positive rate)")
+    
+    gridExtra::grid.arrange(grobs=list(cm, roc), ncol=2)
+    })
+}
+shinyApp(ui = ui, server = server)
+
+```
+- thresholding is SUPER IMPORTANT!!!
+
+
+### Last thoughts: aka *why is that*?
+```{r final}
+#mean(predict(classifier)==weekly$Direction)
+predict(classifier, type='prob') %>% 
+  yardstick::roc_auc(truth=weekly$Direction, Up) 
+
+#classifier$pred %>%
+#  dplyr::group_split(Resample) %>% 
+#  purrr::map(~ mean(.x$pred==.x$obs))
+classifier$pred %>%
+  dplyr::group_by(Resample) %>% 
+  yardstick::roc_auc(truth=obs, Up)
+
+#mean(predict(classifier, newdata=weekly_FHO)==weekly_FHO$Direction)
+predict(classifier, newdata=weekly_FHO, type='prob') %>%
+  yardstick::roc_auc(truth=weekly_FHO$Direction, Up)
+```
+
+# next steps 
+
+```{r rabbit_hole}
+# https://blog.revolutionanalytics.com/2016/05/using-caret-to-compare-models.html
+classifier <- caret::train(Direction~Lag2, data=weekly, method="knn", 
+              preProcess=c("center","scale"), 
+              tuneGrid=data.frame(k=seq(1,355,2)),
+              trControl = caret::trainControl("cv", number=4, 
+                          returnResamp='all', savePredictions='final',
+                          classProbs=TRUE, 
+                          summaryFunction=caret::twoClassSummary))
+
+```
+
+```{r rabbit_hole}
+classifier %>% ggplot(aes(x=seq_along(Accuracy), y=Accuracy))
+```
+
+- lets use AUC to decide
+- now go run the above again
+
+## My questions
+
+PollEv.com/scottschwart658
+
+## Your questions

@@ -1,0 +1,16 @@
+Final Project: present something to the class that you would like to share with your peers and raise awareness of generally speaking, and which you want to provide some data evidence for (in support or against)
+
+Your final project will involve ONE SINGLE DOCUMENT which you will present through two different mediums:
+
+1. A standalone document report (which you will submit for review) that's not too unlike an article you might read from a data literate publication and the presentations you've seen (and will continue to see) over the course of the class
+Your final report will be a written article (formatted as a knitted .Rmd/.html, or similar file) that includes compelling presentations of data that help the reader understand, be better informed, or perhaps even convinced and won over to the views presented in your article
+You should be aiming to write a sufficiently interesting and compelling article that you could realistically submit to The Times or The Atlantic for publication, or maybe The Cavalier Daily (as a back up).  Or, if it doesn't actually end up in that sort of a publication, something that would be really cool to show your friends, your family, and you prospective employers...
+While any given part of the arguments you make need not be data driven [and can be rhetorical -- and based on your own personal beliefs and perspectives -- in nature] your work needs to leverage data to strengthen and highlight the points you are trying to make and present to your audience
+If your point is to show the limitations of the data you have at your disposal with respect to the given topics you address, that could work, too (just make sure you demonstrate the thoroughness of your data search efforts).
+
+2. A presentation of your report document (which you will give to the class)
+So what will your report be about?  Anything you want it to be about!  The only requirements are that you choose a topic which (1) you can report on and communicate about effectively, and on which (2) you are able to find compelling data the present and discuss the relevance and implications of for your topic.  
+
+Don't be afraid to present controversial or hot button topics and hot takes.  E.g., if something along the lines of any of these topics interests you, it is a suitable topic options: Covid and/or Governmental and Healthcare Industry Response Ability; the Climate and/or Economic Progress; Vaccines and/or Relative Risks of Global Health Issues; Healthcare and/or Disparity; Vegetarian Heath and/or Meat Production Efficiency; Fluoride in Drinking Water and/or Socio Economic Disparate Impact; Social Justice (e.g., Black Lives Matter) and/or Gender Bias (e.g., Feminism: the radical notion that women are people). Or don't be afraid to NOT work on things as heavy as those above and instead present something YOU want to!  E.g., is coffee bad for you?  Etc. Etc. Etc. 
+
+Go find data that can help you tell an interesting story that you'd like to tell!

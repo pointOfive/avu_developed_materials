@@ -1,0 +1,63 @@
+Untitled
+,Activity count,6
+,Participant count,30
+,Average responses,37.333333333333336
+
+"Even though the book admits that K-folds is better (5.1.4),<br> it still consistently emphasizes LOOCV because",Activity type,Multiple choice
+,Total responses,29
+,Unique participants,27
+,Response options,Count,Percent
+,it's possible to calculate it using a single `lm` fit,18,62.07
+,for linear regression it's calculated using leverages,1,3.45
+,it can be calculated from the hat matrix and its diagonal,5,17.24
+,it's a fast and easy way to calculate linear model scores,5,17.24
+
+There are ___ knots in smoothing splines,Activity type,Multiple choice
+,Total responses,33
+,Unique participants,30
+,Response options,Count,Percent
+,3,1,3.03
+,n,10,30.3
+,It depends,15,45.45
+,k,7,21.21
+
+An example of a GAM is,Activity type,Multiple choice
+,Total responses,29
+,Unique participants,27
+,Response options,Count,Percent
+,LOcally Estimated Scatterplot Smoother (loess),1,3.45
+,$$y \sim \beta_0 + \beta_1x_1 + \beta_{12}x_1^2 + \beta_2x_2 + \beta_{22}x_2^2 + \epsilon$$,0,0.0
+,$$y \sim \beta_0 + f(x_1)+g(x_2)+h(x_3)+\epsilon$$,25,86.21
+,"$$y$$ regressed against loess($$x_1$$), smooth.spline($$x_2$$), and ns($$x_3$$)",3,10.34
+
+select all which define mathematically identical sets of functions,Activity type,Multiple choice
+,Total responses,77
+,Unique participants,26
+,Response options,Count,Percent
+,Natural splines,9,11.69
+,B-splines,4,5.19
+,Truncated power basis functions,5,6.49
+,Twice continuously differentiable functions,16,20.78
+,Cubic splines,25,32.47
+,Smoothing splines,18,23.38
+
+"`poly(x,2)` is to `x+I(x^2)`as",Activity type,Multiple choice
+,Total responses,31
+,Unique participants,25
+,Response options,Count,Percent
+,B-splines are to truncated power basis functions,13,41.94
+,B-splines are to cubic splines,5,16.13
+,B-splines are to smoothing splines,0,0.0
+,B-splines are to GAMs,13,41.94
+,B-splines are to natural cubic splines,0,0.0
+,B-splines are to loess,0,0.0
+
+A smoothing spline is,Activity type,Multiple choice
+,Total responses,25
+,Unique participants,25
+,Response options,Count,Percent
+,a generalized additive models (GAMs) methodology for smooth curve fitting,3,12.0
+,an average regression of points within a window and weighted by distance,6,24.0
+,a (shrinkage) regularized natural cubic spline with knots at every data point,16,64.0
+,a regression spline construction built using truncated power basis functions,0,0.0
+,"heuristic smoothing not based on derivatives, integrals, or continuity requirements",0,0.0

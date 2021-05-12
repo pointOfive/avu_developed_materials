@@ -1,0 +1,95 @@
+Untitled
+,Activity count,11
+,Participant count,30
+,Average responses,25.545454545454547
+
+What is $$\sum_{i=1}^n (y_i - \hat y_i)^2 = (\mathbf{y}-\mathbf{X} {\beta})^T(\mathbf{y}-\mathbf{X} {\beta})$$?,Activity type,Multiple choice
+,Total responses,24
+,Unique participants,24
+,Response options,Count,Percent
+,MSE,9,37.5
+,RMSE,1,4.17
+,SSE,14,58.33
+
+$$\sum_{i=1}^n (y_i - \hat y_i)^2 = (\mathbf{y}-\mathbf{X} {\beta})^T(\mathbf{y}-\mathbf{X} {\beta})$$ is a,Activity type,Multiple choice
+,Total responses,26
+,Unique participants,26
+,Response options,Count,Percent
+,loss function,12,46.15
+,cost function,14,53.85
+,log likelihood,0,0.0
+
+"What is $$\nabla_{\mathbf{\beta}} J(\beta; x, y)$$?",Activity type,Multiple choice
+,Total responses,26
+,Unique participants,26
+,Response options,Count,Percent
+,the gradient of a function $$J$$ with respect to $$\beta$$,26,100.0
+,"the cost function, perhaps with regularization for $$\beta$$",0,0.0
+,I don't know,0,0.0
+
+"$$\nabla_{\mathbf{\beta}} (\mathbf{y}-\mathbf{X} {\beta})^T(\mathbf{y}-\mathbf{X} {\beta}) =\,\mathbf{X}^T \left(\mathbf{X} {\beta} - \mathbf{y}\right)$$ is",Activity type,Multiple choice
+,Total responses,25
+,Unique participants,25
+,Response options,Count,Percent
+,the direction of steepest ascent of the cost function at the current location $$\beta$$,6,24.0
+,the direction of steepest descent of the cost function at the current location $$\beta$$,17,68.0
+,the maximum likelihood estimate of the parameters  $$\beta$$ of a linear model regression,2,8.0
+
+This is,Activity type,Multiple choice
+,Total responses,35
+,Unique participants,25
+,Response options,Count,Percent
+,parameter/model space,8,22.86
+,data space,3,8.57
+,the projection of a point in parameter/model space into data space,13,37.14
+,a gradient descent path in  parameter/model space,11,31.43
+
+This is,Activity type,Multiple choice
+,Total responses,27
+,Unique participants,19
+,Response options,Count,Percent
+,parameter/model space,1,3.7
+,data space,8,29.63
+,the projection of a point in parameter/model space into data space,16,59.26
+,a gradient descent path in  parameter/model space,2,7.41
+
+"What is the ""parameter"" in $$\sum_{i=1}^n (y_i - \hat y_i)^2 = (\mathbf{y}-\mathbf{\mathbf{\hat y}})^T(\mathbf{y}-\mathbf{\mathbf{\hat y}})$$?",Activity type,Multiple choice
+,Total responses,20
+,Unique participants,20
+,Response options,Count,Percent
+,$$\beta$$,12,60.0
+,$$\mathbf{\hat y}$$,5,25.0
+,There is no parameter,3,15.0
+
+"What is dimension of the ""parameter"" in $$\sum_{i=1}^n (y_i - \hat y_i)^2 = (\mathbf{y}-\mathbf{\mathbf{\hat y}})^T(\mathbf{y}-\mathbf{\mathbf{\hat y}})$$?",Activity type,Multiple choice
+,Total responses,26
+,Unique participants,26
+,Response options,Count,Percent
+,$$2$$,4,15.38
+,$$n$$,17,65.38
+,What?,5,19.23
+
+What is $$\nabla_{\mathbf{\hat y}} \frac{1}{2} (\mathbf{\hat y}-\mathbf{\hat y})^T(\mathbf{\hat y}-\mathbf{\hat y})  = \mathbf{\hat y} - \mathbf{ y}$$ ?,Activity type,Multiple choice
+,Total responses,0
+,Unique participants,0
+,Response options,Count,Percent
+,"The direction in which  $$\hat y$$  should change to ""get closer"" to $$y$$",0,0
+,"The opposite direction in which  $$\hat y$$  should change to ""get closer"" to $$y$$",0,0
+,I don't know,0,0
+
+This is,Activity type,Multiple choice
+,Total responses,46
+,Unique participants,24
+,Response options,Count,Percent
+,parameter/model space,9,19.57
+,data space,9,19.57
+,the projection of a point in parameter/model space into data space,11,23.91
+,a gradient descent path in  parameter/model space,17,36.96
+
+Gradient Boosting,Activity type,Multiple choice
+,Total responses,26
+,Unique participants,26
+,Response options,Count,Percent
+,sequentially adds decision trees  to make $$\hat y$$ increasingly closer to $$y$$,8,30.77
+,follows the gradient of  $$\hat y$$ to make predictions sequentially closer to $$y$$,17,65.38
+,approximates the gradient of $$\hat y$$ with a model $$\hat \epsilon$$; $$\hat y + \alpha \hat \epsilon$$ moves in model space,1,3.85

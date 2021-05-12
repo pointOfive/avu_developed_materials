@@ -1,0 +1,221 @@
+Untitled
+,Activity count,19
+,Participant count,65
+,Average responses,67.26315789473684
+
+This image primarily demonstrates,Activity type,Multiple choice
+,Total responses,62
+,Unique participants,62
+,Response options,Count,Percent,Correctness
+,Regularization that is designed to cause preferential shrinkage to only some parameters,8,12.9,Incorrect
+,Regularization that is not designed to cause 100% shrinkage to 0 for any parameters,49,79.03,Correct
+,Regularization that can cause 100% shrinkage to 0 for some parameters,5,8.06,Incorrect
+
+This image primarily demonstrates,Activity type,Multiple choice
+,Total responses,61
+,Unique participants,61
+,Response options,Count,Percent,Correctness
+,Regularization that is designed to cause preferential shrinkage to only some parameters,3,4.92,Incorrect
+,Regularization that is not designed to cause 100% shrinkage to 0 for any parameters,0,0.0,Incorrect
+,Regularization that can cause 100% shrinkage to 0 for some parameters,58,95.08,Correct
+
+This image primarily demonstrates,Activity type,Multiple choice
+,Total responses,63
+,Unique participants,63
+,Response options,Count,Percent,Correctness
+,Regularization that is designed to cause preferential shrinkage to only some parameters,56,88.89,Correct
+,Regularization that is not designed to cause 100% shrinkage to 0 for any parameters,7,11.11,Incorrect
+,Regularization that can cause 100% shrinkage to 0 for some parameters,0,0.0,Incorrect
+
+Choose one of the following:,Activity type,Multiple choice
+,Total responses,65
+,Unique participants,65
+,Response options,Count,Percent,Correctness
+,"I pledge that all Poll Everywhere answers I submit today will (a) be my own and represent my own understandings, and (b) I will not contribute to other students' answers while the poll is active.",62,95.38,Correct
+,I will not be taking this quiz for credit.,3,4.62,Incorrect
+
+"Strategies designed to reduce test error (i.e., minimize generalization error), possibly at the expense of increased training error are called",Activity type,Multiple choice
+,Total responses,65
+,Unique participants,65
+,Response options,Count,Percent,Correctness
+,Regularization,63,96.92,Correct
+,Model Fitting,0,0.0,Incorrect
+,Optimization,2,3.08,Incorrect
+
+This is,Activity type,Multiple choice
+,Total responses,65
+,Unique participants,65
+,Response options,Count,Percent,Correctness
+,Sparse Representation Regularization,0,0.0,Incorrect
+,$$L^2$$ Weight Decay Regularization (or ridge regression or Tikhonov regularization),5,7.69,Incorrect
+,Multitask Learning Regularization,0,0.0,Incorrect
+,$$L^1$$ Weight Decay regularization (or LASSO regression),60,92.31,Correct
+,Semi-Supervised Learning Regularization,0,0.0,Incorrect
+,Candidate Sample for Adversarial Training Regularization,0,0.0,Incorrect
+,Early Stopping Regularization Options,0,0.0,Incorrect
+,Variance Reduction from Bagging Regularization,0,0.0,Incorrect
+,Label Smoothing Regularization,0,0.0,Incorrect
+
+This is,Activity type,Multiple choice
+,Total responses,65
+,Unique participants,65
+,Response options,Count,Percent,Correctness
+,Sparse Representation Regularization,0,0.0,Incorrect
+,$$L^2$$ Weight Decay Regularization (or ridge regression or Tikhonov regularization),0,0.0,Incorrect
+,Multitask Learning Regularization,64,98.46,Correct
+,$$L^1$$ Weight Decay regularization (or LASSO regression),0,0.0,Incorrect
+,Semi-Supervised Learning Regularization,0,0.0,Incorrect
+,Candidate Sample for Adversarial Training Regularization,0,0.0,Incorrect
+,Early Stopping Regularization Options,1,1.54,Incorrect
+,Variance Reduction from Bagging Regularization,0,0.0,Incorrect
+,Label Smoothing Regularization,0,0.0,Incorrect
+
+This is,Activity type,Multiple choice
+,Total responses,65
+,Unique participants,65
+,Response options,Count,Percent,Correctness
+,Sparse Representation Regularization,4,6.15,Incorrect
+,$$L^2$$ Weight Decay Regularization (or ridge regression or Tikhonov regularization),0,0.0,Incorrect
+,Multitask Learning Regularization,0,0.0,Incorrect
+,$$L^1$$ Weight Decay regularization (or LASSO regression),0,0.0,Incorrect
+,Semi-Supervised Learning Regularization,46,70.77,Correct
+,Candidate Sample for Adversarial Training Regularization,3,4.62,Incorrect
+,Early Stopping Regularization Options,1,1.54,Incorrect
+,Variance Reduction from Bagging Regularization,5,7.69,Incorrect
+,Label Smoothing Regularization,6,9.23,Incorrect
+
+This is,Activity type,Multiple choice
+,Total responses,65
+,Unique participants,65
+,Response options,Count,Percent,Correctness
+,Sparse Representation Regularization,1,1.54,Incorrect
+,$$L^2$$ Weight Decay Regularization (or ridge regression or Tikhonov regularization),0,0.0,Incorrect
+,Multitask Learning Regularization,0,0.0,Incorrect
+,$$L^1$$ Weight Decay regularization (or LASSO regression),0,0.0,Incorrect
+,Semi-Supervised Learning Regularization,0,0.0,Incorrect
+,Candidate Sample for Adversarial Training Regularization,0,0.0,Incorrect
+,Early Stopping Regularization Options,0,0.0,Incorrect
+,Variance Reduction from Bagging Regularization,63,96.92,Correct
+,Label Smoothing Regularization,1,1.54,Incorrect
+
+This is,Activity type,Multiple choice
+,Total responses,65
+,Unique participants,65
+,Response options,Count,Percent,Correctness
+,Sparse Representation Regularization,0,0.0,Incorrect
+,$$L^2$$ Weight Decay Regularization (or ridge regression or Tikhonov regularization),64,98.46,Correct
+,Multitask Learning Regularization,0,0.0,Incorrect
+,$$L^1$$ Weight Decay regularization (or LASSO regression),0,0.0,Incorrect
+,Semi-Supervised Learning Regularization,0,0.0,Incorrect
+,Candidate Sample for Adversarial Training Regularization,1,1.54,Incorrect
+,Early Stopping Regularization Options,0,0.0,Incorrect
+,Variance Reduction from Bagging Regularization,0,0.0,Incorrect
+,Label Smoothing Regularization,0,0.0,Incorrect
+
+This is,Activity type,Multiple choice
+,Total responses,65
+,Unique participants,65
+,Response options,Count,Percent,Correctness
+,Sparse Representation Regularization,0,0.0,Incorrect
+,$$L^2$$ Weight Decay Regularization (or ridge regression or Tikhonov regularization),0,0.0,Incorrect
+,Multitask Learning Regularization,0,0.0,Incorrect
+,$$L^1$$ Weight Decay regularization (or LASSO regression),0,0.0,Incorrect
+,Semi-Supervised Learning Regularization,0,0.0,Incorrect
+,Candidate Sample for Adversarial Training Regularization,62,95.38,Correct
+,Early Stopping Regularization Options,0,0.0,Incorrect
+,Variance Reduction from Bagging Regularization,0,0.0,Incorrect
+,Label Smoothing Regularization,3,4.62,Incorrect
+
+This is,Activity type,Multiple choice
+,Total responses,65
+,Unique participants,65
+,Response options,Count,Percent,Correctness
+,Sparse Representation Regularization,0,0.0,Incorrect
+,$$L^2$$ Weight Decay Regularization (or ridge regression or Tikhonov regularization),0,0.0,Incorrect
+,Multitask Learning Regularization,0,0.0,Incorrect
+,$$L^1$$ Weight Decay regularization (or LASSO regression),0,0.0,Incorrect
+,Semi-Supervised Learning Regularization,0,0.0,Incorrect
+,Candidate Sample for Adversarial Training Regularization,0,0.0,Incorrect
+,Early Stopping Regularization Options,65,100.0,Correct
+,Variance Reduction from Bagging Regularization,0,0.0,Incorrect
+,Label Smoothing Regularization,0,0.0,Incorrect
+
+This is,Activity type,Multiple choice
+,Total responses,65
+,Unique participants,65
+,Response options,Count,Percent,Correctness
+,Sparse Representation Regularization,43,66.15,Correct
+,$$L^2$$ Weight Decay Regularization (or ridge regression or Tikhonov regularization),10,15.38,Incorrect
+,Multitask Learning Regularization,0,0.0,Incorrect
+,$$L^1$$ Weight Decay regularization (or LASSO regression),1,1.54,Incorrect
+,Semi-Supervised Learning Regularization,0,0.0,Incorrect
+,Candidate Sample for Adversarial Training Regularization,0,0.0,Incorrect
+,Early Stopping Regularization Options,0,0.0,Incorrect
+,Variance Reduction from Bagging Regularization,0,0.0,Incorrect
+,Label Smoothing Regularization,11,16.92,Incorrect
+
+This is,Activity type,Multiple choice
+,Total responses,65
+,Unique participants,65
+,Response options,Count,Percent,Correctness
+,Sparse Representation Regularization,3,4.62,Incorrect
+,$$L^2$$ Weight Decay Regularization (or ridge regression or Tikhonov regularization),1,1.54,Incorrect
+,Multitask Learning Regularization,2,3.08,Incorrect
+,$$L^1$$ Weight Decay regularization (or LASSO regression),1,1.54,Incorrect
+,Semi-Supervised Learning Regularization,2,3.08,Incorrect
+,Candidate Sample for Adversarial Training Regularization,1,1.54,Incorrect
+,Early Stopping Regularization Options,0,0.0,Incorrect
+,Variance Reduction from Bagging Regularization,47,72.31,Correct
+,Label Smoothing Regularization,8,12.31,Incorrect
+
+This is (choose 2),Activity type,Multiple choice
+,Total responses,125
+,Unique participants,65
+,Response options,Count,Percent,Correctness
+,Sparse Representation Regularization,2,1.6,Incorrect
+,$$L^2$$ Weight Decay Regularization (or ridge regression or Tikhonov regularization),59,47.2,Correct
+,Multitask Learning Regularization,0,0.0,Incorrect
+,$$L^1$$ Weight Decay regularization (or LASSO regression),8,6.4,Incorrect
+,Semi-Supervised Learning Regularization,1,0.8,Incorrect
+,Candidate Sample for Adversarial Training Regularization,0,0.0,Incorrect
+,Early Stopping Regularization Options,51,40.8,Correct
+,Variance Reduction from Bagging Regularization,0,0.0,Incorrect
+,Label Smoothing Regularization,4,3.2,Incorrect
+
+This is,Activity type,Multiple choice
+,Total responses,65
+,Unique participants,65
+,Response options,Count,Percent,Correctness
+,Sparse Representation Regularization,1,1.54,Incorrect
+,$$L^2$$ Weight Decay Regularization (or ridge regression or Tikhonov regularization),0,0.0,Incorrect
+,Multitask Learning Regularization,0,0.0,Incorrect
+,$$L^1$$ Weight Decay regularization (or LASSO regression),0,0.0,Incorrect
+,Semi-Supervised Learning Regularization,0,0.0,Incorrect
+,Candidate Sample for Adversarial Training Regularization,0,0.0,Incorrect
+,Early Stopping Regularization Options,0,0.0,Incorrect
+,Variance Reduction from Bagging Regularization,1,1.54,Incorrect
+,Label Smoothing Regularization,63,96.92,Correct
+
+Examples of data augmentation are (choose all that apply):,Activity type,Multiple choice
+,Total responses,180
+,Unique participants,65
+,Response options,Count,Percent,Correctness
+,Adding noise to inputs,63,35.0,Correct
+,Adding (carefully tuned) noise to activation function outputs,34,18.89,Correct
+,"Image rotations, shifts, crops, etc. which don't change the class label",65,36.11,Correct
+,Dropout and Batch Normalization,18,10.0,Correct
+
+What is the regularization technique that drastically reduces the number of parameters in CNNs?,Activity type,Multiple choice
+,Total responses,7
+,Unique participants,5
+,Response options,Count,Percent,Correctness
+,Sparse Representations,2,28.57,Incorrect
+,Parameter Sharing,5,71.43,Correct
+,Noise Injection/Robustness,0,0.0,Incorrect
+
+Can I make the weights be samples from a distribution rather than a parameter?,Activity type,Multiple choice
+,Total responses,0
+,Unique participants,0
+,Response options,Count,Percent,Correctness
+,"Yes, with tensorflow-probability, and then my Neural Network has a Bayesian Interpretation.",0,0,Correct
+,No,0,0,Incorrect

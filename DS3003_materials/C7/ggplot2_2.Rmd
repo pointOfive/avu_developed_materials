@@ -1,0 +1,400 @@
+---
+title: "ggplot2_2"
+author: "Schwartz"
+date: "11/2/2020"
+output:
+     html_document:
+          toc: TRUE
+          toc_depth: 4
+          toc_float: true
+          toc_collapsed: true
+          theme: journal
+          code_folding: show
+---
+
+<!--- Change font size for headers --->
+<style>
+h1.title {
+  font-size: 30px;
+}
+h1 {
+  font-size: 26px;
+}
+h2 {
+  font-size: 22px;
+}
+h3 { 
+  font-size: 18px;
+}
+
+</style>
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning=FALSE, message=FALSE, 
+                      fig.align = "center",
+                      out.width = "80%")
+```
+
+
+# Resources
+
+## Code 
+
+### Online Textbooks 
+
+- [R4DS -- Data Manipulation](https://r4ds.had.co.nz/transform.html)
+- [R4DS -- Data Joining](https://r4ds.had.co.nz/relational-data.html)
+- [STHDA -- error bars](http://www.sthda.com/english/wiki/ggplot2-error-bars-quick-start-guide-r-software-and-data-visualization)
+- [R Cookbook -- error bars](http://www.cookbook-r.com/Graphs/Plotting_means_and_error_bars_(ggplot2))
+
+### One-Off Answers
+
+[Group by aggregation](https://stackoverflow.com/questions/41673414/r-aggregate-sum-totals-for-grouped-data-using-dplyr)
+[Replace NA's](https://stackoverflow.com/questions/45576805/how-to-replace-all-na-in-a-dataframe-using-tidyrreplace-na)
+
+### Manual Pages
+
+- [geom_col](https://ggplot2.tidyverse.org/reference/geom_bar.html)
+
+
+## Data
+
+### Focus for Class
+
+- [TIME article on Sweden](https://time.com/5899432/sweden-coronovirus-disaster/)
+    - [TIME covid data presentation](https://time.com/5800901/coronavirus-map/)
+- [John Hopkins](https://coronavirus.jhu.edu/map.html)
+    - [John Hopkins Data Repository](https://github.com/CSSEGISandData/COVID-19/blob/master/README.md)
+- [WHO Covid Data](https://covid19.who.int/table)
+- [Covid Infection Estimation](https://ourworldindata.org/covid-models)
+- [Would Bank Country Populations](https://data.worldbank.org/indicator/SP.POP.TOTL)
+
+### Others from Class
+
+- [www.worldometers.info coronavirus](https://www.worldometers.info/coronavirus/#countriese)
+- [Statistical Rate Calculation](https://stattrek.com/estimation/standard-error.aspx)
+- [Tom McClintock (R-Calif) Covid Claiims](https://www.capradio.org/articles/2020/05/05/tom-mcclintock-claimed-the-flu-killed-80000-americans-last-year-heres-why-thats-misleading/)
+    - [Initial CDC Estimates](https://www.statnews.com/2018/09/26/cdc-us-flu-deaths-winter/)
+    - [Updated CDC Estimates](https://www.cdc.gov/flu/about/burden-averted/2017-2018.htm)
+
+### Generally
+
+- [kaggle](https://www.kaggle.com/) 
+- [seaborn](https://github.com/mwaskom/seaborn-data) 
+- [CMU](http://lib.stat.cmu.edu/datasets/)  
+- [Google Dataset Search](https://datasetsearch.research.google.com/)
+- [data.world](https://data.world/search)
+- [Data Portals](http://dataportals.org/)
+- [UCIML Repo](http://archive.ics.uci.edu/ml/)
+- [OpenDataMonitor](http://opendatamonitor.eu/)
+- [Quandl](http://quandl.com/)
+- [Wikipedia](https://en.wikipedia.org/wiki/List_of_datasets_for_machine-learning_research)
+- [AWS data set](https://registry.opendata.aws/)
+- [Quora.com](https://www.quora.com/Where-can-I-find-large-datasets-open-to-the-public)
+- [The datasets subreddit](https://www.reddit.com/r/datasets)
+- [Tycho](https://www.tycho.pitt.edu)
+- [TFDS](https://www.tensorflow.org/datasets/catalog/overview)
+
+
+
+# Uncertainty 
+
+## Tidy 
+
+- `Tidy` can do "database" like operations joining and filtering tables and 
+  selecting from tables:
+    - [https://r4ds.had.co.nz/transform.html](https://r4ds.had.co.nz/transform.html)
+    - [https://r4ds.had.co.nz/relational-data.html](https://r4ds.had.co.nz/relational-data.html)
+
+```{r tidy}
+library(tidyverse)
+```
+
+
+## Data
+
+Sweden has been a target of disapproval regarding their covid policies
+
+- I was in Sweden during the covid outbreak
+    - work went remote, but there was no lock down
+    - masks were not at all common and people enjoyed summer as normal
+
+This article from [TIME](https://time.com/5899432/sweden-coronovirus-disaster/)
+magazine was fairly representative of push back against Swedish (non) policies, and
+referenced [covid data](https://time.com/5800901/coronavirus-map/) as part of its argument.
+I then looked for more covid data and found some additional data driven presentations:
+
+- [John Hopkins](https://coronavirus.jhu.edu/map.html) and [Data Repo](https://github.com/CSSEGISandData/COVID-19/blob/master/README.md)
+- [www.worldometers.info](https://www.worldometers.info/coronavirus/#countriese)
+- [WHO](https://covid19.who.int/table)
+
+We'll use the WHO data to explore for ourselves what the sitation in Sweden
+was like at the time the TIME article was published.
+
+
+```{r who_data}
+
+focus <- c('Sweden', 'United States of America', 'Denmark', 'Finland', 'Norway', 
+           'Republic of Korea', 'Japan', 'China', 'Viet Nam', 'New Zealand')
+# 'Taiwan'
+
+path_1 <- "/Users/gck8gd/Documents/courses/"
+path_2 <- "SDS_3003_Communication_w_Data/ggplot2_2/"
+file <- "WHO-COVID-19-global-data.csv"
+read_csv(paste0(path_1,path_2,file,sep="")) %>%
+  filter(Date_reported=='2020-11-01') %>% 
+  filter(Country %in% focus) -> covids
+covids
+```
+
+## geom_bar/geom_col
+
+To see the Mortality Rate in Sweden we'll look at the 
+using a bar plot, which is actually executed using a function called 
+[geom_col](https://ggplot2.tidyverse.org/reference/geom_bar.html)
+ 
+- What are your thoughts about considering `rate = Cumulative_deaths/Cumulative_cases`?
+    - How could `rate = Cumulative_deaths/Cumulative_cases` *actually* vary by country?
+    - How could `rate = Cumulative_deaths/Cumulative_cases` *appear* to vary by country?
+
+```{r who_geom_col}
+covids %>% mutate(rate = Cumulative_deaths/Cumulative_cases) %>%
+  # https://ggplot2.tidyverse.org/reference/geom_bar.html
+  ggplot(mapping=aes(x=rate, y=Country)) + geom_col() +
+  xlab('WHO: # Reported Deaths / # Reported Cases')
+```
+
+## Uncertainty
+
+Statistical uncertainty under the assumption of *random* **representative** sampling
+can be calculated as described [here](https://stattrek.com/estimation/standard-error.aspx), 
+and we can represent this in our plot using error bars as described
+[here](http://www.sthda.com/english/wiki/ggplot2-error-bars-quick-start-guide-r-software-and-data-visualization)
+and [here](http://www.cookbook-r.com/Graphs/Plotting_means_and_error_bars_(ggplot2)). 
+
+
+### Uncertainty in an estimate of a proportion
+
+1. $\textrm{First we use} \; Variance \; \textrm{of a coin flip with probability p:}\; p(1-p)$
+
+2. $\textrm{Then we calculate the} \; Variance \; \textrm{of an average of coin flips:}\; p(1-p)/n$
+
+3. $\textrm{Then we calculate the} \; Standard \; Deviation \; \textrm{of an average of coin flips:}\; \sqrt{p(1-p)/n}$
+
+4. $\textrm{And when you estimate this with the observed sample proprotion it's called the} \; Standard \; Error:\; \sqrt{\hat p(1-\hat p)/n}$
+
+```{r who_uncertainty}
+covids %>% mutate(rate = Cumulative_deaths/Cumulative_cases) %>%
+  mutate(SE = sqrt(rate*(1-rate)/Cumulative_cases)) %>%
+  ggplot(mapping=aes(x=rate, y=Country)) + geom_col() +
+  # http://www.sthda.com/english/wiki/ggplot2-error-bars-quick-start-guide-r-software-and-data-visualization
+  # http://www.cookbook-r.com/Graphs/Plotting_means_and_error_bars_(ggplot2)
+  geom_errorbar(aes(xmin=rate-2*SE, xmax=rate+2*SE), width=.2) +
+  xlab('WHO: # Reported Deaths / # Reported Cases')
+```
+
+- What is driving the degree of uncertainty?
+  - Do we trust these estimates?
+  - How could death rates should vary by country?
+
+- What are your thoughts about considering `rate = Cumulative_deaths/Cumulative_cases`?
+    - How could `rate = Cumulative_deaths/Cumulative_cases` *actually* vary by country?
+    - How could `rate = Cumulative_deaths/Cumulative_cases` *appear* to vary by country?
+
+
+# 2017/18 US Flu Spike
+
+A somewhat common argument made earlier on during the onset of covid,
+such as that made by [Congressman Tom McClintock (R-Calif)](https://www.capradio.org/articles/2020/05/05/tom-mcclintock-claimed-the-flu-killed-80000-americans-last-year-heres-why-thats-misleading/) was that covid deaths were not unusual 
+relative to common flu season deaths.  He (a) cited [initial estimates](https://www.statnews.com/2018/09/26/cdc-us-flu-deaths-winter/),
+which at the time of his statement and actually been [significantly updated](https://www.cdc.gov/flu/about/burden-averted/2017-2018.htm), and (b)
+cited 2017/18 as 2017/18. 
+
+Here's how the 2017/18 flu season numbers compare to the ones we're currently 
+looking at:
+
+
+```{r who_plus_2017-18}
+covids %>% add_row(tibble(Country='US_2017/18',
+                          Cumulative_deaths=61099,
+                          Cumulative_cases=44802629)) %>%
+  mutate(rate = Cumulative_deaths/Cumulative_cases) %>%
+  mutate(SE = sqrt(rate*(1-rate)/Cumulative_cases)) %>%
+  mutate(SE = ifelse(Country=='US_2017/18', 
+                     (94987/57928172-46404/39322959)/4, SE)) %>%
+  ggplot(mapping=aes(x=rate, y=Country)) + geom_col() +
+  geom_errorbar(aes(xmin=rate-2*SE, xmax=rate+2*SE), width=.2) +
+  xlab('WHO: # Reported Deaths / # Reported Cases')
+
+```
+
+# Infections
+
+Since we know that not all covid cases are reported, let's see what 
+[infection rate estimations](https://ourworldindata.org/covid-models) look like
+- And notice that these provide their own uncertainty estimation
+
+
+```{r estimated_infections_1}
+path_1 <- "/Users/gck8gd/Documents/courses/"
+path_2 <- "SDS_3003_Communication_w_Data/ggplot2_2/"
+file <- "daily-new-estimated-covid-19-infections-icl-model.csv"
+read_csv(paste0(path_1,path_2,file,sep=""))
+```
+
+```{r estimated_infections_2}
+estimated_infections_totals <- read_csv(paste0(path_1,path_2,file,sep="")) %>%
+  # https://stackoverflow.com/questions/45576805/how-to-replace-all-na-in-a-dataframe-using-tidyrreplace-na
+  dplyr::select(-Code, -Date) %>% replace(is.na(.), 0) %>%
+  rename(Country=Entity) %>%
+  # https://stackoverflow.com/questions/41673414/r-aggregate-sum-totals-for-grouped-data-using-dplyr
+  group_by(Country) %>% summarize_all(sum) %>%
+  mutate(Country = Country %>% 
+                   str_replace("South Korea","Republic of Korea")) %>%
+  mutate(Country = Country %>% 
+                   str_replace("United States", "United States of America")) %>%
+  mutate(Country = Country %>% 
+                   str_replace("Vietnam", "Viet Nam")) 
+
+estimated_infections_totals
+```
+      
+
+## Population 
+
+Let's compare these infection rates to the [population sizes](https://data.worldbank.org/indicator/SP.POP.TOTL) of each country
+
+
+```{r pop}
+path_1 <- "/Users/gck8gd/Documents/courses/"
+path_2 <- "SDS_3003_Communication_w_Data/ggplot2_2/API_SP/"
+file <- "API_SP.POP.TOTL_DS2_en_csv_v2_1593924.csv"
+pop <- read_csv(paste0(path_1,path_2,file,sep=""), skip=4) %>% 
+  dplyr::select("Country Name",`2019`) %>%
+  rename(Country=`Country Name`, `2019_pop`=`2019`) %>%
+  mutate(Country = Country %>% 
+                   str_replace("Korea, Rep.","Republic of Korea")) %>%
+  mutate(Country = Country %>% 
+                   str_replace("United States", "United States of America")) %>%
+  mutate(Country = Country %>% 
+                   str_replace("Vietnam", "Viet Nam")) 
+
+pop
+```
+
+## Join Data
+      
+```{r estimated_infections_sweden}
+estimated_infections_totals_focus <- estimated_infections_totals %>% 
+  # `right_join`: "left"=estimated_infections_totals, right="covids"
+  # join on shared column names (here "Country") on the basis of the "right" df
+  right_join(covids) %>% 
+  # `left_join`: "left"="everything so far", "right"=pop
+  # join on shared column names (here "Country") on the basis of the "left" df
+  left_join(pop) %>%
+  rename(ICL_upper=`Daily new estimated infections of COVID-19 (ICL, upper)`) %>%
+  rename(ICL_lower=`Daily new estimated infections of COVID-19 (ICL, lower)`) %>%
+  rename(ICL_mean=`Daily new estimated infections of COVID-19 (ICL, mean)`) %>%
+  add_row(tibble(Country='US_2017/18', ICL_mean=44802629,
+                 `2019_pop`=328239523, Cumulative_deaths=61099)) %>%
+  mutate(ICL_upper = ifelse(Country=='US_2017/18', 57928172, ICL_upper)) %>%
+  mutate(ICL_lower = ifelse(Country=='US_2017/18', 39322959, ICL_lower))
+
+estimated_infections_totals_focus
+```
+
+## Infection Rate
+
+```{r estimated_infections_sweden_geom_bar}                
+estimated_infections_totals_focus %>% 
+  mutate(ICL_upper_per1k = 1000*ICL_upper/`2019_pop`) %>%
+  mutate(ICL_lower_per1k = 1000*ICL_lower/`2019_pop`) %>%
+  mutate(ICL_mean_per1k = 1000*ICL_mean/`2019_pop`) %>%
+  ggplot(mapping=aes(x=ICL_mean_per1k, y=Country)) + geom_col() +
+  geom_errorbar(aes(xmin=ICL_mean_per1k-ICL_lower_per1k, 
+                    xmax=ICL_mean_per1k+ICL_upper_per1k), width=.2) +
+  xlab('ICL estimate/uncertanty: number of infections per 1000 people')
+```
+
+- What do you make of this?
+
+
+# Mortality/Infection
+
+     
+```{r estimated_infections_focus}                
+estimated_infections_totals_focus %>%
+  filter(Country!='Republic of Korea') %>%
+  mutate(deaths_over_ICL_upper = Cumulative_deaths/ICL_upper) %>%
+  mutate(deaths_over_ICL_lower = Cumulative_deaths/ICL_lower) %>%
+  mutate(deaths_over_ICL_mean = Cumulative_deaths/ICL_mean) %>%
+  ggplot(mapping=aes(x=deaths_over_ICL_mean, y=Country)) + geom_col() +
+  geom_errorbar(aes(xmin=deaths_over_ICL_mean-deaths_over_ICL_upper, 
+                    xmax=deaths_over_ICL_mean+deaths_over_ICL_lower), width=.2) +
+  xlab('WHO # Deaths divided by ICL # Infections (estimate/uncertanty)')
+```
+                
+- What do you make of this?
+- Why are the error bars so much larger than before?
+
+# Mortality/Capita
+
+
+```{r both_2017-18}
+covids %>% left_join(pop) %>% add_row(tibble(Country='US_2017/18',
+                                             Cumulative_deaths=61099,
+                                             `2019_pop`=328239523)) %>%
+  mutate(Country = Country %>% 
+                   str_replace("United States of America", "United States")) %>%
+  mutate(rate_per1k = 1000*Cumulative_deaths/`2019_pop`) %>%
+  ggplot(mapping=aes(x=rate_per1k, y=Country)) + geom_col() +
+  xlab('# Deaths per 1000 people in (2019) Country Population') 
+
+```
+
+- What do you make of this? 
+- Why is "pre-covid" flu so high?
+
+# HW [GROUP ASSIGNMENT] 
+
+*Each group member must contribute unique figures to the groups submission in order for all group members to get credit for this homework. If only some members of the group contribute figures in the submitted `.Rmd` file, those group members must additionally provide a supplemental explanation along with their submission as to why other students in their group have not contributed to this assignment.*
+
+1. WHO Reporting Barplots (with uncertainty measures) separated by `WHO_region` using `facet_wrap`
+    - Get the data from from [https://covid19.who.int/table](https://covid19.who.int/table)
+        - The file should likely be named "WHO-COVID-19-global-data.csv"
+    - Extend the lecture code with the `facet` feature from the last lecture
+        - `facet_wrap(~ WHO_region, nrow=2, scale="free")`
+    - to examine mortality rate
+        - `mutate(rate = Cumulative_deaths/Cumulative_cases)`
+    - and it's "theoretical" uncertainty
+        - `mutate(SE = sqrt(rate*(1-rate)/Cumulative_cases))`
+    - separated out by `WHO_region` (with, say, 5-10 countries per region)
+- ***Each student in the group will choose different countries so all submitted plots are unique***
+    
+2. Infection Model Bar plots for the ICL and IHME methodologies
+    - Get the data from [https://data.worldbank.org/indicator/SP.POP.TOTL](https://data.worldbank.org/indicator/SP.POP.TOTL) and [https://ourworldindata.org/covid-models](https://ourworldindata.org/covid-models)
+        - For me, the former was called `API_SP/API_SP.POP.TOTL_DS2_en_csv_v2_1593924.csv`
+        - while the latter were named
+            - `daily-new-estimated-covid-19-infections-ihme-model.csv`
+            - `daily-new-estimated-covid-19-infections-icl-model.csv`
+        - Make plots of the country infection rates per 1000 residents 
+            - ```mutate(ICL_mean_per1k = 1000*ICL_mean/`2019_pop`)```
+        - including the uncertainties provided by the models, e.g., using
+          - `mutate(ICL_upper_per1k = 1000*ICL_upper/`2019_pop`)`
+          - `geom_errorbar(aes(xmin=ICL_mean_per1k-ICL_lower_per1k, xmax=ICL_mean_per1k+ICL_upper_per1k), width=.2)`
+        - Again separated out by `WHO_region` (with, say, 5-10 countries per region)
+            - `facet_wrap(~ WHO_region, nrow=2, scale="free")`
+- ***Again, each student in the group will choose different countries so all submitted plots are unique***        
+        
+3. Use any of the above data to create a scatterplots or 2d density plots
+    - which provides a representation of the COVID situation that you find interesting, noteworthy, or compelling
+    - Code for scatter plots or 2d density plots is available in `ggplot2.Rmd` (*Class 6*)
+- ***Each student in the group must create a distinct plot with a distinct focus***
+
+4. +1 extra credit if ALL parts in C7.HW1 above are redone
+    - in addition to the original assignment
+    - at the same level of high quality as the original assignment
+    - and by all members of the group each with their own data sets
+
+
+

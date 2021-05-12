@@ -1,0 +1,27 @@
+
+
+
+
+
+
+Jaya: 26
+Bryce Huffman: 22
+Emily Cathey: 19
+Madeleine: 16
+Cecily: 8
+
+Ayushi: 20
+Diana: 19
+Nikhil: 18
+Lily: 15
+Sahil: 13
+Sejal: 12
+Xinyi: 9
+
+
+
+# https://stackoverflow.com/questions/42821171/fix-plotly-ggplotly-title-overlapping-plot-when-title-is-split-on-two-lines
+ggplotly(some_ggplot_object) %>% layout(margin=list(t = 75))
+
+
+

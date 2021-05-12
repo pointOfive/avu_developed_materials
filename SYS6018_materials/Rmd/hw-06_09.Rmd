@@ -1,0 +1,298 @@
+---
+title: "ISLR Problem 6.9"
+author: "**SOLUTIONS**"
+output: html_document # uncomment and comment the following line to switch
+#output: html_notebook  # notebooks may be a better option for homework
+---
+
+<!--- Below are global settings for knitr. You can override any of them by adding the changes to individual chunks --->
+
+
+```{r global_options, include=FALSE}
+knitr::opts_chunk$set(error=TRUE,        # Keep compiling upon error
+                      collapse=FALSE,    # collapse by default
+                      echo=TRUE,         # echo code by default
+                      comment = "#>",    # change comment character
+                      fig.width = 5.5,     # set figure width
+                      fig.align = "center",# set figure position
+                      out.width = "49%", # set width of displayed images
+                      warning=FALSE,     # do not show R warnings
+                      message=FALSE)     # do not show R messages
+```
+
+<!--- Change font size for headers --->
+<style>
+h1.title {
+  font-size: 28px;
+}
+h1 {
+  font-size: 22px;
+}
+h2 {
+  font-size: 18px;
+}
+h3 { 
+  font-size: 14px;
+}
+
+</style>
+
+
+
+**SYS 6018 | Summer 2020 | University of Virginia **
+
+Solutions to the homework problems in [Introduction to Statistical Learning (ISLR)](https://faculty.marshall.usc.edu/gareth-james/ISL/).
+
+*******************************************
+
+Solutions will be shown using Base R (following the textbook) and the [Tidyverse](https://www.tidyverse.org/learn/) dialect of R. Either (or a mix of both) is acceptable, but I encourage tidyverse for those who can take the extra time to deviate from the textbook. It is well worth the investment.
+
+To use tidyverse solutions, we will need to load the following packages:
+```{r, warning=FALSE}
+library(tidyverse)  # ggplot2, dplyr, etc.
+library(broom)      # to get tidy model output
+library(knitr)      # for the kable() function for tables
+library(kableExtra) # to make fancier html tables
+library(glmnet)     # for ridge and lasso regression
+library(pls)        # for pcr and pls
+```
+
+In this exercise, we will predict the number of applications received using the other variables in the `College` data set.
+
+Load the `College` data.  
+```{r load-data}
+#-- Load data. Convert to tibble for better printing. Add rownames.
+College = ISLR::College %>% 
+  as_tibble(rownames = "College")
+
+#-- Load csv directly from web:
+# College = read_csv("https://faculty.marshall.usc.edu/gareth-james/ISL/College.csv") %>%
+#   rename(College=X1)
+```
+
+
+## (a).  Split the data set into a training set and a test set. {.tabset}
+
+There are `r nrow(College)` observations which isn't alot considering we have `r ncol(College)` predictors. That is `r {nrow(College)/ncol(College)} %>% round(1)` observations per parameter (if one parameter per predictor). I'll reserve 50  (`r 100*round(50/nrow(College), 3)`%) observations for test and use the rest for training. 
+
+### Tidyverse
+```{r}
+#-- Settings
+n = nrow(College)
+n.test = 50
+n.train = n - n.test
+
+#-- select training data
+set.seed(61)
+train = c(rep(TRUE, n.train), rep(FALSE, n.test)) %>%
+  sample()
+
+```
+
+
+### Base R
+
+```{r}
+#-- Settings
+n = nrow(College)
+n.test = 50
+n.train = n - n.test
+
+#-- select training data
+set.seed(61)
+train = sample(c(rep(TRUE, n.train), rep(FALSE, n.test)))
+```
+
+
+
+## (b). Linear Model 
+
+Fit a linear model using least squares on the training set, and report the test error obtained.
+
+Note: There is an annoying feature with `lm()` and `predict.lm()`. An unused predictor, like `College` is still carried along in the model and converted to a factor. Thus the factor levels won't match up when trying to predict and you will get a strange error message. Thus I am going to create a data frame called data that removes the `College` variable. 
+
+```{r}
+data = College %>% select(-College)
+```
+
+Now everything works as expected:
+```{r}
+#-- Formula
+fmla = formula(Apps ~ .)  # everything used as predictors
+
+#-- Linear Model (unpenalized)
+fit.lm = lm(fmla,
+            data=data[train, ])
+
+#-- Prediction on test set
+yhat.lm = predict(fit.lm, newdata=data[!train,])
+```
+
+And test error (I'll use RMSE since its not specified what to use)
+```{r}
+rmse <- function(yhat, y) {
+  sqrt(mean((y - yhat)^2))
+}
+```
+
+```{r}
+#-- test error
+rmse(yhat.lm, data$Apps[!train])
+```
+
+
+## (c). Ridge Regression 
+
+Fit a ridge regression model on the training set, with $\lambda$ chosen by cross-validation. Report the test error obtained.
+
+Note: the `glmnet` package requires matrix input instead of formulas and data frames. Thus, we can use `model.matrix()` to get our matrices. 
+
+```{r}
+#-- Packages
+library(glmnet)
+
+#-- Set up design matrix
+X = model.matrix(fmla, data=data)[,-1] # remove Intercept
+Y = data$Apps
+```
+
+
+To ensure all folds are consistent over all models, the folds need to be set manually. Here I'll use 10-fold cross-validation. 
+```{r}
+#-- Set folds so consistent over all runs
+set.seed(62)     # set seed for reproducibility
+K = 10           # number of folds
+folds = rep(1:K, length=sum(train)) # make folds
+```
+
+Now we can estimate and predict
+```{r}
+#-- Ridge Regression
+fit.ridge = cv.glmnet(x=X[train,], y=Y[train],
+                      alpha=0,    # ridge penalty
+                      foldid=folds)
+
+print(fit.ridge)
+
+#-- predict on test set
+yhat.ridge = predict(fit.ridge, 
+                            s="lambda.min",
+                            newx=X[!train,]) 
+```
+
+```{r}
+#-- test error
+rmse(yhat.ridge, Y[!train])
+```
+
+
+
+## (d). Lasso Regression 
+
+Fit a lasso model on the training set, with $\lambda$ chosen by cross-validation. Report the test error obtained, along with the number of non-zero coeﬃcient estimates.
+
+Estimate and predict
+```{r}
+#-- Ridge Regression
+fit.lasso = cv.glmnet(x=X[train,], y=Y[train],
+                      alpha=1,    # lasso penalty
+                      foldid=folds)
+
+print(fit.lasso)
+
+#-- predict on test set
+yhat.lasso = predict(fit.lasso, 
+                            s="lambda.min",
+                            newx=X[!train,]) 
+```
+
+```{r}
+#-- test error
+rmse(yhat.lasso, Y[!train])
+```
+
+
+## (e). Principal Component Regression 
+
+Fit a PCR model on the training set, with M chosen by cross-validation. Report the test error obtained, along with the value of M selected by cross-validation.
+
+
+The `pls` package doesn't appear to allow specification of the folds so I'll manually run CV for this model
+```{r}
+#-- load package
+library(pls)
+
+#-- Cross-validation
+ind.train = which(train)   # index of training observations
+  
+sse = matrix(NA, K, 17)
+for(k in unique(folds)) {
+  ind.fit = ind.train[folds != k]
+  ind.val = ind.train[folds == k]
+  pcr.fit = pcr(fmla, data=data[ind.fit,],
+              scale=TRUE)
+  yhat = predict(pcr.fit, data[ind.val,])[,1,]
+  y.true = data$Apps[ind.val]
+  sse[k,] = apply(yhat, 2, function(x) sum( (y.true-x)^2 ))
+}
+
+tibble(ncomp = 1:17, sse = colSums(sse)) %>% 
+  arrange(sse)
+
+#-- Or ignore the folds and let the model choose
+pcr(fmla, data=data[train, ], validation="CV") %>%
+  summary()
+
+```
+
+It appears the full model (same as least-squares) is best! Thus same error as least squares.  
+
+
+## (f). Partial Least Squares 
+
+Fit a PLS model on the training set, with M chosen by cross- validation. Report the test error obtained, along with the value of M selected by cross-validation.
+
+```{r}
+sse = matrix(NA, K, 17)
+for(k in unique(folds)) {
+  ind.fit = ind.train[folds != k]
+  ind.val = ind.train[folds == k]
+  plsr.fit = plsr(fmla, data=data[ind.fit,],
+              scale=TRUE)
+  yhat = predict(plsr.fit, data[ind.val,])[,1,]
+  y.true = data$Apps[ind.val]
+  sse[k,] = apply(yhat, 2, function(x) sum( (y.true-x)^2 ))
+}
+
+tibble(ncomp = 1:17, sse = colSums(sse)) %>% 
+  arrange(sse)
+```
+
+This happens to select 9 components. The error is
+```{r}
+plsr.fit = plsr(fmla, data=data[train, ])
+yhat.plsr = predict(plsr.fit, data[!train, ], ncomp=9)[,1,1]
+rmse(yhat.plsr, Y[!train])
+```
+
+
+## (g). Results 
+
+Comment on the results obtained. How accurately can we predict the number of college applications received? Is there much difference among the test errors resulting from these five approaches?
+
+```{r}
+yhat = tibble(lm = yhat.lm, 
+              ridge=yhat.ridge, 
+              lasso=yhat.lasso, 
+              pcr = yhat.lm, 
+              plsr = yhat.plsr)
+apply(yhat, 2, rmse, y=Y[!train])
+```
+
+
+The winner goes to the full linear model. Using this particular train/test split the penalized/reduced models can't predict as well as the full model. Perhaps there would be a slightly different result if we used a different split. 
+
+
+
+
+

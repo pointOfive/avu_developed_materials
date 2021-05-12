@@ -1,0 +1,277 @@
+---
+title: "R+Python Intro"
+author: "Schwartz"
+date: "9/19/2020"
+output:
+     html_document:
+          toc: TRUE
+          toc_depth: 4
+          toc_float: true
+          toc_collapsed: true
+          theme: journal
+          code_folding: show
+---
+
+<!--- Change font size for headers --->
+<style>
+h1.title {
+  font-size: 34px;
+}
+h1 {
+  font-size: 30px;
+}
+h2 {
+  font-size: 26px;
+}
+h3 { 
+  font-size: 22px;
+}
+
+</style>
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning=FALSE, message=FALSE, 
+                      fig.align = "center",
+                      out.width = "80%")
+```
+
+
+
+# Resources
+
+## Documentation 
+
+### Getting Started:
+- [Plotly Get Stareted](https://plotly.com/r/getting-started/)
+- [Plotly R](https://plotly.com/r/)
+- [Textbook](https://plotly-r.com)
+
+### Manual Pages Referenced for this Lecture
+- [`tidy::read_delim`](https://readr.tidyverse.org/reference/read_delim.html)
+- [`tidy::drop_na`](https://tidyr.tidyverse.org/reference/drop_na.html)
+- [Figure Layout](https://plotly.com/r/reference/layout/)
+- [Figure Axes](https://plotly.com/r/axes/)
+- [Figure Margins](https://plotly.com/r/setting-graph-size/#customize-margins-and-plot-size)
+- [Legends](https://plotly.com/r/legend/)
+- [Legend Titles](https://plotly.com/r/legend/#legend-title)
+- [Log Axes](https://plotly.com/r/log-plot/)
+- [Violin Plots](https://plotly.com/r/violin/)
+- [Violin Widths](https://plotly.com/r/reference/violin/#violin-width)
+- [3d Scatter Plots](https://plotly.com/r/3d-scatter-plots/)
+- [Markers](https://plotly.com/r/marker-style/)
+- [Color Scales](https://plotly.com/r/colorscales/)
+
+ 
+### One-Off Answers
+- [DO NOT USE red and green](https://www.tableau.com/about/blog/2016/4/examining-data-viz-rules-dont-use-red-green-together-53463)
+- [title location](https://stackoverflow.com/questions/56508442/change-title-position-in-plotly-r)
+- [z-axis](https://stackoverflow.com/questions/42160660/plotly-3d-scatterplot-in-r-z-axis-and-isomorphis)
+- [colorbar title](https://stackoverflow.com/questions/37283165/change-plotly-colorbar-title/37286201)
+- [colors](https://www.w3.org/TR/css-color-3/#svg-color)
+
+#### For Rubric Score Plotting
+- [tidy downloads google sheets!](https://googlesheets4.tidyverse.org)
+- [tidy ggplot examples](http://www.sthda.com/english/wiki/ggplot2-violin-plot-quick-start-guide-r-software-and-data-visualization)
+- [tidy ggplot manual page](https://stagraph.com/HowTo/Plot/Geometries/Geom/violin)
+- [working with tall/wide tables in tidy](https://tidyr.tidyverse.org/reference/pivot_wider.html)
+- [jittering  data](https://stackoverflow.com/questions/29090286/add-jitter-to-column-value-using-dplyr)
+
+
+## Data Sets
+
+### From Class
+
+- [Kaggle County Facts](https://www.kaggle.com/benhamner/2016-us-election?select=county_facts.csv)
+- [Class Rubric Scores](https://docs.google.com/spreadsheets/d/1_o3GfxSvh--A9nNJA458Ge2MNiIs2yeNCWTJwBpfIns/edit?usp=sharing)
+
+### Generally
+
+- [kaggle](https://www.kaggle.com/) 
+- [data.world](https://data.world/search)
+- [UCIML Repo](http://archive.ics.uci.edu/ml/)
+- [AWS data sets](https://registry.opendata.aws/)
+- [Google Dataset Search](https://datasetsearch.research.google.com/)
+- [TFDS](https://www.tensorflow.org/datasets/catalog/overview)
+- [OpenDataMonitor](http://opendatamonitor.eu/)
+- [Data Portals](http://dataportals.org/)
+- [Wikipedia Datasets](https://en.wikipedia.org/wiki/List_of_datasets_for_machine-learning_research)
+- [Quora.com](https://www.quora.com/Where-can-I-find-large-datasets-open-to-the-public)
+- [Quandl](http://quandl.com/)
+- [The datasets subreddit](https://www.reddit.com/r/datasets)
+- [seaborn](https://github.com/mwaskom/seaborn-data) 
+- [Tycho](https://www.tycho.pitt.edu)
+- [CMU](http://lib.stat.cmu.edu/datasets/)  
+
+
+ 
+# Plotly
+
+- more modern graphics (Python+R)
+
+## Initialization
+
+```{r tidy_data}
+library(tidyverse)
+
+# https://readr.tidyverse.org/reference/read_delim.html
+d2 <- "/Users/gck8gd/Documents/courses/SDS_3003_Communication_w_Data/county_facts.csv"
+county_facts <- readr::read_csv(d2)
+```
+
+## Box Plots
+
+- Interactive Graphics!
+  - Zooming
+  - Silencing
+  - Hovering
+  - Sliding
+- `plotly` "aes" and "geom" and "+"
+- layout function
+
+
+```{r plotly}
+
+library(plotly)
+# https://tidyr.tidyverse.org/reference/drop_na.html
+# https://plotly.com/r/reference/layout/
+# `?layout`
+# https://plotly.com/r/axes/
+# https://stackoverflow.com/questions/56508442/change-title-position-in-plotly-r
+# https://plotly.com/r/setting-graph-size/#customize-margins-and-plot-size
+county_facts %>% dplyr::select(state_abbreviation, LND110210) %>%
+  drop_na() %>%
+  plotly::plot_ly(x=~LND110210, color=~state_abbreviation, type="box") %>%
+  layout(title=list(text='US Counties', x=0),
+         #yaxis=list(showticklabels=FALSE),
+         xaxis=list(title='Land Area in Square Miles'),
+         margin=list(l=0),
+         legend=list(traceorder='reversed'))
+```
+
+## Violin Plots (Boxplots 2.0)
+
+- Spaces in column names
+- `plotly::add_trace`
+- "sides" parameter
+- `plotly::layout(legend=list())`
+
+
+```{r violins}
+
+county_facts <- county_facts %>% 
+  dplyr::mutate(`Bachelor Degree Prevalence Quintile` = 
+                  dplyr::ntile(EDU685213, 5)) %>%
+  dplyr::mutate(`Above Median African American Percent` = 
+                  RHI225214>median(RHI225214)) %>%
+  dplyr::rename(`Per Capita Income` = INC910213) %>% 
+  dplyr::filter(!is.na(state_abbreviation)) 
+
+# https://www.w3.org/TR/css-color-3/#svg-color
+# https://plotly.com/r/legend/#legend-title
+# https://plotly.com/r/legend/
+# https://plotly.com/r/reference/violin/#violin-width
+county_facts %>% dplyr::filter(`Above Median African American Percent`) %>%
+  plotly::plot_ly(type='violin') %>%
+  plotly::add_trace(x=~`Bachelor Degree Prevalence Quintile`, 
+                    y=~`Per Capita Income`,
+                    side='negative', color=I('navy'), 
+                    legendgroup='>50th %tile', name='>50th %tile', width=1,
+                    box=list(visible=TRUE), meanline=list(visible=TRUE)) %>%
+  plotly::add_trace(data = county_facts %>% 
+                      dplyr::filter(!`Above Median African American Percent`),
+                    x=~`Bachelor Degree Prevalence Quintile`, 
+                    y=~`Per Capita Income`,
+                    side='positive', color=I('forestgreen'),
+                    legendgroup='<=50th %tile', name='<=50th %tile', width=1,
+                    box=list(visible=TRUE), meanline=list(visible=TRUE)) %>%
+  layout(legend=list(title=list(text="African American Population"),
+                     x=0.0, y=1.0))
+```
+
+
+## More Violin Plots
+
+- But with ggplot
+
+```{r rubricPractice}
+# https://googlesheets4.tidyverse.org
+library(googlesheets4)
+
+# got "share: everyone can view" link:
+scottscores <- read_sheet("https://docs.google.com/spreadsheets/d/1_o3GfxSvh--A9nNJA458Ge2MNiIs2yeNCWTJwBpfIns/edit?usp=sharing")
+# it will do a pop up for you to authenticate in one of your browser windows
+
+library(tidyverse)
+
+# http://www.sthda.com/english/wiki/ggplot2-violin-plot-quick-start-guide-r-software-and-data-visualization
+scottscores %>% dplyr::select(-id) %>%
+  pivot_longer(-1) %>% 
+  rename(Category=name) %>% rename(Score=value) %>% 
+  rename(Presentation=`...1`) %>%
+  ggplot(aes(x=Category, y=Score)) + # , fill=Presentation
+  geom_violin(trim=TRUE, scale='width') +
+  # https://stagraph.com/HowTo/Plot/Geometries/Geom/violin
+  geom_jitter(shape=16,position=position_jitter(0.3,0.05))
+
+
+scottscores %>% pivot_longer(c(-1, -id)) %>% 
+  rename(Category=name) %>% rename(Score=value) %>% 
+  rename(Presentation=`...1`) %>%
+  # https://tidyr.tidyverse.org/reference/pivot_wider.html
+  pivot_wider(names_from=Presentation, 
+              values_from=Score, 
+              id_cols=c(id,Category)) %>%
+  # https://stackoverflow.com/questions/29090286/add-jitter-to-column-value-using-dplyr
+  mutate(Polls=jitter(Polls, amount=.01)) %>%
+  mutate(Climate=jitter(Climate, amount=.01)) %>%
+  ggplot(aes(x=Climate, y=Polls, color=Category)) +
+  geom_jitter(shape=16, position=position_jitter(0.3, 0.3)) +
+  facet_wrap(~Category) + geom_smooth(method='lm') +
+  geom_abline(slope=1, intercept=0)
+
+```
+
+
+
+## Data Clouds
+
+- marker
+  - colorbar 
+- hover
+  - hovertemplate
+- scene
+  - zooming
+  - rotating
+- type="log"
+
+```{r 3d}
+# https://stackoverflow.com/questions/42160660/plotly-3d-scatterplot-in-r-z-axis-and-isomorphis
+# https://plotly.com/r/log-plot/
+# https://stackoverflow.com/questions/37283165/change-plotly-colorbar-title/37286201
+# https://plotly.com/r/3d-scatter-plots/
+# https://plotly.com/r/marker-style/
+# https://plotly.com/r/colorscales/
+# https://www.tableau.com/about/blog/2016/4/examining-data-viz-rules-dont-use-red-green-together-53463
+
+plot_ly(county_facts, z=~(POP645213+1), y=~AGE295214, x=~INC110213, 
+        type='scatter3d', mode='markers', 
+        marker = list(color = ~PVY020213, 
+                      size = ~(10*rank(PST045214)/length(PST045214)),
+                      line = list(width=0), 
+                      colorbar=list(title='%\nbelow\npoverty\nline'),
+                      colorscale='RdBu', reversescale=TRUE, showscale=TRUE),
+        hovertext = ~paste0(area_name,' (',state_abbreviation,')'), 
+        hovertemplate = ~paste0('%{hovertext}<br>',
+                               'Population: ', PST045214, '<br><br>',
+                               'Median Household Income: %{x}<br>',
+                               '% below poverty line: ', PVY020213, '<br><br>',
+                               '% under 18: %{y}<br>',
+                               '% foreign born: %{z}<br><extra></extra>')) %>%
+  layout(scene=list(xaxis=list(title='Median Household Income'),
+                    yaxis=list(title='% under 18'),
+                    zaxis=list(title='% foreign born'))) #, type="log"
+
+```
+
+
+

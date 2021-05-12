@@ -1,0 +1,453 @@
+---
+title: "DS 3003: Communicating *WITH* Data"
+author: "Spring 2021"
+date: ""
+output:
+     html_document:
+          toc: TRUE
+          toc_depth: 4
+          toc_float: true
+          toc_collapsed: true
+          theme: journal
+          code_folding: hide
+---
+
+<!--- Change font size for headers --->
+<style>
+h1.title {
+  font-size: 28px;
+}
+h1 {
+  font-size: 22px;
+}
+h2 {
+  font-size: 18px;
+}
+h3 { 
+  font-size: 14px;
+}
+
+
+div.tocify {
+  width: 15%;
+  max-width: 150px;
+  }
+
+.toc-content {
+  padding-left: 20%;
+  padding-right: 0px;
+  width: 95%;
+}
+  
+</style>
+
+
+
+Graded or for Credit Undergraduate Course.  Choose between:
+
+- February 1-16
+- April 23-30
+
+*This syllabus is to be considered a reference document that can and will be adjusted through the course of the semester to address changing needs. It is up to the student to stay sufficiently engaged in course to be aware of any potential changes and updates. The final authority on any decision in this course rests with the course instructor, not with this document.*
+
+# Description
+
+Are you interested in getting your hands dirty coding up some data visualizations?
+Are you ready to discuss contentious topics from an evidence-based, "data first" perspective?
+Do you want to participate in  "article take-downs",
+or champion contributions of exceptional reporting and information sharing?
+If so, you're in the right place!
+In this class your job is to seek out and share
+information, to present the meaning in data in fun and cool ways,
+and to appreciate, help, and learn from others doing the same thing!
+
+## Content
+
+### Textbook
+
+There is no textbook for this class, as our textbook will be the world will as
+it appears before us; however, as such, students will both supply and be 
+supplied with content over the course of the course from sources such as 
+[Our World in Data](https://ourworldindata.org),
+[The New York Times](https://www.nytimes.com),
+[FiveThirtyEight.com](https://fivethirtyeight.com), 
+[Medium.com](http://medium.com), 
+[The Atlantic](https://www.theatlantic.com), 
+[TIME](https://time.com), and
+[National Geographic](https://www.nationalgeographic.com), *etc.*
+
+
+### Coding
+
+The primary language for this course will be R,
+which is a very popular and highly ubiquitous 
+programming language designed for statistical data analysis and 
+visualization.  Instructions, resources, and materials to help students
+work with and use R -- 
+such as those available from the 
+[ggplot2 book](https://ggplot2-book.org/index.html), 
+[R for Data Science](https://r4ds.had.co.nz),
+the [R Cookbook](http://www.cookbook-r.com), 
+[Tidyverse](https://www.tidyverse.org),
+[Plotly](https://plotly.com/r/), [Shiny](https://shiny.rstudio.com),
+and *plain old [google](https://www.google.com/?client=safari) web searches* --
+will be made available at appropriate times to support student efforts at each 
+stage of the course. 
+R and all of these additional resources are (*of course!*) available for free.
+
+
+### Data
+
+For several assignments and your final project you'll be telling your
+own story with data. These days it's actually fairly easy to get your hands
+on interesting data!
+
+|Here are |some places|where you can |find interesting data!|
+|:--|:--|:--|:--|
+|[kaggle](https://www.kaggle.com/)|[AWS Open Data](https://registry.opendata.aws/)|[the Seaborn Data Repo](https://github.com/mwaskom/seaborn-data)|[Quandl](http://quandl.com/)|
+|[data.world](https://data.world/search)|[The UCIML Repo](http://archive.ics.uci.edu/ml/)|[the CMU data repository](http://lib.stat.cmu.edu/datasets/)|[TFDS](https://www.tensorflow.org/datasets/catalog/overview)|
+|[Quora.com](https://www.quora.com/Where-can-I-find-large-datasets-open-to-the-public)|[OpenDataMonitor](http://opendatamonitor.eu/)|[The Google Dataset Search](https://datasetsearch.research.google.com/)|[Tycho](https://www.tycho.pitt.edu)|
+|[Wikipedia](https://en.wikipedia.org/wiki/List_of_datasets_for_machine-learning_research)|[Data Portals](http://dataportals.org/)|[The datasets subreddit](https://www.reddit.com/r/datasets)||
+
+
+
+
+
+## Objectives
+
+Students will gain
+
+1. exposure to and experience with critical evaluation (of both ones own as well as others)
+communications involving data presentation and visualization
+    - *appreciation of uncertainty and weariness of the "cardinal sins" of message manipulation*
+4. practice creating tailored communications leveraging purposeful data 
+summarization and representation in support of a messaging objective 
+    - *a sense of the prevalent techniques in use today, and what makes them powerful and compelling*
+2. hands-on technical skills in coding data visualization in R using ggplot2, Plotly, 
+and Shiny
+    - *empowerment in both internal understanding (of data) and external communication (of findings)*
+5. a portfolio piece of their own creation showcasing 
+communication and visualization skills
+    - *each student will individually present a final project presentation and associated report* 
+3. extensive experience interacting in groups and other social contexts
+    - *during the courses initial "learning phase" all coding assignments will be group assignments*
+
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning=FALSE, message=FALSE, 
+                      fig.align = "center",
+                      out.width = "80%")
+```
+
+# Details 
+
+- Course Lectures take place as Online Zoom virtual meetings twice a week 
+    - Students are nonetheless encouraged to meet and collaborate in person if they wish
+        - (in addition to meeting and collaborating virtually, of course)
+- Course Discussion takes place on the discussion board system of the UVA Collab site for this course
+- Assignments, course materials, and lecture plans will be managed through the UVA Collab site for this course
+    - Assignments will be submitted through the UVA Collab site for this course
+
+## Support 
+
+- Login/Password: https://in.virginia.edu/helpdesk   
+- UVA Collab: collab-support@virginia.edu
+
+## Times
+
+```{r tables}
+# https://tibble.tidyverse.org
+library(tibble)
+# https://rmarkdown.rstudio.com/lesson-7.html
+library(knitr)
+# https://haozhu233.github.io/kableExtra/awesome_table_in_html.html
+
+kable(
+  tibble('Class'='TuTh 3:30-4:45PM',
+         'Office Hours'='TuTh 4:45-6:00PM',
+         'Location'='Collab Live Session Tab')
+)
+```
+
+## Schedule
+
+```{r outline}
+# https://stackoverflow.com/questions/25961897/how-to-merge-2-vectors-alternating-indexes
+
+kable(
+  tibble('Date'=c('2/2','2/4',
+                  '2/9','2/11',
+                  '2/16','2/18',
+                  '2/23','2/25',
+                  '3/2','3/4',
+                  '3/9','3/11',
+                  '3/16','3/18',
+                  '3/23','3/25',
+                  '3/30','4/1',
+                  '4/6','4/8',
+                  '4/13','4/15',
+                  '4/20','4/22',
+                  '4/27','4/29',
+                  '5/4','5/6'),
+         'Class'=paste(c(rbind(1:14,1:14)), 1:28, sep='.'),
+         'Topic'=c('Syllabus',
+                   'Learning',
+                   'Communication',
+                   'Conflict',
+                   'R/Python',
+                   'ggplot2 (scatter plots + facets)',
+                   'Uncertainty in data (bar plots and whiskers)',
+                   'Statistical Uncertainty (histograms, KDEs, & loess)',
+                   'Climate Reconstructions (time series) + Election Polls',
+                   'Covid and Masks',
+                   '"Break Day"',
+                   'Plotly (box plots and 3d plots)',#Fluoride Added to City Water?
+                   'Midterms','Midterms','Midterms','Midterms',
+                   '3d plots','Maps','ggplot play buttons','Plotly play buttons','shiny I','"Break Day"',
+                   'shiny II', 'Cardinal Sins Infographics',
+                   'Finals','Finals','Finals','Finals'),
+         'Class Lesson'=c('Review Syllabus + PollEverywhere (PEV) (0.5)',
+                   'Some Tricks + Suggestive Data + Learning Principles',
+                   'Barriers + Asynchronous Communication + PEV input (0.5)',
+                   'PEV: Re/Pre-view (0.33) + Cooperativeness-vs-Assertiveness (0.33)',
+                   'Live Coding: RStudio and Jupyter Notebooks',
+                   'Live Coding: 2016 election scatter plots',
+                   'Live Coding: Sweden/US COVID',
+                   'PEV: scatter plots (1) + Live Coding: Distributions',
+                   'Midterm Introduction + Two Example Presentations',
+                   'Model Uncertainty? + Model Assumptions?',
+                   '',
+                   'Live Coding: Plot Interactivity',
+                   'Student Midterm Presentations (21+3?)',
+                   'Student Midterm Presentations (*+2?)',
+                   'Student Midterm Presentations (*+1?)',
+                   'Student Midterm Presentations (*+3?)',
+                   'Article Example + Live Code Recreation',
+                   'Article Example + Live Code Recreation',
+                   'Article Example + Live Code Recreation',
+                   'Article Example + Live Code Recreation',
+                   'Article Example + Live Code',
+                   '',
+                   'Article Example + Live Code',
+                   '',
+                   'Student Final Presentations (42+3?)',
+                   'Student Final Presentations (*+2?)',
+                   'Student Final Presentations (*+1?)',
+                   'Student Final Presentations (*+3?)'),
+         'Class Discussion'=c('PEV: Student Composition (0.5)',
+                   'PEV: Lecture Checks (1) + Review of Articles on Learning (1+*)',
+                   'PEV: Re/Pre-view (0.5) + Review of Articles on Communication (1+*)',
+                   'PEV: Group Assignments (0.33) + Review of Articles on Conflict (1)',
+                   '*time for catch up?* + *student questions?*',
+                   '*student questions?*',
+                   '*student questions?*',
+                   'Groups Facet Plots Demonstrations (1)',
+                   "PEV: p's and CI's (1) + Rubric Practice (1) + Model Uncertainty? + Model Assumptions?",
+                   'Extra Credit Swap Out Associations (*) + Discussion of Covid Mask Articles (2)',
+                   '', #Discussion of Fluoride Arguments
+                   'Groups Time Series Plots Demonstrations (1)',
+                   'Discussion Board Questions and Comments (1)',
+                   'Discussion Board Questions and Comments (1)',
+                   'Discussion Board Questions and Comments (1)',
+                   'Discussion Board Questions and Comments (1)',
+                   'Discuss and Introduce Final',
+                   '*early show and tell?*',
+                   'Show and Tell (1)','Show and Tell (1)',
+                   'Show and Tell (1)','','Show and Tell (1)','',
+                   'Questions and Comments in Discussion Board (3)',
+                   'Questions and Comments in Discussion Board (3)',
+                   'Questions and Comments in Discussion Board (3)',
+                   'Questions and Comments in Discussion Board (3)'),         
+         'Assignment I'=c('Select and Post a Summary of an Article on Learning (1)',
+                   'Select and Post a Summary of an Article on Communication (1)',
+                   'Select and Post a Summary of an Article on Conflict (1)',
+                   'All Group Members Together Install Rstudio (3) + Anaconda (2) + Review Group (1)',
+                   '',
+                   'Groups Students Get Data Sets and facet SCATTER ggplot theirs (5 +1? palette)',
+                   'Groups Students Use Covid Data and facet BAR ggplot a subset (5)',
+                   'Submit knit facet SCATTER ggplot Rmd/html + Group Reviews (1) + Groups Students Use Covid Model Data for LOESS ggplot (5)',
+                   'Reply to a Covid Masks Article Post (1) + Groups Students Climate and Another TIME SERIES ggplot (5)',
+                   '**Work on Midterm Presentations!**', #Read Pro and Con Fluoride Articles
+                   '',
+                   '**Work on Midterm Presentations!**',
+                   'Students Score Rubric for Presentations  (5)',
+                   'Students Score Rubric for Presentations (5)',
+                   'Students Score Rubric for Presentations (5)',
+                   'Students Score Rubric for Presentations (5)',
+                   'Find Data in order to Make this Plot (5)','Find Data in order to Make this Plot (5)','Find Data in order to Make this Plot (5)','Find Data and Make this Plot (5)',
+                   '**Work on Final Presentations!**',
+                   '',
+                   '**Finalize Final Presentations!**',
+                   '**Finalize Final Presentations!**',
+                   'Make and Describe a Plot of Some of the Presented Data (2)',
+                   'Make  and Describe a Plot of Some of the Presented Data (4)',
+                   'Make  and Describe a Plot of Some of the Presented Data (6)',
+                   'Make  and Describe a Plot of Some of the Presented Data (8)'),
+         'Assignment II'=c('Figure/Data Extra Credit (+1*)',
+                   'Reply to Learning Article Post (1) + Figure/Data Extra Credit (+1*) + YouTube Bonus',
+                   'Reply to Communication Article Post (1)',
+                   'Reply to Conflict Article Post (1) + Figure Remake Extra Credit (+1-2)',
+                   '',
+                   'Submit Group knit Rmd/html + ipynb + Group Reviews + Figure Remake Extra Credit',
+                   '*potential time to resolve group issues if needed?*',
+                   'Select and Post a Summary of an Article on Covid Masks (1) + Swap Out Plotted Covid Model Data Extra Credit (+1-2*)',
+                   'Submit knit facet BAR ggplot Rmd/html + Group Reviews (1) + **Start  Work on Midterm Presentations!**',
+                   'Submit knit LOESS ggplot Rmd/html + Group Reviews (1)',
+                   '',
+                   'Submit knit TIME SERIES ggplot Rmd/html + Group Reviews (1)',
+                   'Make a Histogram and a KDE of Some Presented Data (1) OR',
+                   'Make Box or Violin Plots of Some Presented Data (2) OR',
+                   'Make Time Series Trajectories of Some Presented Data (3) OR',
+                   'Make Plotly 3d scatter plot of Some Presented Data (4) OR?',
+                   '**Work on Final Presentations!**',
+                   '**Work on Final Presentations!**',
+                   '**Work on Final Presentations!**',
+                   '**Work on Final Presentations!**','','','','',
+                   '','','','')
+         
+  )
+)
+```
+
+## Grading
+
+One's grade is calculated out of 225 points, as specified below; and, will follow,
+the standard "percent" to "letter grade" mapping
+(with +/-3% indicating +/- grade modifiers). 
+
+
+```{r grades}
+kable(
+  tibble('Date'=c('2/2','2/4',
+                  '2/9','2/11',
+                  '2/16','2/18',
+                  '2/23','2/25',
+                  '3/2','3/4',
+                  '3/9','3/11',
+                  '3/16','3/18',
+                  '3/23','3/25',
+                  '3/30','4/1',
+                  '4/6','4/8',
+                  '4/13','4/15',
+                  '4/20','4/22',
+                  '4/27','4/29',
+                  '5/4','5/6'),
+         'Class'=paste(c(rbind(1:14,1:14)), 1:28, sep='.'),
+         'Coding 75'=c("","","","","",
+                    "Group R+Python Install: 3+2",
+                    "",
+                    "Find Data + Group ggplot + Rmd/html: 5 (+1? palette)",
+                    "Group bar ggplot + Rmd/html: 5",
+                    "Group loess ggplot + Rmd/html: 5",
+                    "","Group time series ggplot + Rmd/html: 5",
+                    "plot+Rmd/html: 1 (one week to do)","plot+Rmd/html: 2 (one week to do)","plot+Rmd/html: 3 (one week to do)","plot+Rmd/html: 4 (one week to do)",
+                    "","","plot+Rmd/html: 5","plot+Rmd/html: 5",
+                    "plot+Rmd/html: 5","","plot+Rmd/html: 5","",
+                    "plot + Rmd/html: 2 (one week to do)","plot + Rmd/html: 4 (one week to do)","plot + Rmd/html: 6 (one week to do)","plot + Rmd/html: 8 (one week to do)"),
+         'Participation 76'=c("Syllabus Poll: 1, Learning Post: 1",
+                           "Learning Poll: 1, Learning Reply: 1, Communication Post:1",
+                           "Communication Poll: 1, Communication Reply: 1, Conflict Post: 1",
+                           "Communication and Conflict + Grouping Poll: 1, Conflict Reply:1",
+                           "",
+                           "Group Review: 1",
+                           "","Group Review: 1, Association Poll:1, Covid Post: 1",
+                           "Group Review: 1, Uncertainty Poll: 1, Rubric Poll: 1, Covid Reply: 1",
+                           "Group Review: 1",
+                           "",
+                           "Group Review: 1",
+                           "Post Question: 1, Score  Rubric: 5 (one week until due)",
+                           "Post Question: 1, Score  Rubric: 5 (one week until due)",
+                           "Post Question: 1, Score  Rubric: 5 (one week until due)",
+                           "Post Question: 1, Score  Rubric: 5 (one week until due)",
+                           "","",
+                           "","","",
+                           "",
+                           "","",
+                           "Post Questions: 3, Score  Rubric: 5 (one week until due)","Post Questions: 3, Score  Rubric: 5 (one week until due)","Post Questions: 3, Score  Rubric: 5 (one week until due)","Post Questions: 3, Score  Rubric: 5 (one week until due)"),
+         'Presentation 74'=c("","Learning Share: 1","Communication Share: 1","Conflict Share: 1","","","",
+                          "Plot Share: 1",
+                          "",
+                          "Covid Share: 2",
+                          "","Plot Share: 1",
+                          "Midterm Presentation: 21",
+                          "","","","","",
+                          "Show and Tell: 1","Show and Tell: 1","Show and Tell: 1",
+                          "","Show and Tell: 1","",
+                          "Final Presentation: 42","","",""),
+         'Extra Credit'=c("Learning Figure or Data: +0.5-1","Communication Figure or Data: +0.5-1","",
+                          "Conflict Figure with Graphics Tool: +1-2","","","","",
+                          "","Use Your Data: +1-2",
+                          "","",
+                          "Early Bird: +3","Early Bird: +2","Early Bird: +1","+3 for exceptionally impressive graphical +presentation work","","","","","",
+                          "","","","Early Bird: +3","Early Bird: +2","Early Bird: +1","+3 for exceptionally impressive graphical +presentation work")
+         
+  )
+)
+```
+   
+## Due Dates
+
+
+- Any issues addressed after a due date will receive NO consideration with 
+respect to the due date in question: ***report issues IMMEDIATELY as they arise***.
+
+- Generally, review of **discussion forum posts** is expected to happen prior to the 
+**next class**.  *Submissions for credit are closed as soon as the initial review completes.*
+
+- Generally, review of **code and plot submissions** are expected to complete **within a week** of
+the initial task assignment. 
+*Submissions for credit are closed as soon as the initial review completes.*
+
+- If you are not going to meet a given deadline, this must be addressed BEFORE
+the due date in question, and (barring incredibly unique and fantastic
+circumstances) will receive NO consideration after the fact: 
+***report issues IMMEDIATELY as they arise***.
+
+## Honor Code
+
+Work which should be pledged in the spirit of the Honor System at the 
+University of Virginia *will be explicitly noted*. Generally speaking, group work 
+will require no pledge (and indeed collaboration is *intended* and *expected*
+for these assignments); while later individual assignments require either of the
+following statements:
+
+- "I pledge that I have neither given nor received help on this [examination/quiz/assignment]."
+- "I have [received/given] help on this assignment [to/from] [student]; the nature
+  of this support was [elaborate]."
+
+For more information, visit [www.virginia.edu/honor](www.virginia.edu/honor).
+
+## Accomodations
+
+Special accommodations are available through the Student Disability Access Center.
+If you anticipate any issues related to the format, materials, or requirements 
+of this course, please get more information on the process of applying for 
+special accommodations, and apply for such services online, at the SDAC website 
+at [sdac.studenthealth.virginia.edu](sdac.studenthealth.virginia.edu). 
+Once you are approved for accommodations through SDAC, please send me (a) your 
+accommodation letter, and (b) your specific suggestions as to how we can best
+accommodate *your* needs in *our* class. Generally speaking, all students,
+regardless of accommodation status, will be required to maintain course cadence 
+throughout the semester.  
+
+
+# Professor
+
+```{r images, include=FALSE}
+# https://stackoverflow.com/questions/25166624/insert-picture-table-in-r-markdown
+```
+![](schwartz2.jpg){#id .class width=25% height=25%}
+
+
+
+```{r contact}
+kable(
+  tibble('Professor'='Scott Schwartz, PhD',
+         'E-mail'='scott.schwartz@virginia.edu',
+         'Video'='https://virginia.zoom.us/j/7650778302')
+)
+```
+
+
+

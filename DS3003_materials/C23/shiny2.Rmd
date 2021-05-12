@@ -1,0 +1,405 @@
+---
+title: "Shiny V2"
+author: "Schwartz"
+date: "12/10/2020"
+output:
+     html_document:
+          toc: TRUE
+          toc_depth: 4
+          toc_float: true
+          toc_collapsed: true
+          theme: journal
+          code_folding: show
+
+runtime: shiny
+---
+
+<!--- runtime: shiny --->
+<!--- Change font size for headers --->
+<style>
+h1.title {
+  font-size: 28px;
+}
+h1 {
+  font-size: 22px;
+}
+h2 {
+  font-size: 18px;
+}
+h3 { 
+  font-size: 14px;
+}
+
+</style>
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo=TRUE, warning=FALSE, message=FALSE, 
+                      fig.align="center", out.width="80%")
+```
+
+
+## Setup
+
+- `tidyverse` to give us our basic modern R functionality, including `ggplot2`
+- `plotly` because we're going to convert our `ggplot` to a `plotly` figure
+  - and to render this within `shiny` we'll need `plotly::renderPlotly`
+- `shiny` so we can do some data dashboarding!
+  - Found another ["local" shiny tutorial here](https://data.library.virginia.edu/getting-started-with-shiny/), you can check out and might find useful!
+  
+```{r imports}
+library(tidyverse)
+library(plotly)
+library(shiny)
+```
+
+<br>
+
+- we won't add `geom_*`'s yet; but otherwise the `ggplot` is ready to go here
+- we'll add different `geom_*`'s as a function of the `shiny` inputs  
+
+```{r figure_data}
+x <- faithful$waiting
+faithful_wait_min <- min(x)
+faithful_wait_max <- max(x)
+offset_max <- 9.99
+figure <- faithful %>% ggplot() + 
+  labs(x="Waiting time to next eruption (in mins)") +
+  # https://ggplot2.tidyverse.org/reference/lims.html
+  # http://www.sthda.com/english/wiki/ggplot2-axis-ticks-a-guide-to-customize-tick-marks-and-labels
+  lims(x=c(45,95)) + theme(axis.text.y = element_blank())
+```
+
+## Inputs
+
+You can put as many panels/layouts (separated by `,`'s) as you want in the `fluidPage`
+
+- `fluidPage(titlePanel(...), sidebarLayout(...),` **ELEMENT_3, ELEMENT_4, ..., ELEMENT_M**`)`
+
+Similarly, you can put as many widgets (separated by `,`'s) as you want in the `sidebarPanel`
+
+- `fluidPage(..., sidebarLayout(sidebarPanel(`**WIDGET_1, WIDGET_2, ..., WIDGET_N**`)`
+
+
+```{r shiny_plotly_fluidPage}
+
+
+ui <- fluidPage(
+
+    # 1ST of an arbitrary number of elements in `fluidPage` 
+    titlePanel("Old Faithful"),
+    
+    # 2ND of an arbitrary number of elements in `fluidPage` 
+    sidebarLayout(
+        
+        # FIRST OF TWO REQUIRE ARGUMENTS FOR `sidebarLayout`
+        sidebarPanel(
+            
+            # 1ST of an arbitrary number of elements in `sidebarPanel`
+            sliderInput(inputId="bins", label="Histogram number of bins:",
+                        min=1, max=50, value=30),
+            # (https://shiny.rstudio.com/reference/shiny/latest/sliderInput.html
+
+            # 2ND of an arbitrary number of elements in `sidebarPanel`
+            sliderInput(inputId="offset", label="Histogram bin offset:",
+                        min=0, max=offset_max, value=0),
+            
+            # 3RD of an arbitrary number of elements in `sidebarPanel`
+            sliderInput(inputId="bw", label="KDE log10 smoothing bandwidth:",
+                        min=-2.5, max=2.5, value=1),
+            # https://ggplot2.tidyverse.org/reference/geom_density.html
+
+            # 4TH of an arbitrary number of elements in `sidebarPanel`
+            radioButtons(inputId="hist_kde", label="Density Representation",
+                         choices = c('Hist','KDE'), selected='Hist'),
+            # https://shiny.rstudio.com/reference/shiny/latest/radioButtons.html            
+            
+            # 5TH of an arbitrary number of elements in `sidebarPanel`
+            selectInput(inputId="kernel", label="smoothing kernel",
+                        # https://rdrr.io/r/stats/density.html
+                        choices=c("gaussian", "epanechnikov", "rectangular",
+                                  "triangular", "biweight",
+                                  "cosine", "optcosine"), selected='gaussian')
+            # https://shiny.rstudio.com/reference/shiny/latest/selectInput.html
+            
+        ),
+        
+        # SECOND OF TWO REQUIRE ARGUMENTS FOR `sidebarLayout`
+        mainPanel(plotlyOutput(outputId="distPlot"))
+        )
+)
+```
+
+<br> 
+
+**AND** ***You can keep variables whose value (i.e., "state") is updated by inputs:***
+
+- `reactive` function keep tracks of input values and can be called
+
+```{r shiny_plotly_server}
+
+server <- function(input, output) {
+
+   # https://shiny.rstudio.com/tutorial/written-tutorial/lesson6/
+   # Remember: code inside of curly brackets "{}" can be run on command!
+   # here, whenever these variables are called
+   bins <- reactive({
+       seq(faithful_wait_min-offset_max+input$offset, 
+           faithful_wait_max+offset_max, 
+           length.out=input$bins+1)
+   })
+   bw <- reactive({
+       10^input$bw
+   })
+   kernel <- reactive({
+       input$kernel
+   })
+
+    output$distPlot <- renderPlotly({
+
+        # https://www.datamentor.io/r-programming/if-else-statement/
+        if(input$hist_kde=='Hist'){
+                                  # call/return/use the `bins()` function output
+            figure + geom_histogram(aes(waiting), breaks=bins(),
+                                    color="#75AADB", fill="gray") +  
+                     ggtitle("Histogram of waiting times") -> tmp
+          
+        }else{
+                                         # call/return/use the `bw()` function output
+            figure + geom_density(aes(waiting), bw=bw(), 
+                  # call/return/use the `kernel()` function output                                  
+                                  kernel=kernel(), 
+                                  color="#75AADB", fill="gray") +  
+                     ggtitle("KDE of waiting times") -> tmp
+      }  
+       
+      # our cool `ggplot` -> `plotly` converter
+      # which is the last thing run, and hence returned by `renderPlotly`
+      ggplotly(tmp)  %>% layout(margin=list(t = 75))
+      # https://stackoverflow.com/questions/42821171/fix-plotly-ggplotly-title-overlapping-plot-when-title-is-split-on-two-lines
+
+    })
+}
+
+# run it
+shinyApp(ui=ui, server=server, options=list(height = 700))
+```
+
+## MAPS!
+
+I found a series of packages/resources that I was able to leverage within `shiny`
+to make an "interactive" map:
+
+- [`leaflet`](https://rstudio.github.io/leaflet/shiny.html)
+- [`sp` (spatial features)](https://r-spatial.github.io/sf/)
+- [`tigris` shapefiles](https://r-spatial.github.io/sf/)
+
+```{r shiny_map_capability, include=TRUE}
+# https://rstudio.github.io/leaflet/
+# https://rstudio.github.io/leaflet/shiny.html
+library(leaflet)
+
+# https://r-spatial.github.io/sf/
+library(sf)
+
+# https://github.com/walkerke/tigris
+# VA counties - downloaded via the awesome tigris package
+# install.packages('tigris')
+va_shape_map <- tigris::counties(state = "VA", class = "sf")
+# suppress the loading printout: https://stackoverflow.com/questions/13090838/r-markdown-avoiding-package-loading-messages
+# just running it again after it's loaded can also supress the printouts 
+
+# add a color column
+va_shape_map$COLOR <- "aliceblue"
+
+# https://rmarkdown.rstudio.com/lesson-7.html
+# https://cran.r-project.org/web/packages/kableExtra/vignettes/awesome_table_in_html.html
+#knitr::kable(tibble(va_shape_map), format="markdown", booktabs=TRUE) #%>% kableExtra::kable_styling(fixed_thead=TRUE)
+va_shape_map
+```
+
+<br>
+
+Our UI layout for this map with a couple new OUTPUT options:
+
+- `wellPanel`
+- `leafletOutput`
+
+```{r shiny_map_capability_ui}
+
+# Define UI 
+ui <- fluidPage(
+  
+      # ELEMENT 1
+      titlePanel("The Old Dominion"),
+      
+      # ELEMENT 2   # FIRST REQUIRED PARAMETER
+      sidebarLayout(sidebarPanel(
+        
+                    # WIDGET 1 (but note that this is an OUTPUT not INPUT)
+                    wellPanel(textOutput(outputId="cnty_just_clicked")),
+                    # https://shiny.rstudio.com/reference/shiny/latest/wellPanel.html
+                    # https://shiny.rstudio.com/reference/shiny/latest/textOutput.html
+                    
+                    # WIDGET 2 (but note that this is an OUTPUT not INPUT)
+                    wellPanel(textOutput(outputId="cntys_selected"))),
+                    
+                    # SECOND REQUIRED PARAMETER
+                    mainPanel(leafletOutput(outputId="map"))
+                            # leafletOutput: this is like `plotOutput` or `plotlyOutput`
+      )
+)
+```
+
+<br>
+
+Actually, in addition to the `reactive` function, 
+**we can build maintain *arbitrary* interactive data structures** with the
+`reactiveValues` function.
+
+```{r shiny_growing_lists_for_maps, message=FALSE}
+# https://stackoverflow.com/questions/53016404/advantages-of-reactive-vs-observe-vs-observeevent
+# https://stackoverflow.com/questions/39436713/r-shiny-reactivevalues-vs-reactive/39440482#39440482
+# this is now an arbitrary data structure that we can fill with whatever we want!
+visited <- reactiveValues()
+visited$cntys_selected <- c()
+```
+
+<br>
+
+Now, with this arbitrary storage object available 
+
+1. **First**, we just draw the map object as the output as it currently is
+
+- which is based on the values in `va_shape_map`
+  
+2. **Second**, we run `observeEvent`, checks if `input$map_shape_click` happened
+
+-  `renderLeaflet` (i.e., `leaflet()`) objects AUTOMATICALLY get `input$map_shape_click`
+
+3. **Third**, and if `input$map_shape_click` happened, we run some code to 
+
+    a. keep track of what's been clicked (and un-clicked), and 
+  
+    b. set the colors on the map to indicate the current state as such
+    
+4. **Fourth**, finally, we render our lists of counties current selected    
+
+- these go into our `wellPanel(textOutput(...` widgets/elements 
+
+```{r shiny_growing_lists_for_maps_server, message=FALSE}
+# Define server logic       
+server <- function(input, output) {
+  
+    # Draw the map as it is so far    
+    output$map <- renderLeaflet({
+                # https://rstudio.github.io/leaflet/shiny.html
+        leaflet() %>%
+            # http://leaflet-extras.github.io/leaflet-providers/preview/index.html
+            addProviderTiles("Stamen.Toner") %>% 
+            # https://rstudio.github.io/leaflet/shapes.html
+            addPolygons(data=va_shape_map, 
+                        fillColor=~COLOR,
+                        fillOpacity=0.5,
+                        weight=1,
+                        opacity=1,
+                        color='black',
+                        layerId=~COUNTYNS)
+                        # each COUNTYNS is a layer
+    })
+
+    # check if there's been a "map shape click" ...
+    # `renderLeaflet` (i.e., `leaflet()`) objects
+    # AUTOMATICALLY get `input$map_shape_click` ...
+    observeEvent(
+      
+      # FIRST ARGUMENT to `observeEvent` is checked to see if it happened
+      input$map_shape_click, 
+      
+      # SECOND ARGUMENT to `observeEvent` is a function run if the above check passes
+      { 
+        # which county was clicked
+        event <- input$map_shape_click$id
+        cnty_just_clicked <- va_shape_map$NAMELSAD[va_shape_map$COUNTYNS==event]
+        
+        # if county already clicked, un-click it, and un-color it
+        if(cnty_just_clicked %in% visited$cntys_selected){
+          
+            visited$cntys_selected <- 
+              visited$cntys_selected[visited$cntys_selected!=cnty_just_clicked]
+            va_shape_map$COLOR[va_shape_map$COUNTYNS==event] <- 'aliceblue'
+            
+        }else{ # I.E., if county not in "has been clicked" list
+          
+            # add county to list of "has been clicked" counties. 
+            visited$cntys_selected <- append(visited$cntys_selected, 
+                                             cnty_just_clicked) 
+            # and set the color on the map to show the county "has been clicked"
+            va_shape_map$COLOR[va_shape_map$COUNTYNS==event] <- 'forestgreen'
+            
+        }
+        
+        # with map colors now updated, we can access the map with `leafletProxy`
+        leafletProxy(mapId="map", data=va_shape_map) %>%
+          # and "overwrite" the shape stored in `output$map`
+          addPolygons(data=va_shape_map[va_shape_map$COUNTYNS==event, ], 
+                      fillColor=~COLOR, fillOpacity=0.5,
+                      weight=1, opacity=1, color='black',
+                      layerId=~COUNTYNS)
+          # https://stackoverflow.com/questions/37214141/delete-polygon-from-leafletmap-r-shiny
+        # SO THE STATE OF `output$map` HAS NOW BEEN UPDATED
+        # so this is what will be "returned" (i.e., available) as part of the `map` object
+        
+        # In addition/Finally, we render our lists 
+        # as part of our `wellPanel(textOutput(...` widgets/elements
+        output$cnty_just_clicked <- 
+          renderText(va_shape_map$NAMELSAD[va_shape_map$COUNTYNS == event])
+        output$cntys_selected <- 
+          renderText(paste0(visited$cntys_selected, sep='... ', collapse='\n'))
+    })
+}
+
+# Run the application 
+shinyApp(ui=ui, server=server)
+```
+
+
+## Resources
+
+### data
+- Using the built-in `Faithful` data set again as our example
+
+### `shiny` widgets
+- [sliderInput](https://shiny.rstudio.com/reference/shiny/latest/sliderInput.html)
+- [`radioButtons`](https://shiny.rstudio.com/reference/shiny/latest/radioButtons.html)
+- [`selectInput`](https://shiny.rstudio.com/reference/shiny/latest/selectInput.html)
+- [`reactive` functions](https://shiny.rstudio.com/tutorial/written-tutorial/lesson6/)
+  - [`reactiveValues` functions](https://stackoverflow.com/questions/39436713/r-shiny-reactivevalues-vs-reactive/39440482#39440482)
+  - [`observeEvent` functions](https://stackoverflow.com/questions/53016404/advantages-of-reactive-vs-observe-vs-observeevent)
+- [`wellPanel`](https://shiny.rstudio.com/reference/shiny/latest/wellPanel.html)
+  - [`renderText`](https://shiny.rstudio.com/reference/shiny/latest/textOutput.html)
+
+
+### `shiny` tutorial
+- [UVA library tutorial](https://data.library.virginia.edu/getting-started-with-shiny/)
+
+### `shiny` MAPS!
+- [`leaflet`](https://rstudio.github.io/leaflet/)
+  - [`renderLeaflet`, `leaflet`, and `leafletProxy` for `shiny`](https://rstudio.github.io/leaflet/shiny.html)
+  - [shape layers](https://rstudio.github.io/leaflet/shapes.html)
+  - [updatng shape layers](https://stackoverflow.com/questions/37214141/delete-polygon-from-leafletmap-r-shiny)
+  - [map styles with `addProviderTiles`](http://leaflet-extras.github.io/leaflet-providers/preview/index.html)
+- [`sf`: Spatial/Simple Features](https://r-spatial.github.io/sf/)
+- [`tigris` MAPS!](https://github.com/walkerke/tigris)
+
+### `ggplot2` quick checks
+- [`lims`](https://ggplot2.tidyverse.org/reference/lims.html)
+- [`ticks` and `labels`](http://www.sthda.com/english/wiki/ggplot2-axis-ticks-a-guide-to-customize-tick-marks-and-labels)
+- [`geom_density` parameters](https://ggplot2.tidyverse.org/reference/geom_density.html)
+
+### `R` coding 
+- [`if`-`else` condititional logic](https://www.datamentor.io/r-programming/if-else-statement/)
+
+### knit formatting
+- [good table formatting](https://rmarkdown.rstudio.com/lesson-7.html)
+- [even better table formatting](https://cran.r-project.org/web/packages/kableExtra/vignettes/awesome_table_in_html.html)

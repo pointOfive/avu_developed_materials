@@ -1,0 +1,8 @@
+
+[GROUP HOMEWORK]: submit a knitted "group" `.html` file showing you code and following figures
+
+Only a single "group figure" is required for Parts 1-3 above; however, the comments provided (Part 4) in that code must be created and contributed by the group as a whole. For part 5, each group member must contribute a unique figure to the groups submission in order for all group members to get credit for this homework. If only some members of the group contribute figures in the submitted `.Rmd` file, those group members must additionally provide a supplemental explanation along with their submission as to why other students in their group have not contributed to this assignment.
+
+1. Title your document and use sections and subsections to organize all team member's code and figures into a well organized and visually pleasing and attractive presentation
+2. Each must provide some exposition explaining the data set, the subset of the data set they're using, and the the plot they created
+3. Each student should include comments in their code which would allow someone else to readily understand each code line of their implementation

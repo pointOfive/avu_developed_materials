@@ -1,0 +1,215 @@
+Untitled
+,Activity count,17
+,Participant count,12
+,Average responses,13.176470588235293
+
+MODULE 3: Videos+Reading+Lab+HW (no tidyverse) took,Activity type,Multiple choice
+,Total responses,9
+,Unique participants,9
+,Response options,Count,Percent
+,$$<5$$ hrs,1,11.11
+,$$5$$$$-$$$$10$$ hrs,5,55.56
+,$$10$$$$+$$ hrs,3,33.33
+
+MODULE 3: Time Spent on Tidyverse,Activity type,Multiple choice
+,Total responses,9
+,Unique participants,9
+,Response options,Count,Percent
+,$$0$$ hrs,3,33.33
+,$$1$$$$-$$$$2$$ hrs,3,33.33
+,$$3$$$$-$$$$5$$ hrs,3,33.33
+,$$6$$$$-$$$$10$$ hrs,0,0.0
+,$$11$$$$+$$ hrs,0,0.0
+
+MODULE 4: Videos+Reading+Lab+HW (no tidyverse) took,Activity type,Multiple choice
+,Total responses,5
+,Unique participants,5
+,Response options,Count,Percent
+,$$<5$$ hrs,1,20.0
+,$$5$$$$-$$$$10$$ hrs,0,0.0
+,$$10$$$$+$$ hrs,0,0.0
+,$$<5$$  (but I'm almost done),0,0.0
+,$$5$$$$-$$$$10$$ hrs (but I'm almost done),2,40.0
+,$$10$$$$+$$ hrs (but I'm almost done),0,0.0
+,$$<5$$  (but I've still got quite a bit to do),2,40.0
+,$$5$$$$-$$$$10$$ hrs (but I've still got quite a bit to do),0,0.0
+,$$10$$$$+$$ hrs (but I've still got quite a bit to do),0,0.0
+
+MODULE 4: Time Spent on Tidyverse,Activity type,Multiple choice
+,Total responses,0
+,Unique participants,0
+,Response options,Count,Percent
+,$$0$$ hrs,0,0
+,$$1$$$$-$$$$2$$ hrs,0,0
+,$$3$$$$-$$$$5$$ hrs,0,0
+,$$6$$$$-$$$$10$$ hrs,0,0
+,$$11$$$$+$$ hrs,0,0
+
+"For which of the following would it be said that ""their <em>primary purpose<em> is to <em>critique model complexity</em>""?</em></em>",Activity type,Multiple choice
+,Total responses,14
+,Unique participants,10
+,Response options,Count,Percent
+,K-Folds,0,0.0
+,Bootstrapping,3,21.43
+,BIC,3,21.43
+,Confidence Intervals,1,7.14
+,R-squared,2,14.29
+,RMSE,5,35.71
+
+"For which of the following would it be said that ""their <em>primary purpose</em> is to <em>characterize estimation uncertainty</em>""?",Activity type,Multiple choice
+,Total responses,17
+,Unique participants,12
+,Response options,Count,Percent
+,K-Folds,0,0.0
+,Bootstrapping,8,47.06
+,BIC,1,5.88
+,Confidence Intervals,7,41.18
+,R-squared,0,0.0
+,RMSE,1,5.88
+
+"For which of the following would it be said that ""their <em>basis</em> is <em>distributional/theoretical</em>"" in nature?",Activity type,Multiple choice
+,Total responses,16
+,Unique participants,11
+,Response options,Count,Percent
+,K-Folds,3,18.75
+,Bootstrapping,1,6.25
+,BIC,1,6.25
+,Confidence Intervals,5,31.25
+,R-squared,4,25.0
+,RMSE,2,12.5
+
+"For which of the following would it be said that ""their <em>basis</em> is <em>empirical/simulation</em>"" in nature?",Activity type,Multiple choice
+,Total responses,21
+,Unique participants,11
+,Response options,Count,Percent
+,K-Folds,6,28.57
+,Bootstrapping,10,47.62
+,BIC,0,0.0
+,Confidence Intervals,0,0.0
+,R-squared,3,14.29
+,RMSE,2,9.52
+
+<em>Generative Modeling</em> relies on,Activity type,Multiple choice
+,Total responses,10
+,Unique participants,10
+,Response options,Count,Percent
+,p(y|x),3,30.0
+,p(x|y),6,60.0
+,the zeitgeist of the times,1,10.0
+,Discriminative Modeling,0,0.0
+,Deep Learning,0,0.0
+
+"In the ""Classification Workflow"" (Training -> Tuning -> Using), in the <em>first</em> stage",Activity type,Multiple choice
+,Total responses,15
+,Unique participants,11
+,Response options,Count,Percent
+,Complexity Dials are turned and final optimal settings are Selected,0,0.0
+,Cost Functions of Parameters are traversed by Optimization procedures,2,13.33
+,Metrics are considered and evaluated and optimized through Thresholding,1,6.67
+,"I create an ROC curve and consider, e.g., sensitivity/specificity tradeoffs",2,13.33
+,I create a final hold out test data set,9,60.0
+,I use a cross-validation methodology like K-folds,1,6.67
+
+"In the ""Classification Workflow"" (Training -> Tuning -> Using), in the <em>second</em> stage",Activity type,Multiple choice
+,Total responses,22
+,Unique participants,11
+,Response options,Count,Percent
+,Complexity Dials are turned and final optimal settings are Selected,6,27.27
+,Cost Functions of Parameters are traversed by Optimization procedures,1,4.55
+,Metrics are considered and evaluated and optimized through Thresholding,5,22.73
+,"I create an ROC curve and consider, e.g., sensitivity/specificity tradeoffs",3,13.64
+,I create a final hold out test data set,0,0.0
+,I use a cross-validation methodology like K-folds,7,31.82
+
+"In the ""Classification Workflow"" (Training -> Tuning -> Using), in the <em>third</em> stage",Activity type,Multiple choice
+,Total responses,17
+,Unique participants,11
+,Response options,Count,Percent
+,Complexity Dials are turned and final optimal settings are Selected,0,0.0
+,Cost Functions of Parameters are traversed by Optimization procedures,4,23.53
+,Metrics are considered and evaluated and optimized through Thresholding,2,11.76
+,"I create an ROC curve and consider, e.g., sensitivity/specificity tradeoffs",10,58.82
+,I create a final hold out test data set,0,0.0
+,I use a cross-validation methodology like K-folds,1,5.88
+
+A benefit of RMSE and MAE over MSE is,Activity type,Multiple choice
+,Total responses,9
+,Unique participants,9
+,Response options,Count,Percent
+,they are cost functions,1,11.11
+,they are not cost functions,1,11.11
+,they naturally support regularization,6,66.67
+,they are more interpretable,0,0.0
+,there are two of them and only one of the other,1,11.11
+
+The <em>MOST important</em> concept in Data Science/Data Mining/ML/Statistical Learning is,Activity type,Multiple choice
+,Total responses,23
+,Unique participants,10
+,Response options,Count,Percent
+,Permutation Tests,0,0.0
+,K-Folds Cross-Validation,0,0.0
+,Final Hold Out Test Data,3,13.04
+,Uncertainty Characterization,3,13.04
+,Non-Parametric Methods,1,4.35
+,Statistical Uncertainty Estimation,1,4.35
+,Flexible Predictive Methodologies,1,4.35
+,Predictive Methodologies,5,21.74
+,Sampling Variation,3,13.04
+,Regularization,2,8.7
+,Feature Scaling,1,4.35
+,Out-of-Sample Testing,0,0.0
+,Overfitting,3,13.04
+
+"In <em>EVERYTHING</em> I do in Data Science/Data Mining/ML/Statistical Learning, I am <em>PRIMARILY concerned</em> with",Activity type,Multiple choice
+,Total responses,14
+,Unique participants,10
+,Response options,Count,Percent
+,Permutation Tests,0,0.0
+,K-Folds Cross-Validation,0,0.0
+,Final Hold Out Test Data,0,0.0
+,Uncertainty Characterization,1,7.14
+,Non-Parametric Methods,0,0.0
+,Statistical Uncertainty Estimation,3,21.43
+,Flexible Predictive Methodologies,0,0.0
+,Predictive Methodologies,1,7.14
+,Sampling Variation,7,50.0
+,Regularization,0,0.0
+,Feature Scaling,0,0.0
+,Out-of-Sample Testing,0,0.0
+,Overfitting,2,14.29
+
+<em>*My* MOST favorite</em> concept in Data Science/Data Mining/ML/Statistical Learning is,Activity type,Multiple choice
+,Total responses,15
+,Unique participants,8
+,Response options,Count,Percent
+,Permutation Tests,0,0.0
+,K-Folds Cross-Validation,5,33.33
+,Final Hold Out Test Data,1,6.67
+,Uncertainty Characterization,1,6.67
+,Non-Parametric Methods,2,13.33
+,Statistical Uncertainty Estimation,0,0.0
+,Flexible Predictive Methodologies,1,6.67
+,Predictive Methodologies,2,13.33
+,Sampling Variation,2,13.33
+,Regularization,0,0.0
+,Feature Scaling,1,6.67
+,Out-of-Sample Testing,0,0.0
+,Overfitting,0,0.0
+
+<em>*My* MOST favorite</em> concept in Data Science/Data Mining/ML/Statistical Learning is,Activity type,Multiple choice
+,Total responses,8
+,Unique participants,8
+,Response options,Count,Percent
+,Permutation Tests,0,0.0
+,K-Folds Cross-Validation,0,0.0
+,Final Hold Out Test Data,0,0.0
+,Uncertainty Characterization,0,0.0
+,Non-Parametric Methods,0,0.0
+,Statistical Uncertainty Estimation,0,0.0
+,Flexible Predictive Methodologies,0,0.0
+,Predictive Methodologies,0,0.0
+,Sampling Variation,8,100.0
+,Regularization,0,0.0
+,Feature Scaling,0,0.0
+,Out-of-Sample Testing,0,0.0
+,Overfitting,0,0.0

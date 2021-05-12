@@ -1,0 +1,238 @@
+---
+title: "Maps"
+author: "Schwartz"
+date: "12/06/2020"
+output:
+     html_document:
+          toc: TRUE
+          toc_depth: 4
+          toc_float: true
+          toc_collapsed: true
+          theme: journal
+          code_folding: hide
+---
+
+<!--- Change font size for headers --->
+<style>
+h1.title {
+  font-size: 28px;
+}
+h1 {
+  font-size: 22px;
+}
+h2 {
+  font-size: 18px;
+}
+h3 { 
+  font-size: 14px;
+}
+
+</style>
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning=FALSE, message=FALSE, 
+                      fig.align = "center",
+                      out.width = "80%")
+
+
+```
+
+# The *Rule* of Proportional Ink
+
+Back when their was an effort to impeach Trump, 
+Lara Trump tweeted a map of the US, which looked very red,
+with the phrase "Try to Impeach This". 
+A graphical designer, [Karim Douieb](https://www.linkedin.com/in/karim-douieb/), 
+in Brussels (Belgium), 
+who co-founded a company call [Jetpack.ai](https://www.jetpack.ai/),
+(weirdly?) decided to weigh-in on this (American) political issue with an
+interactive response web page title ["Try to impeach this? Challenge accepted!"](http://try-to-impeach-this.jetpack.ai). 
+During the 2020 Biden-Trump election, 
+a tweeter (*@BettinaForget*) reminded us of this project, with a slight
+variation on its original punchline ("Acres don't vote, people do"):
+*"Land doesn't vote. People do"*.  If you want to want to read a little bit more
+about how "The most viral election map of 2020 was actually made by a Belgian man in 2019",
+you can find some additional reporting in this
+[Fast Company article](https://www.fastcompany.com/90572489/u-s-election-maps-are-wildly-misleading-so-this-designer-fixed-them). 
+
+|                 |                  |
+|:---------------:|:----------------:|
+|![](MAPS/try.png)|![](MAPS/okay.png)|
+| See the full interactive web page [here](http://try-to-impeach-this.jetpack.ai)|Find *@BettinaForget* and her post [here](https://twitter.com/BettinaForget/status/1324139878666391555?ref_src=twsrc%5Etfw%7Ctwcamp%5Etweetembed%7Ctwterm%5E1324139878666391555%7Ctwgr%5E%7Ctwcon%5Es1_)|
+
+
+[Karim Douieb's project](http://try-to-impeach-this.jetpack.ai) did a very
+nice job of highlighting the visual misrepresentation of the initial 
+Lara Trump Tweet; but, sadly, *@BettinaForget* and "The most viral election map of 2020"
+didn't quite get the message.  In a cringingly embarrassing redux of the same
+problem, *and possibly and even more egregious violation*, because the map 
+reported by *@BettinaForget* didn't bother to actually use the final *most 
+informative* map provided by the [Karim Douieb's project](http://try-to-impeach-this.jetpack.ai):
+
+![](MAPS/actual.png)
+
+## Election 2020
+
+To make a state level map like this
+I copied (on December 6th, 2020) state voting counts from 
+[NBC news](https://www.nbcnews.com/politics/2020-elections/president-results),
+along with States Latitudes and Longitudes from 
+[Google](https://developers.google.com/public-data/docs/canonical/states_csv).
+Because we're still very close to the actual 2020 election day (November 3rd, 2020),
+I was not immediately able to find data set with a richer break down of the full
+election polling results.  The best source for this 
+is the [AP Elections API](https://developer.ap.org/ap-elections-api/), which is
+the [most trusted](https://2020.dataforprogress.org) source for election results, 
+and generally what all reporting 
+around election results in based on.  But, as it turns out, this data is
+limited to a [very exclusive set](https://www.reddit.com/r/programming/comments/48p3ke/election_nerds_the_new_york_times_wrote_a_command/) of reporting agencies; although, [here's Open Elections github repo](https://github.com/openelections/) project that might be interesting for
+exploring election data further. 
+
+
+
+## Initialization
+
+- Loading tidyverse and data.
+    - Loading the data directly from [Google Sheets](https://docs.google.com/spreadsheets/d/1J1p79EUabjMuECV12AcLKeITIWkOoWD0kmU0mxelsrc/edit?usp=sharing) using [googlesheets4](https://googlesheets4.tidyverse.org)!
+    - As described above, I made this data file by taking the vote counts in each
+      state so far, as reported by [NBC news](https://www.nbcnews.com/politics/2020-elections/president-results),
+      and combining them with US state latitude and longitude coordinates provided
+      by a file from [Google](https://developers.google.com/public-data/docs/canonical/states_csv).
+        - I was careful to make sure that the order of the data (by state name) was
+          correct because these files were initially not sorted the same way
+        - I was careful to remove *Puerto Rico* from the Google latitude/longitude 
+          file as I did not have votes for *Puerto Rico*.
+        - I created voting percentages within the range of [0.4, 0.6] so that
+          I could eventually color the map red and blue in a manner that 
+          closely reflected population political leanings
+  
+
+```{r data}
+library(tidyverse)
+
+d1 <- "https://docs.google.com/spreadsheets/d/1J1p79EUabjMuECV12AcLKeITIWkOoWD0kmU0mxelsrc/edit?usp=sharing"
+# install.packages('googlesheets4')
+US2020_Election <- googlesheets4::read_sheet(d1, skip=3) %>%
+  mutate(Total = Trump+Biden) %>%
+  mutate(Trump_Percent = 
+           ifelse(Trump/Total>0.6, 0.6, ifelse(Trump/Total<0.4, 0.4, Trump/Total)))
+
+US2020_Election
+```
+
+
+## Coordinates
+
+The map library I'm using, `usmap`, which links with `ggplot2`, uses a slightly
+different coordinate system than Latitude/Longitude, so the first thing we 
+need to do is transform our Latitude/Longitude locations into the
+`usmap` coordinate system with the libraries helper `usmap_transform` function. 
+
+- Be careful with the `usmap_transform` function because it does not appear to
+  keep the order of the output the same as the order of the input!
+
+```{r coordiantes}
+# install.packages('usmap')
+library(usmap)
+library(ggplot2)
+
+# https://stackoverflow.com/questions/52911837/add-points-to-usmap-with-ggplot-in-r
+# https://cran.r-project.org/web/packages/usmap/vignettes/advanced-mapping.html
+# but note that usmap_transform(earthquakes) does not keep the same order as earthquakes
+
+US2020_Election %>% dplyr::select(Lon, Lat) %>% usmap_transform -> new_coords
+US2020_Election_new_coors <- US2020_Election %>% 
+  inner_join(new_coords, by=c('Lat','Lon')) 
+```
+
+
+
+## Map 2020 Redux
+
+- The US state map is provided by `usmap`
+- Population size is given as a black and white gradient over states
+- Voter count is given by circle size
+  - Be careful with the `size` aesthetic of `ggplot2::geom_point` because if
+  you're not careful the area of the point will not actually be proportional to 
+  the data determining the `size` aesthetic
+- Voter preferences are given by a blue-purple-red gradient
+  
+
+```{r maps}
+# install.packages('ggforce')
+
+# https://cran.r-project.org/web/packages/usmap/vignettes/mapping.html
+plot_usmap(data=statepop, values="pop_2015", color="black") + 
+  scale_fill_continuous(name="Pop", label=scales::scientific,
+                        low="white", high="black") + 
+# https://cran.r-project.org/web/packages/usmap/vignettes/advanced-mapping.html
+    geom_point(data=US2020_Election_new_coors, 
+             mapping=aes(x=Lon.1, y=Lat.1, size=Total, 
+                         color=Trump_Percent),
+             alpha=0.5) +
+# https://github.com/tidyverse/ggplot2/issues/1666
+# https://stackoverflow.com/questions/6862742/draw-a-circle-with-ggplot2
+# https://www.rdocumentation.org/packages/ggforce/versions/0.3.2/topics/geom_circle
+  ggforce::geom_circle(data=US2020_Election_new_coors, 
+# Google: "The area of a circle is pi times the radius squared (A = π r²)."
+                       aes(x0=Lon.1, y0=Lat.1, r=sqrt(Total)*127),
+                       color='white') +
+# https://ggplot2.tidyverse.org/reference/scale_gradient.html
+    scale_color_gradient2(low="blue", mid='purple', high="red", midpoint=0.5,
+                          limits=c(.4,.6), name='Rep %') +
+# https://stackoverflow.com/questions/27645720/increasing-size-of-circles-in-ggplot2-graphs
+# https://ggplot2.tidyverse.org/reference/scale_size.html
+  scale_size_area(label=scales::scientific, name='Vote',
+                  breaks=c(500000, 3000000, 10000000), max_size=35) + 
+# https://stackoverflow.com/questions/52060601/ggplot-multiple-legends-arrangement
+  guides(size = guide_legend(nrow=4, byrow=TRUE)) +
+  theme(legend.position="right", #legend.title=element_blank(), 
+        legend.direction="horizontal", legend.box="vertical")
+```
+
+## More
+
+Check out the other very cool maps at the bottom of 
+[this page](https://plotly-r.com/maps.html)!  And also [here](https://stackoverflow.com/questions/10368180/plotting-pie-graphs-on-map-in-ggplot)!
+
+|                   |                   |
+|:-----------------:|:-----------------:|
+| ![](MAPS/pr1.png) | ![](MAPS/pr2.png) | 
+| ![](MAPS/pr3.png) | ![](MAPS/pr4.png) | 
+
+## References
+
+### Reporting
+
+- [Karim Douieb](https://www.linkedin.com/in/karim-douieb/)
+- [Jetpack.ai](https://www.jetpack.ai/)
+- ["Try to impeach this? Challenge accepted!"](http://try-to-impeach-this.jetpack.ai)
+- [*@BettinaForget*](https://twitter.com/BettinaForget/status/1324139878666391555?ref_src=twsrc%5Etfw%7Ctwcamp%5Etweetembed%7Ctwterm%5E1324139878666391555%7Ctwgr%5E%7Ctwcon%5Es1_)
+- [Fast Company article](https://www.fastcompany.com/90572489/u-s-election-maps-are-wildly-misleading-so-this-designer-fixed-them)
+- [Voting Counts](https://www.nbcnews.com/politics/2020-elections/president-results)
+    - [State Lat/Lon](https://developers.google.com/public-data/docs/canonical/states_csv)
+        - [Data I created from the two above sources](https://docs.google.com/spreadsheets/d/1J1p79EUabjMuECV12AcLKeITIWkOoWD0kmU0mxelsrc/edit?usp=sharing)
+- [AP Elections API](https://developer.ap.org/ap-elections-api/)
+- [Data for Progress](https://2020.dataforprogress.org)
+- [Open Elections](https://github.com/openelections/)
+- [AP Data Reddit Discussion](https://www.reddit.com/r/programming/comments/48p3ke/election_nerds_the_new_york_times_wrote_a_command/)
+
+
+### Coding
+
+- [usmap](https://cran.r-project.org/web/packages/usmap)
+    - [mapping](https://cran.r-project.org/web/packages/usmap/vignettes/mapping.html)
+    - [advanced mapping](https://cran.r-project.org/web/packages/usmap/vignettes/advanced-mapping.html)
+- [tidyverse](https://www.tidyverse.org)
+    - [googlesheets4](https://googlesheets4.tidyverse.org)
+    - [sizing ggplot2::geom_point](https://ggplot2.tidyverse.org/reference/scale_size.html)
+    - [proportional ggplot2::geom_point sizes](https://github.com/tidyverse/ggplot2/issues/1666)
+    - [ggforce::geom_circle](https://www.rdocumentation.org/packages/ggforce/versions/0.3.2/topics/geom_circle)
+    - [color gradients](https://ggplot2.tidyverse.org/reference/scale_gradient.html)
+- [stack overflow](https://stackoverflow.com/)
+    - [sizing ggplot2::geom_point](https://stackoverflow.com/questions/27645720/increasing-size-of-circles-in-ggplot2-graphs)
+    - [circle size by radius](https://stackoverflow.com/questions/6862742/draw-a-circle-with-ggplot2)
+    - [multiple ggplot2 legends](https://stackoverflow.com/questions/52060601/ggplot-multiple-legends-arrangement)
+    - [pie charts on plots](https://stackoverflow.com/questions/10368180/plotting-pie-graphs-on-map-in-ggplot)
+- [Plotly R Maps](https://plotly-r.com/maps.html)
+    

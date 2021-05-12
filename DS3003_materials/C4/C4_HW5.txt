@@ -1,0 +1,7 @@
+
+[EXTRA CREDIT]: remake the Thomas-Kilmann plot according to the following rules
+
+1. Use a graphics creation tool that has not been demonstrated by any other student for this extra credit
+- I.e., only the first student to demonstrate each graphic software gets extra credit
+
+2. Make a post on the forum which (a) is titled by the name of the graphical tool and (b) showcases a screenshot of your figure within the interface context of the tool

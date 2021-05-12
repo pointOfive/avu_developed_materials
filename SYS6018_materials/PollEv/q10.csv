@@ -1,0 +1,194 @@
+﻿Untitled
+,Activity count,21
+,Participant count,27
+,Average responses,20.238095238095237
+
+"Unsupervised learning is only interested in ""$$X$$"", and is unconcerned with  ""$$Y$$""",Activity type,Multiple choice
+,Total responses,13
+,Unique participants,13
+,Response options,Count,Percent
+,True,8,61.54
+,False,5,38.46
+
+"If there is an outcome $$Y$$ in my data, I would not pursue unsupervised learning (because I would pursue supervised learning)",Activity type,Multiple choice
+,Total responses,17
+,Unique participants,17
+,Response options,Count,Percent
+,True,1,5.88
+,False,16,94.12
+
+"If I google search how to do something, find and use an answer strategy on, e.g., a blog, or stack overflow, etc., I should",Activity type,Multiple choice
+,Total responses,24
+,Unique participants,24
+,Response options,Count,Percent
+,"copy the website link and include it with my code, preferably even commenting on it's role in the solution",24,100.0
+,"use it and move on to the next problem because ""I'm not busy enough to use someone else work in my answer but I'm too busy to note it""",0,0.0
+
+$$z_1 = \phi_{11}x_1 + \phi_{12}x_2 + \cdots + \phi_{1p}x_p$$ looks like,Activity type,Multiple choice
+,Total responses,24
+,Unique participants,24
+,Response options,Count,Percent
+,the definition of a hyperplane,3,12.5
+,a linear regression model,5,20.83
+,a dot product,0,0.0
+,the first principal component,16,66.67
+
+The first principal component is,Activity type,Multiple choice
+,Total responses,24
+,Unique participants,24
+,Response options,Count,Percent
+,"the ""direction of most variation"" in $$X$$",13,54.17
+,The column of $$X$$ that drives variability in feature space,0,0.0
+,"The project of $$X$$ onto the ""direction of most variation"" in $$X$$",11,45.83
+
+ISLR homework solutions are available online,Activity type,Multiple choice
+,Total responses,43
+,Unique participants,25
+,Response options,Count,Percent
+,but I should never use them because doing so is not allowed for SYS 6018,0,0.0
+,"and they can be acceptably utilized by adding something such as ""I am generally relying on  to help guide my learning efforts"" at the top of your document",18,41.86
+,so long as (non text/course) code copied is changed or commented sufficiently to clearly demonstrate student engagement/understanding (in addition to being cited),25,58.14
+
+$$x_{ij} \approx \sum_{m=1}^M z_{im} \phi_{jm} = \tilde x_{ij}$$,Activity type,Multiple choice
+,Total responses,26
+,Unique participants,26
+,Response options,Count,Percent
+,is the approximation of $$x_{ij}$$ using only $$M$$ principal components,15,57.69
+,retains as much information about $$x_{ij}$$ as in encoded in the first $$M$$ principal components,11,42.31
+,lives in the same space as the original data $$X$$,0,0.0
+
+This figure primarily demonstrates,Activity type,Multiple choice
+,Total responses,41
+,Unique participants,25
+,Response options,Count,Percent
+,a way to visualize the feature composition of principal components,17,41.46
+,that feature scaling affects PCA,19,46.34
+,that `UrbanPop` and `Assault` dominate variability in the data,5,12.2
+
+"Collaboration, sharing of ideas, and taking advantage of learning resources of all forms",Activity type,Multiple choice
+,Total responses,23
+,Unique participants,23
+,Response options,Count,Percent
+,is not something that's encouraged in SYS 6018,0,0.0
+,is something that's encouraged in SYS 6018,23,100.0
+
+"If the features are ""centered"" (as is the general prescription in PCA)",Activity type,Multiple choice
+,Total responses,44
+,Unique participants,22
+,Response options,Count,Percent
+,"the ""total variation in the data"" is $$\frac{1}{n}\sum_{i=1}^p Var(X_j) = \frac{1}{n}\sum_{j=1}^p \sum_{i=1}^n x_{ij}^2$$",12,27.27
+,"the ""variation explained by the $$m^{th}$$ principal component"" is $$\frac{1}{n}\sum_{i=1}^n z_{im}^2 = \frac{1}{n}\sum_{i=1}^n(\sum_{j=1}^p \phi_{jm}x_{ij})^2",13,29.55
+,"we can use the above to examine ""proportion of variance explained"" to select how many principal components to retain for dimensionality reduction",19,43.18
+
+Principal component $$m$$ defined by $$\sum_{j=1}^p \phi_{jm}x_{ij}$$ and principal component $$m'$$ defined by $$\sum_{j=1}^p \phi_{jm'}x_{ij}$$,Activity type,Multiple choice
+,Total responses,25
+,Unique participants,23
+,Response options,Count,Percent
+,are linearly independnt,21,84.0
+,are linearly dependent,4,16.0
+
+"""the practice of taking someone else's work or ideas and passing them off as one's own""",Activity type,Multiple choice
+,Total responses,21
+,Unique participants,21
+,Response options,Count,Percent
+,is the Oxford Languages dictionary definition of pla·gia·rism,21,100.0
+,is a good way way to submit work pursuant to the UVA honor code,0,0.0
+
+Describe the K-means algorithm.,Activity type,Open ended
+,Total responses,15
+,Unique participants,14
+,Responses
+,Randomly grouping and then finding the mean and closest centroid
+,Create group prototypes and add observations to best prototype fit
+,keeps points in clusters and clusters as far as possible
+,randomGroups::recursive()
+,Clustering - similar points grouped together
+,iterate thru centroid
+,The k-means algorithm iterates through observations and establishes cluster based on distance from centroids
+,randomly group points. find mean of each group. regroup to closest mean. find mean...rpt
+,"Assign random color, calc centroid of all dots of color, reassign color by closest to centroid, repeat"
+,iterative process of clustering and changing centroid
+,mean of means
+,Assigning data points to the closest centroid
+,"You are looking to define subgroups of your data by random selection, using the Euclidean distance, and iterating"
+,randomly group points
+,automagic grouping
+
+"Describe your satisfaction about another ML, K-means, having ""K"" as it's primary identifier.",Activity type,Open ended
+,Total responses,16
+,Unique participants,14
+,Responses
+,Edward can answer for me
+,it's Kool
+,slightly concerned about needing to choose the k prior to clustering in order for this to be effective...seems problematic for large datasets?
+,It's like we only have one letter in the alphabet
+,I'm o(K) with it
+,at least its not pi
+,snickers level
+,why not kappa
+,K-iller
+,is oK
+,K bye
+,Too many Ks...
+,It's confusing. It works. But K is overused
+,too many ks
+,K tastic
+,CAN'T BELIEVE WE HAVE ANOTHER
+
+"Did you know that UVA's honor code is that ""students pledge never to lie, cheat, or steal, and accept that the consequence for breaking this pledge is permanent dismissal from the University""? [Yes/No I don't care... I am genuinely curious]",Activity type,Multiple choice
+,Total responses,23
+,Unique participants,23
+,Response options,Count,Percent
+,Yes,23,100.0
+,No,0,0.0
+
+Describe the hierarchical clustering algorithm.,Activity type,Open ended
+,Total responses,9
+,Unique participants,8
+,Responses
+,feels like knn with clusters
+,Definitely similar to a decision tree but with added complexity to the clusters
+,question: what's best reference point for euclidian distance to use as a rule of thumb? (have a few options? closest/average/etc)
+,I don't get it
+,treat each observation as its own cluster and begin clustering based disimmilarity using a variety of characteristics such as euclidean distance or correlation distance
+,"linkeage, cut_trees"
+,"pairs are clustered based on euclidian distance, then hierarchical structure determines the final clusters based on the cutoff point you choose (dashed line)"
+,You tune the heights to figure out the # of clusters
+,Decision tree's twin in appearance
+
+"As far as ""choosing the number of components""... do you prefer",Activity type,Multiple choice
+,Total responses,17
+,Unique participants,17
+,Response options,Count,Percent
+,K-means,11,64.71
+,Hierarchical Clustering,2,11.76
+,K-Folds,3,17.65
+,KNN,1,5.88
+
+"My methods aside, given that I can be unyieldingly committed to ""the letter of the law"", do you understand that failure to cite utilized resources concerns me greatly because it appears to me to be something I should be acting on?",Activity type,Multiple choice
+,Total responses,8
+,Unique participants,8
+,Response options,Count,Percent
+,Yes,8,100.0
+,No,0,0.0
+
+"If these are based on the same data, why would they look different?",Activity type,Open ended
+,Total responses,2
+,Unique participants,2
+,Responses
+,The model type/method used...and the tuning parameter
+,"complete, average, single"
+
+"Do you think it is a ""detrimental thing for the cohort"" if someone has additional time/bandwidth to improve their position and productivity relative to the course?",Activity type,Multiple choice
+,Total responses,5
+,Unique participants,5
+,Response options,Count,Percent
+,Yes,0,0.0
+,No,5,100.0
+
+Do you think positivity or negativity should be expressed if someone has additional time/bandwidth to improve their position and productivity relative to the course?,Activity type,Multiple choice
+,Total responses,5
+,Unique participants,5
+,Response options,Count,Percent
+,"Positivity, support, enthusiasm, encouragement",5,100.0
+,"Negativity, shaming, detraction, undermining",0,0.0

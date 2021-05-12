@@ -1,0 +1,54 @@
+---
+title: "Chapter 2 Lab Notes"
+author: "Michael D Porter"
+date: "2020-05-19"
+output: html_notebook
+---
+
+
+The textbook and datasets are hosted online at <https://faculty.marshall.usc.edu/gareth-james/ISL/>. 
+You will find that the `Auto.csv` data is at the following link <https://faculty.marshall.usc.edu/gareth-james/ISL/Auto.csv>. 
+
+```{r}
+# Load tidyverse packages
+library(tidyverse)
+```
+
+Load the `Auto` data using the `read_csv()` function (from `readr` package).
+```{r}
+Auto = read_csv('https://faculty.marshall.usc.edu/gareth-james/ISL/Auto.csv')
+```
+Note: some value of `horsepower` are missing, and represented with `?`. We need to make this explictly missing (represent with an `NA`).
+```{r}
+Auto = read_csv('https://faculty.marshall.usc.edu/gareth-james/ISL/Auto.csv', na = "?")
+```
+
+Preview the data
+```{r}
+Auto
+```
+Summarize the data
+```{r}
+summary(Auto)
+```
+
+Now make boxplots. We will use the `ggplot2` package (part of tidyverse so its already loaded)
+```{r}
+library(ggplot2) # already loaded, but to be clear
+ggplot(Auto, aes(x=factor(cylinders), y=mpg)) + 
+  geom_boxplot(fill="orange", color="blue") + 
+  labs(x="Number of Cylinders", y="MPG")
+```
+
+Histogram of mpg
+```{r}
+ggplot(Auto, aes(x=mpg)) + 
+  geom_histogram(binwidth=1, center=10,
+                 fill="orange", color="blue")
+```
+
+
+
+
+
+

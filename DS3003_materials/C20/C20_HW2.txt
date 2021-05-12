@@ -1,0 +1,11 @@
+
+find some data that you can use to create a Plotly Slider!
+
+1. Submit a nice looking .Rmd knitted .html
+2. Provide some exposition explaining the data set, the subset of the data set you're using, and the the plot you created
+3. Include comments in your code which would allow someone else to readily understand each code line of your implementation
+
+Include either of the following in your submission text box: 
+
+"Honor Pledge: I have [given and/or received] the following help [to and/or from] <student> to complete this submission: <explain help utilized>"
+"Honor Pledge: I have neither given nor received aid on this assignment."

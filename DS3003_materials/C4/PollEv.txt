@@ -1,0 +1,74 @@
+
+<started out class with these as a warm up>
+
+q1. You have 3 votes but you may vote 2 times for a single answer: which barriers to communication do you most frequently encounter in your personal life? (multiple choice with multiple selections available as described)
+Someone doesn't understand (language vocabulary, or technical concepts)
+Someone doesn't ask for clarification
+Someone runs out of time
+Someone misunderstands
+Someone jumps to conclusions without listening
+Someone is offended
+Someone feels threatened (non-physically) and gets defensive
+Someone stops listening
+Someone "agrees to disagree" (having different values, preferences, attitudes, etc.)
+Someone has hidden or unknown biases driving their thinking
+Someone has a miscommunication that is "cultural" (a "lost in translation" sort of thing)
+
+q2. You have 3 votes but you may vote 2 times for a single answer: which barriers to resolving conflicts and disagreements do you find the most concerning?
+Someone doesn't understand (language vocabulary, or technical concepts)
+Someone doesn't ask for clarification
+Someone runs out of time
+Someone misunderstands
+Someone jumps to conclusions without listening
+Someone is offended
+Someone feels threatened (non-physically) and gets defensive
+Someone stops listening
+Someone "agrees to disagree" (having different values, preferences, attitudes, etc.)
+Someone has hidden or unknown biases driving their thinking
+Someone has a miscommunication that is "cultural" (a "lost in translation" sort of thing)
+
+<then went through my DS3003_Conflict.pptx slides>
+
+q3. Is AVOIDING ever good? If so, when? (open answer and upvote)
+q4. Is ACCOMMODATING ever NOT good? If so, when? (open answer and upvote)
+q5. Is COMPETING ever good? If so, when? (open answer and upvote)
+q6. Is COMPROMISING ever NOT good? If so, when? (open answer and upvote)
+q7. Is COLLABORATING ever NOT good? If so, when? (open answer and upvote)
+
+<end of class skills quiz to make groups>
+<actually, I made this a "survey" in PollEv so students could do it after class if needed>
+
+q8. Rstudio
+What?
+Heard of it.
+Used it maybe once or twice.
+I've worked in R a little bit.
+I'm a decent to strong R coder.
+
+q9. conda
+What?
+Heard of it.
+Used it maybe once or twice.
+I've worked in Python a little bit.
+I'm a decent to strong Python coder.
+
+q10. bash
+What?
+I've never done command line stuff.
+Used a terminal maybe once or twice.
+I can use a terminal when needed.
+I hate GUIs.
+
+q11. markdown
+What?
+I've never used it.
+I've used it maybe once or twice and seen it, e.g., on GitHub.
+I like markdown.
+I use markdown a lot.
+
+q12. public speaking/presenting/acting
+What?
+I've never really been in front of an "audience".
+I've been in front of an "audience" once or twice before.
+I'm in front of an "audience" fairly frequently.
+Watch out Hollywood... this town ain't big enough for the both of us!

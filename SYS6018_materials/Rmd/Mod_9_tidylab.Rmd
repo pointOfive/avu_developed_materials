@@ -1,0 +1,550 @@
+# Chapter 9 Lab: Support Vector Machines
+
+```{r global_options, include=FALSE}
+knitr::opts_chunk$set(error=TRUE,        # Keep compiling upon error
+                      collapse=FALSE,    # collapse by default
+                      echo=TRUE,         # echo code by default
+                      comment = "#>",    # change comment character
+                      fig.width = 5.5,     # set figure width
+                      fig.align = "center",# set figure position
+                      out.width = "80%", # set width of displayed images
+                      warning=FALSE,     # do not show R warnings
+                      message=FALSE)     # do not show R messages
+```
+
+## Support Vector Classifier
+
+```{r setup}
+library(tidyverse)
+```
+
+```{r data}
+set.seed(1)
+#x=matrix(rnorm(20*2), ncol=2)
+#y=c(rep(-1,10), rep(1,10))
+#x[y==1,]=x[y==1,] + 1
+#plot(x, col=(3-y))
+#dat=data.frame(x=x, y=as.factor(y))
+
+
+n <- 20
+dats <- tibble(x1=rnorm(n), x2=rnorm(n), 
+               y=c(rep(-1,n/2), rep(1,n/2)))
+dats <- dats %>% 
+  mutate(x1=x1+(y+1)/2) %>% 
+  mutate(x2=x2+(y+1)/2) %>%
+  mutate(y=factor(y))
+# SVMs maximize a margin, so
+# usually you should standardize feature scales if you don't want the margin 
+# to depend more on one feature than another as a function of feature scale.
+
+# http://www.cookbook-r.com/Graphs/Colors_(ggplot2)/#a-colorblind-friendly-palette
+cbbPalette <- c("#009E73", "#CC79A7","#D55E00", "#000000", 
+                "#56B4E9", "#F0E442", "#0072B2", "#E69F00")
+
+ggplot(dats) + geom_point(aes(x=x1, y=x2, color=y)) +
+  scale_colour_manual(values=cbbPalette) -> data.plot
+data.plot
+```
+
+```{r svm_10}
+#library(e1071)
+#svmfit=svm(y~., data=dat, kernel="linear", cost=10,scale=FALSE)
+#plot(svmfit, dat)
+
+# https://rdrr.io/cran/caret/man/models.html
+caret.svm.C10 <- caret::train(y~., data=dats, method='svmLinear2', scale=FALSE, 
+                              tuneGrid=data.frame(cost=c(10)),
+                              trControl=caret::trainControl("none"))
+
+#https://stats.stackexchange.com/questions/26293/how-to-obtain-decision-boundaries-from-linear-svm-in-r
+#https://stats.stackexchange.com/questions/25387/problem-with-e1071-libsvm
+
+#Weight vector
+w <- t(caret.svm.C10$finalModel$coefs) %*% 
+  as.matrix(dats[caret.svm.C10$finalModel$index,1:2])
+#Offset
+b = -caret.svm.C10$finalModel$rho 
+
+# w^Tx=b so we can solve for values of x satisifying this equation
+x1_left=-1
+x2_left=-(w[1]*x1_left + b)/w[2] 
+x1_right=2
+x2_right=-(w[1]*x1_right + b)/w[2] 
+
+data.plot + geom_line(data=tibble(x=c(x1_left,x1_right), y=c(x2_left,x2_right)), 
+                      mapping=aes(x,y)) +
+  geom_point(dats[caret.svm.C10$finalModel$index,],
+             mapping=aes(x1,x2), shape=1, size=3) +
+  geom_text(data=tibble(x1=mean(dats$x1),
+                        x2=mean(dats$x2)+2,
+                        text='Circled Data are Support Vectors'),
+             mapping=aes(x=x1, y=x2, label=text), size=5)
+
+# these are the support vectors: 
+#svmfit$index
+
+# this information is easy enough to get from: 
+# - caret.svm
+# - caret.svm$finalModel
+#summary(svmfit)
+
+```
+
+```{r svm_point1}
+#svmfit=svm(y~., data=dat, kernel="linear", cost=0.1,scale=FALSE)
+#plot(svmfit, dat)
+#svmfit$index
+
+linear_svm_decision_boundary <- function(x1_left, x1_right, svm){
+  
+  #Weight vector
+  w <- t(-svm$finalModel$coefs) %*% 
+    as.matrix(dats[svm$finalModel$index,1:2])
+    #also available as svm$finalModel$SV
+  #Offset
+  b = svm$finalModel$rho 
+  
+  # w^Tx=b so we can solve for values of x satisifying this equation
+  x2_left=(-w[1]*x1_left - b)/w[2] 
+  x2_right=(-w[1]*x1_right - b)/w[2] 
+  
+  c(x2_left, x2_right)
+}
+
+
+caret.svm.C0.1 <- caret::train(y~., data=dats, method='svmLinear2', scale=FALSE, 
+                              tuneGrid=data.frame(cost=c(0.1)),
+                              trControl=caret::trainControl("none"))
+
+x1_left=-1
+x1_right=2
+tmp <- linear_svm_decision_boundary(x1_left, x1_right, caret.svm.C0.1)
+x2_left <- tmp[1] 
+x2_right <- tmp[2] 
+
+data.plot + geom_line(data=tibble(x=c(x1_left,x1_right), y=c(x2_left,x2_right)), 
+                      mapping=aes(x,y)) +
+  geom_point(dats[caret.svm.C0.1$finalModel$index,],
+             mapping=aes(x1,x2), shape=1, size=3) +
+  geom_text(data=tibble(x1=mean(dats$x1),
+                        x2=mean(dats$x2)+2,
+                        text='Circled Data are Support Vectors'),
+             mapping=aes(x=x1, y=x2, label=text), size=5)
+
+```
+
+```{r svm_caret}
+set.seed(1)
+#tune.out=tune(svm,y~.,data=dat,kernel="linear",ranges=list(cost=c(0.001, 0.01, 0.1, 1,5,10,100)))
+#summary(tune.out)
+
+caret.svm <- caret::train(y~., data=dats, method='svmLinear2', scale=FALSE, 
+             tuneGrid=data.frame(cost=c(0.001, 0.01, 0.1, 1,5,10,100)),
+             trControl=caret::trainControl("cv", number=5))
+
+caret.svm 
+```
+
+```{r svm_caret_best}
+#bestmod=tune.out$best.model
+#summary(bestmod)
+summary(caret.svm$finalModel)
+```
+
+```{r svm_caret_best_test}
+#xtest=matrix(rnorm(20*2), ncol=2)
+#ytest=sample(c(-1,1), 20, rep=TRUE)
+#xtest[ytest==1,]=xtest[ytest==1,] + 1
+#testdat=data.frame(x=xtest, y=as.factor(ytest))
+#ypred=predict(bestmod,testdat)
+#table(predict=ypred, truth=testdat$y)
+
+set.seed(1)
+n <- 20
+test <- tibble(x1=rnorm(n), x2=rnorm(n), 
+               y=c(rep(-1,n/2), rep(1,n/2)))
+test <- test %>% 
+  mutate(x1=x1+(y+1)/2) %>% 
+  mutate(x2=x2+(y+1)/2) %>%
+  mutate(y=factor(y))
+
+caret::confusionMatrix(predict(caret.svm, test), reference=test$y)
+```
+
+```{r svm_caret_other_test}
+#svmfit=svm(y~., data=dat, kernel="linear", cost=.01,scale=FALSE)
+#ypred=predict(svmfit,testdat)
+#table(predict=ypred, truth=testdat$y)
+
+caret.svm <- update(caret.svm, param=list(cost=0.01))
+caret::confusionMatrix(predict(caret.svm, test), reference=test$y)
+```
+
+```{r svm_caret_more}
+#x[y==1,]=x[y==1,]+0.5
+#plot(x, col=(y+5)/2, pch=19)
+#dat=data.frame(x=x,y=as.factor(y))
+
+dats <- dats %>% 
+  mutate(x1=x1+(as.numeric(y)-1)/2) %>% 
+  mutate(x2=x2+(as.numeric(y)-1)/2)
+x1_mean <- mean(dats$x1)
+x2_mean <- mean(dats$x2)
+
+ggplot(dats) + geom_point(aes(x=x1, y=x2, color=y)) +
+  scale_colour_manual(values=cbbPalette) -> data.plot
+data.plot
+
+```
+
+```{r svm_caret_more2}
+
+#svmfit=svm(y~., data=dat, kernel="linear", cost=1e5)
+#summary(svmfit)
+#plot(svmfit, dat)
+
+caret.svm <- caret::train(y~., data=dats, method='svmLinear2', scale=FALSE, 
+             tuneGrid=data.frame(cost=c(1,100000)),
+             trControl=caret::trainControl("cv", number=5))
+
+svm_all <- update(caret.svm, param=list(cost=1))
+w_all <- t(svm_all$finalModel$coefs) %*% svm_all$finalModel$SV
+# here's another way to do this
+# https://stats.stackexchange.com/questions/5056/computing-the-decision-boundary-of-a-linear-svm-model
+# w1*x1/w2+b/w2=x2
+data.plot + geom_abline(mapping=aes(intercept=svm_all$finalModel$rho/w_all[2],
+                                    slope=-w_all[1]/w_all[2],
+                                    color='cost=1')) -> data.plot.tmp
+
+
+#svmfit=svm(y~., data=dat, kernel="linear", cost=1)
+#summary(svmfit)
+#plot(svmfit,dat)
+
+svm_small <- update(caret.svm, param=list(cost=100000))
+w_small <- t(svm_small$finalModel$coefs) %*% svm_small$finalModel$SV
+
+data.plot.tmp + 
+  geom_abline(mapping=aes(intercept=svm_small$finalModel$rho/w_small[2],
+                          slope=-w_small[1]/w_small[2],
+                          color='cost=100000')) +
+  geom_point(as_tibble(svm_all$finalModel$SV) %>% add_column(color='cost=1'),
+             mapping=aes(x1,x2,color=color), shape=1, size=3) +
+  geom_point(as_tibble(svm_small$finalModel$SV) %>%
+               add_column(color='cost=100000'),
+             mapping=aes(x1,x2,color=color), shape=1, size=4) 
+```
+
+## Support Vector Machine
+
+```{r svm_data}
+set.seed(1)
+#x=matrix(rnorm(200*2), ncol=2)
+#x[1:100,]=x[1:100,]+2
+#x[101:150,]=x[101:150,]-2
+#y=c(rep(1,150),rep(2,50))
+#dat=data.frame(x=x,y=as.factor(y))
+#plot(x, col=y)
+train <- sample(200,100)
+
+n <- 200
+dats <- tibble(x1=rnorm(n), x2=rnorm(n), 
+               y=factor(c(rep(-1,n/4*3), rep(1,n/4))))
+dats[1:100,1:2] = dats[1:100,1:2]+2 
+dats[100:150,1:2] = dats[100:150,1:2]-2 
+
+ggplot(dats) + geom_point(aes(x=x1, y=x2, fill=y),
+                          color="black", shape=21, size=3) +
+  scale_fill_manual(values=cbbPalette) -> data.plot
+data.plot
+```
+
+```{r svm_train}
+
+#svmfit=svm(y~., data=dat[train,], kernel="radial",  gamma=1, cost=1)
+#plot(svmfit, dat[train,])
+
+# sigma = 1/gamma
+caret.svm.rbf_kernel_trick <- caret::train(y~., 
+                                           data=dats[train,], 
+                                           method='svmRadialWeights',
+                                           scale=FALSE, 
+                                           prob.model=TRUE,
+                              tuneGrid=data.frame(sigma=c(1,1), 
+                                                  C=c(1, 10000),
+                                                  Weight=c(1,1)),
+                              trControl=caret::trainControl("cv",
+                                                            number=5))
+
+caret.svm.rbf_kernel_trick.C1 <- update(caret.svm.rbf_kernel_trick,
+                                        param=list(C=1, Weight=1, sigma=1))
+
+support <- expand.grid(x1=modelr::seq_range(dats[train,1],100),
+                       x2=modelr::seq_range(dats[train,2],100))
+
+# https://stackoverflow.com/questions/48425460/independent-colouring-of-points-by-category-and-contours-by-height-in-ggplot
+# https://www.r-statistics.com/2016/07/using-2d-contour-plots-within-ggplot2-to-visualize-relationships-between-three-variables/
+caret.svm.rbf_kernel_trick.invert <- as_tibble(support) %>% 
+  add_column(y_1=predict(caret.svm.rbf_kernel_trick.C1,
+                         type='prob',newdata=support)[,2])
+data.plot + geom_contour(data=caret.svm.rbf_kernel_trick.invert,
+                         mapping=aes(x=x1,y=x2,z=y_1,color=..level..)) +
+  scale_colour_viridis_c()
+  #scale_color_continuous()#low = "green", high = "orange"
+
+```
+
+```{r svm_train2}
+#summary(svmfit)
+#svmfit=svm(y~., data=dat[train,], kernel="radial",gamma=1,cost=1e5)
+#plot(svmfit,dat[train,])
+
+caret.svm.rbf_kernel_trick.C100000 <- update(caret.svm.rbf_kernel_trick,
+                                        param=list(C=100000, Weight=1, sigma=1))
+
+caret.svm.rbf_kernel_trick.invert <- as_tibble(support) %>% 
+  add_column(y_1=predict(caret.svm.rbf_kernel_trick.C100000,
+                         type='prob',newdata=support)[,2])
+data.plot + geom_contour(data=caret.svm.rbf_kernel_trick.invert,
+                         mapping=aes(x=x1,y=x2,z=y_1,color=..level..)) +
+  scale_colour_viridis_c()
+  #scale_color_continuous()#low = "green", high = "orange"
+
+
+```
+
+```{r svm_train_more}
+set.seed(1)
+#tune.out=tune(svm, y~., data=dat[train,], kernel="radial", ranges=list(cost=c(0.1,1,10,100,1000),gamma=c(0.5,1,2,3,4)))
+#summary(tune.out)
+
+caret.svm.rbf_kernel_trick <- caret::train(y~., 
+                                           data=dats[train,], 
+                                           method='svmRadialWeights',
+                                           scale=FALSE, 
+                                           prob.model=TRUE,
+                              tuneGrid=expand.grid(sigma=c(1/0.5,1,1/2,1/3,1/4), 
+                                                   C=c(0.1,1,10,100,1000),
+                                                   Weight=c(1)),
+                              trControl=caret::trainControl("cv", number=5))
+
+# https://www.r-graph-gallery.com/79-levelplot-with-ggplot2.html
+# http://www.sthda.com/english/wiki/ggplot2-axis-ticks-a-guide-to-customize-tick-marks-and-labels
+caret.svm.rbf_kernel_trick$results %>% as_tibble() %>% rowid_to_column() %>%
+  inner_join(expand.grid(sigma_i=1:5, C_i=1:5) %>% 
+               as_tibble() %>% rowid_to_column()) %>%
+  ggplot(aes(sigma_i, C_i, fill=Accuracy)) + 
+  geom_tile() + 
+  scale_x_continuous(breaks=1:5, labels=c("2","1","1/2","1/3","1/4")) +
+  scale_y_continuous(breaks=1:5, labels=c("0.1","1","10","100","1000"))
+```
+
+```{r svm_train_score}
+#table(true=dat[-train,"y"],pred=predict(tune.out$best.model,newdata=dat[-train,]))
+caret::confusionMatrix(data=predict(caret.svm.rbf_kernel_trick, 
+                                    newdata=dats[-train,]),
+                       reference=dats[-train,]$y, positive='1')
+```
+
+## ~~ROC Curves~~ Precision/Recall Curves
+
+- going to instead do precision/recall to demonstrate the final project
+
+
+```{r precision_recall}
+# https://www.rdocumentation.org/packages/ROCR/versions/1.0-1/topics/performance
+library(ROCR)
+#rocplot=function(pred, truth, ...){
+#   predob = prediction(pred, truth)
+#   perf = performance(predob, "tpr", "fpr")
+#   plot(perf,...)}
+
+precision_recall <- function(pred, truth, ...){
+   predob = ROCR::prediction(pred, truth, label.ordering=c('X.1','X1'))
+   perf = ROCR::performance(predob, measure="prec", x.measure="rec")
+   perf
+}
+
+```
+
+```{r precision_recall_setup}
+
+#svmfit.opt=svm(y~., data=dat[train,], kernel="radial",gamma=2, cost=1,decision.values=T)
+#fitted=attributes(predict(svmfit.opt,dat[train,],decision.values=TRUE))$decision.values
+
+caret.svm.rbf_kernel_trick <- caret::train(y~., 
+                                           data=dats[train,] %>%
+                                                  mutate(y=make.names(y)), 
+                                           method='svmRadialWeights',
+                                           prob.model=TRUE,
+                              tuneGrid=expand.grid(sigma=c(1/2,1/50), 
+                                                   C=c(1),
+                                                   Weight=c(1)),
+                              trControl=caret::trainControl("cv", number=5,
+                                savePredictions=TRUE,
+                                classProbs=TRUE))
+
+
+
+#as_tibble(caret.svm.rbf_kernel_trick$bestTune) %>% 
+tibble(sigma=1/2, C=1, Weight=1) %>%
+  left_join(as_tibble(caret.svm.rbf_kernel_trick$pred)) %>%
+  group_split(Resample) %>% map( ~ .x[,'obs']$obs) -> ys
+tibble(sigma=1/2, C=1, Weight=1) %>%
+  left_join(as_tibble(caret.svm.rbf_kernel_trick$pred)) %>%
+  group_split(Resample) %>% map( ~ .x[,'X1']$X1) -> ps
+
+plot(precision_recall(ps,ys), colorize=TRUE)
+plot(precision_recall(ps,ys), colorize=TRUE, 
+     avg='threshold', spread.estimate='stderror', add=TRUE, lwd=5)
+
+```
+
+```{r precision_recall_2}
+
+#par(mfrow=c(1,2))
+#rocplot(fitted,dat[train,"y"],main="Training Data")
+#svmfit.flex=svm(y~., data=dat[train,], kernel="radial",gamma=50, cost=1, decision.values=T)
+#fitted=attributes(predict(svmfit.flex,dat[train,],decision.values=T))$decision.values
+#rocplot(fitted,dat[train,"y"],add=T,col="red")
+
+tibble(sigma=1/50, C=1, Weight=1) %>%
+  left_join(as_tibble(caret.svm.rbf_kernel_trick$pred)) %>%
+  group_split(Resample) %>% map( ~ .x[,'obs']$obs) -> ys
+tibble(sigma=1/50, C=1, Weight=1) %>%
+  left_join(as_tibble(caret.svm.rbf_kernel_trick$pred)) %>%
+  group_split(Resample) %>% map( ~ .x[,'X1']$X1) -> ps
+
+plot(precision_recall(ps,ys), colorize=TRUE)
+plot(precision_recall(ps,ys), colorize=TRUE, 
+     avg='threshold', spread.estimate='stderror', add=TRUE, lwd=5)
+
+```
+
+```{r precision_recall_3}
+
+#fitted=attributes(predict(svmfit.opt,dat[-train,],decision.values=T))$decision.values
+#rocplot(fitted,dat[-train,"y"],main="Test Data")
+
+svmfit.opt <- caret::train(y~., data=dats[train,] %>% mutate(y=make.names(y)), 
+                           method='svmRadialWeights', prob.model=TRUE,
+                tuneGrid=expand.grid(sigma=c(1/2), C=c(1), Weight=c(1)),
+                trControl=caret::trainControl("none"))
+  
+svmfit.flex <- caret::train(y~., data=dats[train,] %>% mutate(y=make.names(y)), 
+                           method='svmRadialWeights', prob.model=TRUE,
+                tuneGrid=expand.grid(sigma=c(1/50), C=c(1), Weight=c(1)),
+                trControl=caret::trainControl("none"))
+
+#fitted=attributes(predict(svmfit.flex,dat[-train,],decision.values=T))$decision.values
+#rocplot(fitted,dat[-train,"y"],add=T,col="red")
+
+plot(precision_recall(predict(svmfit.opt, 
+                              newdata=dats[-train,], 
+                              type="prob")[,2],
+                      make.names(dats[-train,3]$y)), colorize=FALSE, lwd=5)
+
+plot(precision_recall(predict(svmfit.flex, 
+                              newdata=dats[-train,], 
+                              type="prob")[,2],
+                      make.names(dats[-train,3]$y)), colorize=TRUE, lwd=5,
+     add=TRUE)
+
+```
+
+
+#$ SVM with Multiple Classes
+
+```{r smv_3}
+set.seed(1)
+#x=rbind(x, matrix(rnorm(50*2), ncol=2))
+#y=c(y, rep(0,50))
+#x[y==0,2]=x[y==0,2]+2
+#dat=data.frame(x=x, y=as.factor(y))
+
+n <- 50
+dats2 <- tibble(x1=rnorm(n), x2=rnorm(n)+2, y=as.factor(rep(0,n)))
+dats3 <- bind_rows(list(dats,dats2))
+
+#par(mfrow=c(1,1))
+#plot(x,col=(y+1))
+
+ggplot(dats3) + geom_point(aes(x=x1, y=x2, fill=y),
+                           color="black", shape=21, size=3) +
+  scale_fill_manual(values=cbbPalette) -> data.plot
+data.plot
+```
+
+```{r smv_3_fit}
+svmfit=e1071::svm(y~., data=dats3, kernel="radial", cost=10, gamma=1,
+                  decision.values=TRUE, probability=TRUE)
+
+support <- expand.grid(x1=modelr::seq_range(dats3[,1],100),
+                       x2=modelr::seq_range(dats3[,2],100))
+
+preds <- predict(svmfit, newdata=support, probability=TRUE)
+
+
+svmfit_dats3 <- as_tibble(attr(preds,"probabilities")) %>% 
+  rowid_to_column() %>%
+  inner_join(support%>%rowid_to_column()) %>%
+  rename(level_0=`0`, level_1=`1`, level_m1=`-1`)
+
+#plot(svmfit, dat)
+
+data.plot + geom_contour(data=svmfit_dats3,
+                         mapping=aes(x=x1,y=x2,z=level_0,color=..level..)) +
+  scale_color_continuous(low='white', high='red') 
+  
+```
+
+```{r smv_3_fit_more}
+data.plot + geom_contour(data=svmfit_dats3,
+                         mapping=aes(x=x1,y=x2,z=level_1,color=..level..)) +
+  scale_color_continuous(low='white', high='purple')
+
+```
+
+```{r smv_3_fit_last}
+data.plot + geom_contour(data=svmfit_dats3,
+                         mapping=aes(x=x1,y=x2,z=level_m1,color=..level..)) +
+  scale_color_continuous(low='white', high='forestgreen')
+
+```
+
+## Application to Gene Expression Data
+
+- out of time... we'll have to be satisfied with the books implementation
+  - which is not bad, as this is a pretty fun/cool demonstration!
+
+```{r as_is}
+
+library(ISLR)
+names(Khan)
+dim(Khan$xtrain)
+dim(Khan$xtest)
+length(Khan$ytrain)
+length(Khan$ytest)
+table(Khan$ytrain)
+table(Khan$ytest)
+dat=data.frame(x=Khan$xtrain, y=as.factor(Khan$ytrain))
+out=e1071::svm(y~., data=dat, kernel="linear",cost=10)
+summary(out)
+table(out$fitted, dat$y)
+dat.te=data.frame(x=Khan$xtest, y=as.factor(Khan$ytest))
+pred.te=predict(out, newdata=dat.te)
+table(pred.te, dat.te$y)
+
+```
+
+
+
+
+
+
+
+
+
+
+

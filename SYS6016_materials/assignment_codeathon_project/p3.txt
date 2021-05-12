@@ -1,0 +1,49 @@
+
+PROJECT PART 3: GROUP PROPOSAL AND LITERATURE REVIEW
+
+Due: 3/24 3:30PM EST (before Class 16)
+Late: -10/day (after 3:30PM EST beginning with the start of Class 16)
+Value: 20 points (2% of class grade)
+For this part of the project you redo the previous Project Parts 1 and 2 for the project that your group selects.  
+
+In the project proposal, your group picks the project topic that they are going to work on. If your proposed project will be done jointly with a different class’s project, you should obtain approval from the other instructor and approval from us.
+
+
+
+DIRECTIONS
+
+You will continue to work on this document for the checkpoint and final report, so make sure to get familiar with the template and how to write the research manuscript. Your project proposal should include the following information:
+
+Motivation: What problem are you tackling? 
+Dataset: What dataset (with URL) are you using?
+Related work:
+A review of the literature is a classification and evaluation of what accredited scholars and researchers have written on a topic. In writing a literature review, your purpose is to convey what knowledge and ideas have been established on a topic, and what their strengths and weaknesses are. A literature review consists of an overview, a summary, and an evaluation/critique of the current state of knowledge about a specific area of research. It may also include a discussion of methodological issues and suggestions for future study. As you have selected a topic of interest, it would be to your benefit to expand your knowledge about the topic. A literature review should demonstrate the following:
+Be organized around and related directly to the topic or research question you are developing
+Synthesize results into a summary of what is and is not known
+Identify areas of controversy in the literature 
+Formulate questions that need further research
+Intended experiments: What experiments are you planning to run? How do you plan to evaluate your machine learning algorithm?
+SUBMISSION INSTRUCTIONS
+
+Your document should be submitted as a PDF document (5-7 pages) and include:
+
+The title of the project
+The full names and UVA IDs of team members
+Designate a single team member to submit your document titled as: 
+
+"projectTitle_teamMemberComputingIDs_ProposalLitRev.pdf"
+
+Refer to the Literature Review Rubric for grading details.
+SYS 6016 ML4VA Project Rubric.pdf
+
+OVERLEAF AS PAPER WRITING
+
+For this project, Overleaf is strongly recommended to collaborate and share your latex document throughout the semester. UVA has an agreement with Overleaf, and as a UVA student, you can sign up for free at www.overleaf.com. 
+
+After you have signed up for an account:
+
+Log in and click New Project, then click Academic Journal from the templates. 
+In the template gallery, select the Style and Template for Preprints (arXiv, bio-arXiv) template.
+Click Open Template and start editing the document template. 
+Note that the template already has some existing text, which you may overwrite for your project, but keep some LaTeX Structures (i.e., subsection, figure, reference, etc) just in case you need them later.
+

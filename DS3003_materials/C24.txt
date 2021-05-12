@@ -1,0 +1,130 @@
+
+https://mschermann.github.io/data_viz_reader/introduction.html#key-figures-in-the-history-of-data-visualization
+
+https://time.graphics/editor
+https://www.timetoast.com/timelines/2546697/edit
+schwarls37: 12345
+https://www.timetoast.com/timelines/2546697
+
+1325
+Voynich Manuscript Early 14th Century
+The strange medieval document no one has been able to decipher
+
+1500
+Leonardo da Vinci (1452-1519)
+Working in the Late 15th and Early 16th Century
+
+1525
+Nicolaus Copernicus (1473-1543)
+Educated at four Universities: Kraków, Bologna, Padua, Ferrara; and then pursuing a revolution (1491–1503)
+
+1550 
+Pre 17th Century: Early Diagrams and Maps
+Early 15th century Nicolo Pasqualini chart made for the Cornaro family of Venice
+
+1610
+Galileo Galilei (1564-1642)
+Moon drawings created in 1610 en route to joining Copernicus in his notable revolution
+
+1650
+17th Century: Measurement & Theory
+E.g., Galileo, Newton, Stevin, Roemer, and Huygens
+
+1700
+Edmond Halley (1656-1742)
+English astronomer, geophysicist, mathematician, meteorologist, and physicist known for computing Halley’s Comet's orbit
+
+1750
+18th Century: New Graphic Forms
+E.g., William Playfair (1759–1823)
+
+1750
+Charles de Fourcroy (1766–1824)
+Another example of the explosion of creativity in graph design
+
+1850
+19th Century: Beginnings of Modern Graphics
+E.g., Game of Throne's very own John Snow (1813–1858)
+
+1850
+Florence Nightingale (1820-1910)
+Florence called these "coxcomb" or "rose" diagrams, and she made them visually correctly based on area
+
+1850
+Charles Joseph Minard (1781–1870)
+Frequently lauded as "The Best Figure Ever"
+
+1850
+Luigi Perozzo (1856-1916)
+The first 3D graphical representation every
+
+
+Early 20th Century: Modern Dark Ages
+Nothin's poppin'
+
+Mid 20th Century: Rebirth
+Party's back on
+
+Late 20th Century: Modern graphics
+
+
+Famous Images:
+- Languge Tree
+- Google Weather
+
+
+1.
+Launch with add:
+- Edward Tufte
+- Search to see what years his books have been published
+- tufte: https://www.edwardtufte.com/tufte/fineart
+
+2. Hans Rosling
+- back to reader: https://mschermann.github.io/data_viz_reader/introduction.html#contemporary-visualists
+- Note Hans Rosling: https://www.youtube.com/watch?v=jbkSRLYSojo&t=30s
+- https://www.gapminder.org
+  - gapminder
+  - populations
+  - rank: https://www.youtube.com/watch?v=JGDxnQxFyEs
+  - timeline: https://www.youtube.com/watch?v=z2DHpW79w0Y
+              
+3. David McCandless
+- back to reader: https://mschermann.github.io/data_viz_reader/introduction.html#david-mccandless
+- share, not watch: https://www.youtube.com/watch?v=5Zg-C8AAIGg
+- resume: https://i.pinimg.com/originals/9d/bf/02/9dbf02fa4bd86f8ee7571d854b109773.png
+- another interesting/cool idea:
+https://www.informationisbeautiful.net/visualizations/because-every-country-is-the-best-at-something/
+- https://informationisbeautiful.net
+  - [greenhouse]
+  - [relationships]
+  - [Islamic]
+
+4. data journalism: https://pudding.cool/topics/#social
+- https://pudding.cool/2018/10/city_3d/
+- https://pudding.cool/2018/07/women-in-congress/
+- https://pudding.cool/2018/08/retraining/
+
+5. d3: https://d3js.org
+- lots of plots: https://datavizcatalogue.com/search.html
+- tutorials: https://flowingdata.com/category/tutorials/
+
+6. So that was all the good stuff: now a little bit of bad stuff
+
+succeeding badly:
+- https://bookofbadarguments.com
+- "darrell huff how to lie with statistics"
+  - tufte lie factor: http://davidgiard.com/2011/05/10/DataVisualizationPart3GraphicalIntegrity.aspx
+    - https://eagereyes.org/blog/2008/linear-vs-quadratic-change
+    - https://flowingdata.com/2012/03/16/new-ipad-battery-size-is-huge/
+  - weird funny mistakes
+    - "florida gun deaths graph"
+    - http://2.bp.blogspot.com/-QoaFyb7I29U/U000QdHggpI/AAAAAAAADVs/jqUe5qcyo64/s1600/negativeSpace.jpg
+
+
+
+Extra if there's time?
+
+https://www.vox.com/2015/3/3/8053521/25-maps-that-explain-english
+https://www.farandwide.com/s/amazing-world-maps-74d6186e6d0e414b
+
+

@@ -1,0 +1,24 @@
+```{r hans_rosling_the_best_stats_you_ve_ever_seen}
+# https://www.ted.com/talks/hans_rosling_the_best_stats_you_ve_ever_seen
+# https://www.datanovia.com/en/blog/gganimate-how-to-create-plots-with-beautiful-animation-in-r/
+library('ggplot2')
+library('gganimate')
+theme_set(theme_bw())
+library('gapminder')
+library('gifski')
+
+p <- ggplot(
+  gapminder, 
+  aes(x=gdpPercap, y=lifeExp, size=pop, colour=country)
+  ) +
+  geom_point(show.legend=FALSE, alpha=0.7) +
+  scale_color_viridis_d() +
+  scale_size(range = c(2, 12)) +
+  scale_x_log10() +
+  labs(x = "GDP per capita", y = "Life expectancy")
+
+p + facet_wrap(~continent) +
+  transition_time(year) +
+  view_follow(fixed_y = TRUE) +
+  labs(title = "Year: {frame_time}")
+```

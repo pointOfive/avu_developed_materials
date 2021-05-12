@@ -1,0 +1,87 @@
+Untitled
+,Activity count,9
+,Participant count,5
+,Average responses,3.888888888888889
+
+$$w^Tx+b=0$$ defines a,Activity type,Multiple choice
+,Total responses,4
+,Unique participants,4
+,Response options,Count,Percent
+,affine function,0,0.0
+,hyperplane,4,100.0
+,linear models,0,0.0
+,inner product,0,0.0
+
+What is true about $$w$$ defining the hyperplane $$w^Tx+b=0$$?,Activity type,Multiple choice
+,Total responses,5
+,Unique participants,5
+,Response options,Count,Percent
+,$$w$$ defines a margin of a SVM with total width $$\frac{2}{||w||}$$,4,80.0
+,$$w$$ defines a margin of a SVM with total width $$\frac{1}{||w||}$$,0,0.0
+,$$w$$ is perpendicular to the hyperplane $$w^Tx+b=0$$,1,20.0
+,The hyperplane lies in the direction pointed to by $$w$$,0,0.0
+
+Points $$x^*$$ satisfying $$|w^Tx^*+b|= 1$$ are called,Activity type,Multiple choice
+,Total responses,3
+,Unique participants,3
+,Response options,Count,Percent
+,least squares solutions,0,0.0
+,Inner products,0,0.0
+,admissible solutions,0,0.0
+,support vectors,3,100.0
+
+Points $$x^*$$ satisfying $$y(w^Tx^*+b) \leq 1$$ are called,Activity type,Multiple choice
+,Total responses,2
+,Unique participants,2
+,Response options,Count,Percent
+,least squares solutions,0,0.0
+,Inner products,2,100.0
+,admissible solutions,0,0.0
+,support vectors,0,0.0
+
+If $$w=\sum_{i^*} y_{i^*} \alpha_{i^*} x_{i^*}$$ for SVM selected support vectors $$x_{i^*}$$ and SVM optimized coefficients/weights/parameters $$\alpha_{i^*}$$ indexed by $$i^*$$,Activity type,Multiple choice
+,Total responses,3
+,Unique participants,3
+,Response options,Count,Percent
+,$$w$$ defines a margin of a SVM with total width $$\frac{1}{||w||}$$,0,0.0
+,$$(w^Tx_{i^*}+b) = -1$$ for some $${i^*}$$,1,33.33
+,$$\sum_{i^*} \alpha_{i^*} = C,0,0.0
+,$$(1 - y_{i^*} (w^Tx_{i^*}+b)) \leq 1$$,2,66.67
+
+Fitting a soft-margin SVM means,Activity type,Multiple choice
+,Total responses,5
+,Unique participants,5
+,Response options,Count,Percent
+,maximizing the margin,0,0.0
+,maximizing the margin relative to slack penalties,5,100.0
+,minimizing the cost tuning parameter,0,0.0
+,applying the kernel trick,0,0.0
+
+Regularization in the cost function $$\min \frac{1}{2}||w||^2 +  C \sum_{i^*} (1-y_{i^*}(w^Tx_{i^*}+b))$$ means,Activity type,Multiple choice
+,Total responses,5
+,Unique participants,5
+,Response options,Count,Percent
+,decreasing C to reduce the number of support vectors,0,0.0
+,increasing C to reduce the number of support vectors,2,40.0
+,decreasing C to increase the number of support vectors,2,40.0
+,increasing C to increase the number of support vectors,1,20.0
+
+The kernel trick,Activity type,Multiple choice
+,Total responses,4
+,Unique participants,4
+,Response options,Count,Percent
+,"can be used to replace dot products $$x_1\cdot x_2$$ with alternative inner products $$\phi(x_1,x_2)$$",2,50.0
+,uses radial basis functions to leverage $$\exp(-\gamma||x_1-x_2||^2)$$ transformations,1,25.0
+,maps $$x_1$$ and $$x_2$$ into a transformed feature space and then computes the dot product  $$\phi(x_1)\cdot \phi(x_2)$$,1,25.0
+,requires the soft-margin SVM formulation with the cost tuning parameter $$C$$ to control flexibility,0,0.0
+
+Which one of these inner products has the most potentially to be  computationally intractable?,Activity type,Multiple choice
+,Total responses,4
+,Unique participants,4
+,Response options,Count,Percent
+,$$\left(\gamma\cdot x_1^Tx_2 + \beta_0\right)^p = ( \gamma\sum_{j=1}^n x_{1i}x_{2i}+\beta_0)^p,1,25.0
+,$$\exp(-\gamma||x_1-x_2||^2)  = \sum_{j=1}^\infty \frac{(x_1-x_2)^j}{j!}\exp(-\gamma||x_1||^2) \exp(-\gamma||x_2||^2),1,25.0
+,$$\phi(x_1)\cdot\phi(x_2)$$,1,25.0
+,$$x_1^Tx_2 = \sum_{j=1}^n x_{1i}x_{2i}$$,0,0.0
+,"$$\phi(x_1,x_2)$$",0,0.0
+,$$||x_1||\cdot||x_2||\cdot \cos(\theta)$$,1,25.0

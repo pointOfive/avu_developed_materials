@@ -1,0 +1,142 @@
+Untitled
+,Activity count,15
+,Participant count,0
+,Average responses,0.0
+
+A Query-Key-Value system,Activity type,Multiple choice
+,Total responses,0
+,Unique participants,0
+,Response options,Count,Percent,Correctness
+,creates word+positional encodings,0,0,Incorrect
+,can be used to implement attention,0,0,Correct
+,leverages unique Query-Key matches,0,0,Incorrect
+
+"To create $$context$$ $$vectors$$, the most important operation in the Query-Key-Value system is a",Activity type,Multiple choice
+,Total responses,0
+,Unique participants,0
+,Response options,Count,Percent,Correctness
+,weighted average calculation,0,0,Correct
+,softmax operation,0,0,Correct
+,dot product computation,0,0,Correct
+
+Where might $$sin$$ and $$cos$$ be useful?,Activity type,Multiple choice
+,Total responses,0
+,Unique participants,0
+,Response options,Count,Percent,Correctness
+,https://s3.amazonaws.com/polleverywhere-images/b3b161362122dca202a86ad49d6a68d68d45835e2122b56b2a99f817e616aa24.png?pe_description=a.png,0,0,Incorrect
+,https://s3.amazonaws.com/polleverywhere-images/63ab0f9a90886b0ad1b7310b3a7b954543cf4e97a69bede7e3c2d5e97273e7e9.png?pe_description=b.png,0,0,Correct
+,https://s3.amazonaws.com/polleverywhere-images/ac955d4811091ad1a8837548f9c762241a73128dfbba31b81bfa3b9d965adf27.png?pe_description=e.png,0,0,Incorrect
+,https://s3.amazonaws.com/polleverywhere-images/b1640413ab4c33d1c772bac6ccb10b3f6531e760aa5d969bdc60990707d2f1bc.png?pe_description=c.png,0,0,Incorrect
+,https://s3.amazonaws.com/polleverywhere-images/c52d426b5a7c490c6941280e097fd0d40409bc2395bd02788c8408f1c3f67876.png?pe_description=d.png,0,0,Incorrect
+
+Where does self-attention happen?,Activity type,Multiple choice
+,Total responses,0
+,Unique participants,0
+,Response options,Count,Percent,Correctness
+,https://s3.amazonaws.com/polleverywhere-images/b3b161362122dca202a86ad49d6a68d68d45835e2122b56b2a99f817e616aa24.png?pe_description=a.png,0,0,Incorrect
+,https://s3.amazonaws.com/polleverywhere-images/63ab0f9a90886b0ad1b7310b3a7b954543cf4e97a69bede7e3c2d5e97273e7e9.png?pe_description=b.png,0,0,Incorrect
+,https://s3.amazonaws.com/polleverywhere-images/ac955d4811091ad1a8837548f9c762241a73128dfbba31b81bfa3b9d965adf27.png?pe_description=e.png,0,0,Correct
+,https://s3.amazonaws.com/polleverywhere-images/b1640413ab4c33d1c772bac6ccb10b3f6531e760aa5d969bdc60990707d2f1bc.png?pe_description=c.png,0,0,Correct
+,https://s3.amazonaws.com/polleverywhere-images/c52d426b5a7c490c6941280e097fd0d40409bc2395bd02788c8408f1c3f67876.png?pe_description=d.png,0,0,Incorrect
+
+Where do we choose what to focus on in the input?,Activity type,Multiple choice
+,Total responses,0
+,Unique participants,0
+,Response options,Count,Percent,Correctness
+,https://s3.amazonaws.com/polleverywhere-images/b3b161362122dca202a86ad49d6a68d68d45835e2122b56b2a99f817e616aa24.png?pe_description=a.png,0,0,Incorrect
+,https://s3.amazonaws.com/polleverywhere-images/63ab0f9a90886b0ad1b7310b3a7b954543cf4e97a69bede7e3c2d5e97273e7e9.png?pe_description=b.png,0,0,Incorrect
+,https://s3.amazonaws.com/polleverywhere-images/ac955d4811091ad1a8837548f9c762241a73128dfbba31b81bfa3b9d965adf27.png?pe_description=e.png,0,0,Incorrect
+,https://s3.amazonaws.com/polleverywhere-images/b1640413ab4c33d1c772bac6ccb10b3f6531e760aa5d969bdc60990707d2f1bc.png?pe_description=c.png,0,0,Incorrect
+,https://s3.amazonaws.com/polleverywhere-images/c52d426b5a7c490c6941280e097fd0d40409bc2395bd02788c8408f1c3f67876.png?pe_description=d.png,0,0,Correct
+
+Where might we leverage word2vec or GloVe?,Activity type,Multiple choice
+,Total responses,0
+,Unique participants,0
+,Response options,Count,Percent,Correctness
+,https://s3.amazonaws.com/polleverywhere-images/b3b161362122dca202a86ad49d6a68d68d45835e2122b56b2a99f817e616aa24.png?pe_description=a.png,0,0,Correct
+,https://s3.amazonaws.com/polleverywhere-images/63ab0f9a90886b0ad1b7310b3a7b954543cf4e97a69bede7e3c2d5e97273e7e9.png?pe_description=b.png,0,0,Incorrect
+,https://s3.amazonaws.com/polleverywhere-images/ac955d4811091ad1a8837548f9c762241a73128dfbba31b81bfa3b9d965adf27.png?pe_description=e.png,0,0,Incorrect
+,https://s3.amazonaws.com/polleverywhere-images/b1640413ab4c33d1c772bac6ccb10b3f6531e760aa5d969bdc60990707d2f1bc.png?pe_description=c.png,0,0,Incorrect
+,https://s3.amazonaws.com/polleverywhere-images/c52d426b5a7c490c6941280e097fd0d40409bc2395bd02788c8408f1c3f67876.png?pe_description=d.png,0,0,Incorrect
+
+Which of these is Positional Encoding?,Activity type,Multiple choice
+,Total responses,0
+,Unique participants,0
+,Response options,Count,Percent,Correctness
+,https://s3.amazonaws.com/polleverywhere-images/0907d96497ad0038dfe8d5ae697d3c7a48044f2482fefa6249e953a62105ca05.png?pe_description=f.png,0,0,Incorrect
+,https://s3.amazonaws.com/polleverywhere-images/674aa37f483492070bda1849bd7490f3cea06ff9cc29aaf8137af0d13c7e3a6e.png?pe_description=Screen+Shot+2020-11-29+at+5.27.07+PM.png,0,0,Incorrect
+,https://s3.amazonaws.com/polleverywhere-images/25de797a3d17f41022100ce2452e461f14fdb3f42c7a4525e243a45c06e2201c.png?pe_description=Screen+Shot+2020-11-27+at+2.53.25+PM.png,0,0,Correct
+,$$Y' = Y\alpha + (1-Y)(1-\alpha)/(k-1)$$,0,0,Incorrect
+
+Which of these is Label Smoothing?,Activity type,Multiple choice
+,Total responses,0
+,Unique participants,0
+,Response options,Count,Percent,Correctness
+,https://s3.amazonaws.com/polleverywhere-images/0907d96497ad0038dfe8d5ae697d3c7a48044f2482fefa6249e953a62105ca05.png?pe_description=f.png,0,0,Incorrect
+,https://s3.amazonaws.com/polleverywhere-images/674aa37f483492070bda1849bd7490f3cea06ff9cc29aaf8137af0d13c7e3a6e.png?pe_description=Screen+Shot+2020-11-29+at+5.27.07+PM.png,0,0,Incorrect
+,https://s3.amazonaws.com/polleverywhere-images/25de797a3d17f41022100ce2452e461f14fdb3f42c7a4525e243a45c06e2201c.png?pe_description=Screen+Shot+2020-11-27+at+2.53.25+PM.png,0,0,Incorrect
+,$$Y' = Y\alpha + (1-Y)(1-\alpha)/(k-1)$$,0,0,Correct
+
+Which of these are Residual Connections?,Activity type,Multiple choice
+,Total responses,0
+,Unique participants,0
+,Response options,Count,Percent,Correctness
+,https://s3.amazonaws.com/polleverywhere-images/0907d96497ad0038dfe8d5ae697d3c7a48044f2482fefa6249e953a62105ca05.png?pe_description=f.png,0,0,Correct
+,https://s3.amazonaws.com/polleverywhere-images/674aa37f483492070bda1849bd7490f3cea06ff9cc29aaf8137af0d13c7e3a6e.png?pe_description=Screen+Shot+2020-11-29+at+5.27.07+PM.png,0,0,Incorrect
+,https://s3.amazonaws.com/polleverywhere-images/25de797a3d17f41022100ce2452e461f14fdb3f42c7a4525e243a45c06e2201c.png?pe_description=Screen+Shot+2020-11-27+at+2.53.25+PM.png,0,0,Incorrect
+,$$Y' = Y\alpha + (1-Y)(1-\alpha)/(k-1)$$,0,0,Incorrect
+
+Which of these is the Query-Key-Value components underlying the Attention System?,Activity type,Multiple choice
+,Total responses,0
+,Unique participants,0
+,Response options,Count,Percent
+,https://s3.amazonaws.com/polleverywhere-images/0907d96497ad0038dfe8d5ae697d3c7a48044f2482fefa6249e953a62105ca05.png?pe_description=f.png,0,0
+,https://s3.amazonaws.com/polleverywhere-images/674aa37f483492070bda1849bd7490f3cea06ff9cc29aaf8137af0d13c7e3a6e.png?pe_description=Screen+Shot+2020-11-29+at+5.27.07+PM.png,0,0
+,https://s3.amazonaws.com/polleverywhere-images/25de797a3d17f41022100ce2452e461f14fdb3f42c7a4525e243a45c06e2201c.png?pe_description=Screen+Shot+2020-11-27+at+2.53.25+PM.png,0,0
+,$$Y' = Y\alpha + (1-Y)(1-\alpha)/(k-1)$$,0,0
+
+Which of these are keys to Bidirectional Encoder Representations from Transformers,Activity type,Multiple choice
+,Total responses,0
+,Unique participants,0
+,Response options,Count,Percent,Correctness
+,Encoder-Decoder Framework,0,0,Incorrect
+,Composition,0,0,Correct
+,Transfer Learning,0,0,Correct
+,Deep Recurrent Structure,0,0,Correct
+,Bidirectional Training,0,0,Correct
+
+What formulation could allow us to predict characteristics of tokens?,Activity type,Multiple choice
+,Total responses,0
+,Unique participants,0
+,Response options,Count,Percent,Correctness
+,https://s3.amazonaws.com/polleverywhere-images/5afbe70029347f3c8ed4fc21f0f4fc8fa395868f2e643da82a5a6e1df394303c.png?pe_description=fine_tune_A1.png,0,0,Incorrect
+,https://s3.amazonaws.com/polleverywhere-images/bfbba212f8c57908a2781d25f9f99d57048f64690f072ba0820115e1c9f8f46c.png?pe_description=fine_tune_A2.png,0,0,Incorrect
+,https://s3.amazonaws.com/polleverywhere-images/24e84ed0465f8582fd85f83b9d637bfcfb3cefce521d9d7c6d4bda897874650e.png?pe_description=fine_tune_B1.png,0,0,Incorrect
+,https://s3.amazonaws.com/polleverywhere-images/85ae365e1ca1526a9a00e82d7b1cf7e6d4fb053b13a0319ea0df1f08c22055bb.png?pe_description=fine_tune_B2.png,0,0,Correct
+
+What formulation could allow us predict characteristics of a sentence?,Activity type,Multiple choice
+,Total responses,0
+,Unique participants,0
+,Response options,Count,Percent,Correctness
+,https://s3.amazonaws.com/polleverywhere-images/5afbe70029347f3c8ed4fc21f0f4fc8fa395868f2e643da82a5a6e1df394303c.png?pe_description=fine_tune_A1.png,0,0,Incorrect
+,https://s3.amazonaws.com/polleverywhere-images/bfbba212f8c57908a2781d25f9f99d57048f64690f072ba0820115e1c9f8f46c.png?pe_description=fine_tune_A2.png,0,0,Correct
+,https://s3.amazonaws.com/polleverywhere-images/24e84ed0465f8582fd85f83b9d637bfcfb3cefce521d9d7c6d4bda897874650e.png?pe_description=fine_tune_B1.png,0,0,Incorrect
+,https://s3.amazonaws.com/polleverywhere-images/85ae365e1ca1526a9a00e82d7b1cf7e6d4fb053b13a0319ea0df1f08c22055bb.png?pe_description=fine_tune_B2.png,0,0,Incorrect
+
+What formulation could allow us relativistically characterize two sentences?,Activity type,Multiple choice
+,Total responses,0
+,Unique participants,0
+,Response options,Count,Percent,Correctness
+,https://s3.amazonaws.com/polleverywhere-images/5afbe70029347f3c8ed4fc21f0f4fc8fa395868f2e643da82a5a6e1df394303c.png?pe_description=fine_tune_A1.png,0,0,Correct
+,https://s3.amazonaws.com/polleverywhere-images/bfbba212f8c57908a2781d25f9f99d57048f64690f072ba0820115e1c9f8f46c.png?pe_description=fine_tune_A2.png,0,0,Incorrect
+,https://s3.amazonaws.com/polleverywhere-images/24e84ed0465f8582fd85f83b9d637bfcfb3cefce521d9d7c6d4bda897874650e.png?pe_description=fine_tune_B1.png,0,0,Incorrect
+,https://s3.amazonaws.com/polleverywhere-images/85ae365e1ca1526a9a00e82d7b1cf7e6d4fb053b13a0319ea0df1f08c22055bb.png?pe_description=fine_tune_B2.png,0,0,Incorrect
+
+What formulation could allow us to answer arbitrary textual questions?,Activity type,Multiple choice
+,Total responses,0
+,Unique participants,0
+,Response options,Count,Percent,Correctness
+,https://s3.amazonaws.com/polleverywhere-images/5afbe70029347f3c8ed4fc21f0f4fc8fa395868f2e643da82a5a6e1df394303c.png?pe_description=fine_tune_A1.png,0,0,Incorrect
+,https://s3.amazonaws.com/polleverywhere-images/bfbba212f8c57908a2781d25f9f99d57048f64690f072ba0820115e1c9f8f46c.png?pe_description=fine_tune_A2.png,0,0,Incorrect
+,https://s3.amazonaws.com/polleverywhere-images/24e84ed0465f8582fd85f83b9d637bfcfb3cefce521d9d7c6d4bda897874650e.png?pe_description=fine_tune_B1.png,0,0,Correct
+,https://s3.amazonaws.com/polleverywhere-images/85ae365e1ca1526a9a00e82d7b1cf7e6d4fb053b13a0319ea0df1f08c22055bb.png?pe_description=fine_tune_B2.png,0,0,Incorrect

@@ -1,0 +1,29 @@
+
+Project Part 6: Model Tuning and Interpretation
+Due: 4/19 3:30PM EST (before Class 23)
+Late: -10/day (after 3:30PM EST beginning with the start of Class 23)
+Value: 40 points (4% of class grade)
+Model tuning is the process of maximizing a model’s performance without overfitting or creating too high of a variance. In machine learning, this is accomplished by selecting appropriate hyperparameters. Choosing an appropriate set of hyperparameters is crucial for model accuracy but can be computationally challenging. Hyperparameters differ from other model parameters in that they are not learned by the model automatically through training methods. Instead, these parameters must be set manually. Many methods exist for selecting appropriate hyperparameters such as grid search, random search, or Bayesian optimization. You should be able to answer the following questions:
+
+How many layers did you choose in your neural network?
+Why would you pick a certain number of neurons in a particular layer in your network?
+What would you set for the learning rate for your gradient descent?
+How did you find the best values for your hyperparameters? Describe your selection process.
+What are the common issues associated with your model tuning process?
+
+
+Model Interpretation: As correlation often does not equal causality, a solid model understanding is needed when it comes to making decisions and explaining them. Deep learning models are notorious for their un-interpretability due to the sheer number of parameters and the complex approach to extracting and combining features. Regardless of the end goal of your project solutions, users will always prefer solutions that are interpretable and understandable. Moreover, as a machine learning engineer, you will always benefit from the interpretability of your model to validate and improve your work. In gradient-based methods, the gradients of the target concept calculated in a backward pass are used to produce a map that highlights the important regions in the input for predicting the target concept.
+
+Deliverables: Work with your team and submit one PDF on Collab to include two additional sections on (1) model tuning, and (2) model interpretation. As long as your submission follows the instructions above and you seem to have tuned and interpreted your model in the context of the project, you should do well on this milestone.
+
+SUBMISSION INSTRUCTIONS
+
+Be sure to include the following in your team document:
+
+The title of the project
+The full names and UVA IDs of team members
+Designate a single team member to submit your document titled as: 
+
+"projectTitle_teamMemberComputingIDs_tuningInterpretation.pdf"
+
+

@@ -1,0 +1,43 @@
+\begin{itemize}
+\setlength\itemsep{0em}
+\item \textbf{2020 $|$ Genome Biology}. \href{https://www.biorxiv.org/content/10.1101/810127v1.full}{\emph{Promoter scanning during transcription initiation in Saccharomyces cerevisiae: Pol II in the ``shooting gallery''.}}
+Qiu C, Jin H, Vvedenskaya I, Llenas J, Zhao T, Malik I, Visbisky A, \underline{\emph{\textbf{Schwartz S}}}, Cui P, Cabart P, Han K, Lai W, Metz R,  Johnson C, Sze S,  Pugh B,  Nickels B, Kaplan C. 
+\item \textbf{2019 $|$ Patent Application}, Docket No. 60518-0011. \emph{Computer-implemented detection and statistical analysis of errors by healthcare providers. }
+Elgort D, \underline{\emph{\textbf{Schwartz S}}}, Sweeney E, Dubbin G, Langseth G, Ciollaro M, Andre A. 
+\item  \textbf{2019 $|$ Plant Cell and Environment}, 42(7), 2165-2182. \href{https://onlinelibrary.wiley.com/doi/abs/10.1111/pce.13546}{\emph{Complex
+interactions between day length and diurnal patterns of gene expression drive photoperiodic responses
+in a perennial C4 grass.}} Weng X, Lovell J, \underline{\emph{\textbf{Schwartz S}}}, Changde C, Haque T, Zhang L, Razzaque S, Juenger T.  
+\item \textbf{2017 $|$ Cancer Prevention Research}, 10(10), 553-562. \href{https://cancerpreventionresearch.aacrjournals.org/content/10/10/553}{\emph{Early Exposure
+to a High Fat/High Sugar Diet Increases the Mammary Stem Cell Compartment and Mammary Tumor
+Risk in Female Mice.}} Lambertz I, Luo L, Berton T, \underline{\emph{\textbf{Schwartz S}}}, Hursting S, Conti C, Fuchs-Young R. 
+\item \textbf{2016 $|$ Plant Physiology}, 172(2), 734-48. \href{http://www.plantphysiol.org/content/172/2/734}{\emph{Promises and challenges of eco-physiological genomics in the field: tests of drought responses in Switchgrass.}} 
+Lovell J, Shakirov E \underline{\emph{\textbf{Schwartz S}}}, Lowry D, Aspinwall A, Taylor S, Bonnette J, Hawkes C, Fay
+P, Juenger T. 
+\item \textbf{2016 $|$ Genome Research}, 26(4), 510-18. \href{https://genome.cshlp.org/content/26/4/510.full}{\emph{Drought responsive gene expression and regulatory divergence between upland and lowland ecotypes of a perennial C4 grass.}}
+Lovell J, \underline{\emph{\textbf{Schwartz S}}}, Lowry D, Shakirov E, Wang M, Johnson J, Sreedasyam A, Plott C, Jenkins J,
+Schmutz J, Juenger T. 
+\item \textbf{2016 $|$ BMC Genomics}, 17(202). \href{https://www.nature.com/articles/nbt.2957}{\emph{Colletotrichum graminicola mutant deficient in the establishment of biotrophy reveals early transcriptional events in the maize anthracnose disease interaction.}} 
+Torres M, Ghaffari N, Buiate E, Moore N, \underline{\emph{\textbf{Schwartz S}}}, Johnson C, Vaillancourt L. 
+\item \textbf{2014 $|$ Nature Biotechnology}, 32, 903-14. \emph{A comprehensive assessment of RNA-seq accuracy, reproducibility and information content by the SEQC Consortium. } Su Z, et al. 
+\item \textbf{2013 $|$ Zoonoses Public Health}, 60(5), 327-35. 
+\href{https://onlinelibrary.wiley.com/doi/abs/10.1111/zph.12006}{\emph{Identifcation and phylogenetic analysis of the first pandemic (H1N1) 2009 in
+influenza virus from feral swine.}} 
+ Clavijo A, Nikooienejad A, Shahrokh M, Metz R, \underline{\emph{\textbf{Schwartz S}}}, Atashpaz-Gargariz E, Deliberto T,
+Lutman M, Pedersen K, Bazan L, Swenson S, Koster L, Zang M, Beckham T, Johnson C,
+Bonpheng M. 
+\item \textbf{2012 $|$ Genome Biology}, 13(4). \href{https://genomebiology.biomedcentral.com/articles/10.1186/gb-2012-13-4-r32}{\emph{A metagenomic study of diet-dependent interaction between gut microbiota and host in infants reveals differences in immune response.}}
+\underline{\emph{\textbf{Schwartz S}}}, Ivanov I, Davidson L, Goldsby J, Dahl D, Dougherty E, Herman D, Donavan
+S, Chapkin R. 
+\item \textbf{2012 $|$ Statistics in Medicine}, 31(10), 949-62. \href{https://onlinelibrary.wiley.com/doi/abs/10.1002/sim.4472}{\emph{Sensitivity analysis for unmeasured confounding in principal stratification.}} \underline{\emph{\textbf{Schwartz S}}}, Li F, Reiter J. 
+\item \textbf{2011 $|$ Physiological Genomics}, 43(10), 640-54. \href{https://journals.physiology.org/doi/full/10.1152/physiolgenomics.00213.2010}{\emph{Integrated microRNA and mRNA expression profiling in a rat colon carcinogenesis model: Effect of a chemoprotective diet. }}
+Shah M, \underline{\emph{\textbf{Schwartz S}}}, Zhao C, Davidson L, Zhou B, Lupton J, Ivanov I, Chapkin R.
+\item \textbf{2011 $|$ Journal of the American Statistical Association}, 106(496), 1331-44.
+\href{https://www.tandfonline.com/doi/abs/10.1198/jasa.2011.ap10425}{\emph{Dirichlet processes for flexible modeling of continuous intermediate variables using principal stratification. }}
+\underline{\emph{\textbf{Schwartz S}}}, Li F, Mealli F. 
+\item \textbf{2010 $|$ Statistics in Medicine}, 29(16),  1710-23.
+\href{https://onlinelibrary.wiley.com/doi/abs/10.1002/sim.3900}{\emph{Joint Bayesian analysis of birthweight and censored gestational
+age using finite mixture models. }} \underline{\emph{\textbf{Schwartz S}}}, Gelfand A, Miranda M. 
+\item \textbf{2010 $|$ Dissertation, Duke University}, advisors: Drs. Fan Li and Jerome P. Reiter. 
+\href{https://dukespace.lib.duke.edu/dspace/handle/10161/2983}{\emph{Bayesian Mixture Modeling Approaches for Intermediate Variables and Causal Inference.}}
+\underline{\emph{\textbf{Schwartz S}}}. 
+\end{itemize}

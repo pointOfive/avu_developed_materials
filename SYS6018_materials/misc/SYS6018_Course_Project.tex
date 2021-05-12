@@ -1,0 +1,164 @@
+\documentclass[11pt, oneside]{article}   	% use "amsart" instead of "article" for AMSLaTeX format
+\usepackage[margin=0.75in]{geometry}
+\geometry{letterpaper}                   		% ... or a4paper or a5paper or ... 
+%\geometry{landscape}                		% Activate for rotated page geometry
+%\usepackage[parfill]{parskip}    		% Activate to begin paragraphs with an empty line rather than an indent
+\usepackage{graphicx}				% Use pdf, png, jpg, or eps§ with pdflatex; use eps in DVI mode
+								% TeX will automatically convert eps --> pdf in pdflatex		
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{arydshln}
+\usepackage{xcolor}
+%SetFonts
+
+%SetFonts
+
+
+\title{Disaster Relief Project}
+\author{SYS 6018: Data Mining}
+%\date{}							% Activate to display a given date or no date
+
+\begin{document}
+\maketitle
+
+\section{Introduction}
+
+In this project, you will use classification methods covered in this course to solve a real historical data-mining problem: locating displaced persons living in makeshift shelters following the destruction of the earthquake in Haiti in 2010.\\
+
+\noindent Following that earthquake, rescue workers, mostly from the United States military, needed to get food and water to the displaced persons. But with destroyed communications, impassable roads, and thousands of square miles, actually locating the people who needed help was challenging.\\
+
+\noindent As part of the rescue effort, a team from the Rochester Institute of Technology were flying an aircraft to collect high resolution geo-referenced imagery. It was known that the people whose homes had been destroyed by the earthquake were creating temporary shelters using blue tarps, and these blue tarps would be good indicators of where the displaced persons were -- if only they could be located in time, out of the thousands of images that would be collected every day. The problem was that there was no way for aid workers to search the thousands of images in time to find the tarps and communicate the locations back to the rescue workers on the ground in time. The solution would be provided by data-mining algorithms, which could search the images far faster and more thoroughly (and accurately?) then humanly possible. The goal was to find an algorithm that could effectively search the images in order to locate displaced persons and communicate those locations rescue workers so they could help those who needed it in time.\\
+
+\noindent This disaster relief project is the subject matter for your project in this course, which you will submit in two parts. You will use data from the actual data collection process was carried out over Haiti. Your goal is to test each of the algorithms you learn in this course on the imagery data collected during the relief efforts made Haiti in response to the 2010 earthquake, and determine which method you will use to as accurately as possible, and in as timely a manner as possible, locate as many of the displaced persons identified in the imagery data so that they can be provided food and water before their situations become unsurvivable.  \\
+
+\noindent  You will document the accuracy and runtime for classification for each algorithm in the \texttt{.Rmd}-based presentation files that you create (as variants of the template that is provided for you). In Module 6, you will submit your \texttt{.Rmd} with some of the results of your analyses filled out. In Module 12, at the end of the course, you will submit your completed \texttt{.Rmd} file, which will include the conclusions of your work as well as your recommendations regarding algorithm preferability for this application.  \\
+
+\section{Collaboration, teamwork, and help}
+
+\begin{enumerate}
+\item This is \emph{not} a group project; however...
+\item You \emph{are} welcome to discuss what you're doing with your classmates
+\item The intent of any peer-to-peer conversations about this project may be ``supportive" in nature
+\item But on a spectrum from ``empowering"  (in the positive sense of this world) to ``enabling" (in the negative sense of this word), your exchanges must stay \emph{well} to the  ``empowering"  end of the equation
+\end{enumerate}
+
+\noindent This is a ``give a friend a fish, feed them for a day; teach a friend to fish, feed them for a lifetime" kind of situation.  Do not feel obligated to ensure the success of your peers in this project -- that is their responsibility -- but help them succeed when you are able.   This is not a zero-sum game and your personal expertise and knowledge will benefit tremendously from opportunities to make this sort of contribution to your fellow man and woman. 
+
+\section{Project Part 1 (60 points) -- \emph{\textcolor{red}{DUE MODULE 6}}}
+\textbf{The \texttt{.Rmd} file you submit will address and provide the entries in Table \ref{tab:1}.}
+If it is not clear from your \texttt{.Rmd} file how the values in your table were produced you will not receive credit for the entry. 
+
+\subsection{K-Folds Out of Sampling Performance (30 points)}
+
+There are 33 blank spaces in Table \ref{tab:1}, each of which contributes \underline{$1$ point} -- to a maximum of \underline{$30$ points} -- to your score. To acquire points for the \textbf{ROC} column, you must provide the actual curve in a plot.  To acquire points for the \textbf{threshold} column, you must both (a) provide a threshold, and (b) explain and justify your rationale for the threshold you chose.  Acquiring points for all rows below the \textbf{threshold} row will of course require a \textbf{threshold} value for the column in question.  All entries are numeric, with the aforementioned exceptions for ROC curves and part (b) -- the justification and explanation of your chosen values -- for the  \textbf{threshold} row. 
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{r|c:c:c:c|}
+&&&&Logistic \\
+\textbf{Method} & KNN ($k=\;\;\;)$ & LDA & QDA & Regression\\ \hline
+\textbf{Accuracy} &&&& \\ \hdashline
+\textbf{AUC} &&&& \\ \hdashline
+\textbf{ROC} &&&& \\ \hdashline
+\textbf{Threshold} &&&& \\ \hdashline
+\textbf{Sensitivity=Recall=Power} &&&& \\ \hdashline
+\textbf{Specificity=1-FPR} &&&& \\ \hdashline
+\textbf{FDR} &&&& \\ \hdashline
+\textbf{Precision=PPV} &&&& \\ \hline
+\end{tabular}
+\caption{Performance Metrics: \textbf{10-Fold} Cross-Validation Metrics}
+\label{tab:1}
+\end{table}
+
+\subsection{Conclusions (30 points)}
+\textbf{Report on at least THREE conclusions.}  
+
+\begin{enumerate}
+\item One must be your determination of which algorithm works best (\underline{$10$ points}).
+\end{enumerate}
+Additional conclusions should be observations you've made based on your work on this project, such as:
+\begin{itemize}
+\item Are there additional recommend actions that might be taken to improve results?
+\item Were there multiple adequately performing methods, or just one clear best method?
+\item What is it about this data formulation that allows us to address it with predictive modeling tools? 
+\item How effective do you think your work here could actually be in terms of helping to save human life? 
+\item Do these data seem particularly well-suited to one class of prediction methods, and if so, why?
+\end{itemize}
+
+\noindent Your best \underline{two} additional conclusions will be graded and will \underline{each} be worth \underline{$10$ points}. 
+
+\section{Project Part 2 (132 points) -- \textcolor{red}{\emph{DUE MODULE 12}}}
+\textbf{The \texttt{.Rmd} file you submit will address and provide the entries in Table \ref{tab:2}.}
+If it is not clear from your \texttt{.Rmd}  file how the values in your table were produced you will not receive credit for the entry. 
+
+\subsection{K-Folds Out of Sampling Performance (36 points)}
+\textcolor{red}{\emph{Table \ref{tab:2} is filled out the in same manner as in Table \ref{tab:1}}}, but the new added columns are worth more points than the original columns.
+There are 18 blank spaces in the rightmost two columns of Table \ref{tab:2} -- each of these spaces is
+worth \underline{$1$ point} for a total of \underline{$18$ points}.  The remaining (33) blank spaces in columns shared with 
+Table \ref{tab:1} -- which you should have already completed in part 1 of this project -- are each worth 
+\underline{$\frac{1}{4}$ point} up to a maximum of \underline{$8$ points}.   The final \underline{$10$ points} will be given for providing an (a) appropriate interpretation of your choses tuning parameter values, and (b) explanation of how they were chosen.  
+
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{r|c:c:c:c:c:c|}
+&&&&Logistic & \multicolumn{2}{:c|}{(tuning parameters $= \quad$)} \\
+\textbf{Method} & KNN ($k=\;\;\;)$ & LDA & QDA & Regression & Random Forest & SVM \\ \hline
+\textbf{Accuracy} &&&&\textcolor{red}{$\longleftarrow\frac{1}{2}$}&\textcolor{red}{$1\longrightarrow$}& \\ \hdashline
+\textbf{AUC} &&&&\textcolor{red}{$\longleftarrow\frac{1}{2}$}&\textcolor{red}{$1\longrightarrow$}& \\ \hdashline
+\textbf{ROC} &&&&\textcolor{red}{$\longleftarrow\frac{1}{2}$}&\textcolor{red}{$1\longrightarrow$}& \\ \hdashline
+\textbf{Threshold} &&&& \textcolor{red}{$\longleftarrow\frac{1}{2}$}&\textcolor{red}{$1\longrightarrow$}& \\ \hdashline
+\textbf{Sensitivity=Recall=Power} &&&&\textcolor{red}{$\longleftarrow\frac{1}{2}$}&\textcolor{red}{$1\longrightarrow$}& \\ \hdashline
+\textbf{Specificity=1-FPR} &&&&\textcolor{red}{$\longleftarrow\frac{1}{2}$}&\textcolor{red}{$1\longrightarrow$}& \\ \hdashline
+\textbf{FDR} &&&&\textcolor{red}{$\longleftarrow\frac{1}{2}$}&\textcolor{red}{$1\longrightarrow$}& \\ \hdashline
+\textbf{Precision=PPV} &&&&\textcolor{red}{$\longleftarrow\frac{1}{2}$}&\textcolor{red}{$1\longrightarrow$}& \\ \hline
+\end{tabular}
+\caption{Performance Metrics: \textbf{10-Fold} Cross-Validation Metrics}
+\label{tab:2}
+\end{table}
+
+\subsection{Hold-Out Test Sample Performance (36 points)}
+\textcolor{red}{\emph{Table \ref{tab:3} is filled out in the same manner as in Table \ref{tab:1}}}.
+If it is not clear from your \texttt{.Rmd}  file how the values in your table were produced you will not receive credit for the entry. \\
+
+\noindent Each of the six columns is worth \underline{$6$ points}, with \underline{$1$ point lost} for each
+entry \emph{not} provided in the table.  \emph{E.g., if you have all the row values for the SVM column,
+but fail to note the values of the tuning parameters you used, you will get only $5$ of  the $6$ available points.}
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{r|c:c:c:c:c:c|}
+&&&&Logistic & \multicolumn{2}{:c|}{(tuning parameters $= \quad$)} \\
+\textbf{Method} & KNN ($k=\;\;\;)$ & LDA & QDA & Regression & Random Forest & SVM \\ \hline
+\textbf{Accuracy} &&&&&& \\ \hdashline
+\textbf{AUC} &&&&&& \\ \hdashline
+\textbf{ROC} &&&&&& \\ \hdashline
+\textbf{Threshold} &&&&&& \\ \hdashline
+\textbf{Sensitivity=Recall=Power} &&&&&& \\ \hdashline
+\textbf{Specificity=1-FPR} &&&&&& \\ \hdashline
+\textbf{FDR} &&&&&& \\ \hdashline
+\textbf{Precision=PPV} &&&&&& \\ \hline
+\end{tabular}
+\caption{Performance Metrics: \textbf{Hold-Out} Test Data Set Scores}
+\label{tab:3}
+\end{table}
+
+\newpage
+
+\subsection{Conclusions (60 points)}
+\textbf{Report on at least SIX conclusions.}  \\
+
+\noindent Four of your conclusions must be the following (each worth \underline{$10$ points}):
+
+\begin{enumerate}
+\item A discussion of the best performing algorithm(s) in the cross-validation and  hold-out data
+\item A discussion or analysis justifying why your findings above are compatible or reconcilable
+\item A recommendation and rationale regarding which algorithm to use for detection of blue tarps
+\item A discussion of the relevance of the metrics calculated in the tables to this application context
+\end{enumerate}
+
+\noindent Your best \underline{two} additional conclusions will \underline{each} be worth \underline{$10$ points}. 
+
+
+
+\end{document}  

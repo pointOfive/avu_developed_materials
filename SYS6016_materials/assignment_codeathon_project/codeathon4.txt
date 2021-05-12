@@ -1,0 +1,27 @@
+
+https://github.com/EXJUSTICE/Optimized_DQN_OpenAI_SpaceInvaders
+
+Assignment 4: Implementing Atari Space Invaders with TF-Agents
+Due: 5/13 3:30PM EST (before Final Presentations)
+Late: 0 (after 3:30PM EST beginning with the start of Final Presentations)
+Value: 100 points (10% of class grade)
+In this assignment, you will apply a DQN to the OpenAI Atari Space Invaders environment. Training RL agents on Atari environments is hard, as it can be a very time-consuming process as the environment complexity is high, especially when the agent needs to visually interpret objects directly from images.
+
+DIRECTIONS
+
+In this assignment, you will use TF-Agents to train an agent that can achieve a superhuman level at SpaceInvaders-v4 using DQNs. To make it easier for you, you may follow the tutorial on how to implement the game with TF-Agents in the Optimized Space Invaders article below. Some codes have been provided to help you process the data; you may modify it to fit your needs. 
+
+ Optimized Space Invaders using Deep Q-learning: An Implementation in Tensorflow 2.0 article
+All of your code must be in the Jupyter Notebook format. If you use Github, please include a zip file or, preferably, a link to a Github repository with the code for your final project. You do not have to include the data or additional libraries.
+
+ 
+
+SUBMISSION INSTRUCTIONS
+
+Submit the .ipynb file via UVA Collab with the following naming convention: yourcomputingID_assignment_4.ipynb.
+
+ Assignment 4: Implementing Atari Space Invaders with TF-Agents
+
+ SYS 6016 Programming Assignment Rubric.pdf
+
+

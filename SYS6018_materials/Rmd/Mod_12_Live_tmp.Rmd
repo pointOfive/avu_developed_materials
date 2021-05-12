@@ -1,0 +1,488 @@
+---
+title: "Mod_12_Live"
+author: "Schwartz"
+date: "11/16/2020"
+output:
+     html_document:
+          toc: TRUE
+          toc_depth: 4
+          toc_float: true
+          toc_collapsed: true
+          theme: journal
+          code_folding: hide
+---
+
+<!--- Change font size for headers --->
+<style>
+h1.title {
+  font-size: 28px;
+}
+h1 {
+  font-size: 22px;
+}
+h2 {
+  font-size: 18px;
+}
+h3 { 
+  font-size: 14px;
+}
+
+</style>
+
+
+## Announcements
+
+- None
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning=FALSE, message=FALSE, 
+                      fig.align = "center",
+                      out.width = "80%")
+```
+
+
+## Imports
+
+- the usuals
+- and some specific stuff for demonstrating gradient boosted trees
+
+```{r imports}
+library(tidyverse)
+library(ggplot2)
+library(plotly)
+
+library(rpart)
+# install.packages('transformr')
+library(gganimate)
+library('transformr')
+
+```
+
+## Toy Data Set
+
+- Synthetic data set we'll use for illustrative for the lecture
+
+```{r data}
+# standard base R functionality
+n <- 30
+support_range <- 5
+x <- support_range*runif(n=n)
+x <- x-mean(x)
+y <- x+runif(n=n)
+
+# ALWAYS take the time to get this right for your audience!!
+# http://www.cookbook-r.com/Graphs/Colors_(ggplot2)/#a-colorblind-friendly-palette
+cbbPalette <- c("#009E73", "#CC79A7","#D55E00", "#000000",
+                "#56B4E9", "#F0E442", "#0072B2", "#E69F00")
+
+data_space_plot <- tibble(x=x,y=y) %>% 
+  ggplot(aes(x=x,y=y,color='Data')) + geom_point() +
+    scale_colour_manual(values=cbbPalette) 
+
+data_space_plot + ggtitle('"Data Space"')
+```
+
+```{r model, include=FALSE}
+X <- tibble(intercept=1,x=x)
+X
+
+Beta <- tibble( estimate = c(0,0) )
+Beta 
+
+tibble( yhat = as.matrix(X) %*% as.matrix(Beta) )
+```
+
+## Gradient Descent 
+
+- We *can* solve for the gradient equal to $0$, but instead...
+- let's see how we would *numerically* fit this model...
+- with **Gradient Descent**!
+
+$$\LARGE
+\begin{align*}
+\sum_{i=1}^n (y_i - \hat y_i)^2 = {} & (\mathbf{y}-\mathbf{X} {\boldsymbol \beta})^T(\mathbf{y}-\mathbf{X} {\boldsymbol \beta})\\
+ = {} &  \mathbf{y}^T\mathbf{y}-2{\boldsymbol \beta}^T \mathbf{X}^T\mathbf{y} + {\boldsymbol \beta}^T \mathbf{X}^T \mathbf{X} {\boldsymbol \beta}\\
+\nabla_{\mathbf{\boldsymbol \beta}} \frac{1}{2} \left(  \mathbf{y}^T\mathbf{y}-2{\boldsymbol \beta}^T \mathbf{X}^T\mathbf{y}+ {\boldsymbol \beta}^T \mathbf{X}^T \mathbf{X} {\boldsymbol \beta}\right) = {} &  \frac{1}{2}(-2 \mathbf{X}^T\mathbf{y} + 2 \mathbf{X}^T \mathbf{X} {\boldsymbol \beta}) \\
+= {} & \mathbf{X}^T \mathbf{X} {\boldsymbol \beta} - \mathbf{X}^T \mathbf{y}\\
+= {} & \mathbf{X}^T \left(\mathbf{X} {\boldsymbol \beta} - \mathbf{y}\right)
+\end{align*}$$
+
+- PollEv.com/scottschwart658
+- What is $\sum_{i=1}^n (y_i - \hat y_i)^2 = (\mathbf{y}-\mathbf{X} {\boldsymbol \beta})^T(\mathbf{y}-\mathbf{X} {\boldsymbol \beta})$?
+- What is $\nabla_{\mathbf{\boldsymbol \beta}}$?
+- What is $\nabla_{\mathbf{\boldsymbol \beta}} \frac{1}{2} \left(  \mathbf{y}^T\mathbf{y}-2{\boldsymbol \beta}^T \mathbf{X}^T\mathbf{y}+ {\boldsymbol \beta}^T \mathbf{X}^T \mathbf{X} {\boldsymbol \beta}\right) = \mathbf{X}^T \left(\mathbf{X} {\boldsymbol \beta} - \mathbf{y}\right)$?
+
+## Gradient Descent in "Parameter" Space
+
+- initiallize gradient descent algorithm
+
+```{r model_gradient_decent_setup}
+
+Beta <- 0*Beta+2
+
+alpha_learning_rate <- 0.01
+step = 1
+Betas_pars <- Beta %>% rename_at(step, 
+                                 function(x) paste0(x, as.character(step), sep=''))
+loss_pars <- c(sum((as.matrix(X)%*%as.matrix(Beta)-as.matrix(y))^2))
+```
+
+- take some gradient descent steps
+  - this is repeatedly manually run (10 times)
+
+```{r model_gradient_descent_iteration, include=FALSE}
+
+for (i in 1:8){
+  Beta <- Beta - alpha_learning_rate*t(as.matrix(X))%*%
+    (as.matrix(X)%*%as.matrix(Beta)-as.matrix(y))
+  loss_pars <- append(loss_pars,
+                      sum((as.matrix(X)%*%as.matrix(Beta)-as.matrix(y))^2))
+  
+  step = step+1                        
+  Betas_pars %>% add_column(Beta) %>% 
+    rename_at(step, 
+              function(x) paste0(x,as.character(step), sep='')) -> Betas_pars
+}
+```
+
+```{r gradient_decent_in_PARAMETER_space}
+
+# https://en.wikipedia.org/wiki/Least_squares#Linear_least_squares
+Beta <- Beta - alpha_learning_rate*t(as.matrix(X))%*%
+  (as.matrix(X)%*%as.matrix(Beta)-as.matrix(y))
+# https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/append
+loss_pars <- append(loss_pars,
+                    sum((as.matrix(X)%*%as.matrix(Beta)-as.matrix(y))^2))
+
+step = step+1                        
+Betas_pars %>% add_column(Beta) %>% 
+  rename_at(step, 
+            function(x) paste0(x,as.character(step), sep='')) -> Betas_pars
+
+# https://tibble.tidyverse.org/reference/add_row.html
+Betas_pars %>% add_row() -> tmp
+tmp[3,]<-loss_pars
+tmp %>% knitr::kable(digits=2) %>%
+  kableExtra::kable_styling(full_width=FALSE)
+```
+
+- create a cost function visualization
+
+```{r cost_function}
+# https://stackoverflow.com/questions/42158198/r-equivalent-of-pythons-np-dot-for-3d-array
+# https://stackoverflow.com/questions/46843926/broadcasting-in-r/46845541#46845541
+# https://stackoverflow.com/questions/37034623/simplest-way-to-repeat-matrix-along-3rd-dimension
+
+two_var_cost_func <- function(x1, x2, y, par1.grid, par2.grid){
+  n <- length(y)
+  par1.x1 <- sweep(replicate(n, par1.grid), MARGIN=3, FUN='*', x1) 
+  par2.x2 <- sweep(replicate(n, par2.grid), MARGIN=3, FUN='*', x2) 
+  resid <- sweep(par1.x1+par2.x2, 3, y)
+  SSE <- (resid^2)
+  rowSums(SSE, dim=2)
+}
+
+range <- 500
+Beta0_hat <- seq(-range,3*range,range/100)/range #seq(-33,33,length.out=300)#
+Beta1_hat <- seq(-range,3*range,range/100)/range #seq(-100,100,length.out=300)#
+Beta0_hat.grid <- outer(Beta0_hat, Beta1_hat, function(x1, x2) x1 )
+Beta1_hat.grid <- outer(Beta0_hat, Beta1_hat, function(x1, x2) x2 )
+
+SSE <- two_var_cost_func(x1=x*0+1, x2=x, y=y, 
+                         par1.grid=Beta0_hat.grid, par2.grid=Beta1_hat.grid)
+
+# https://plotly.com/r/figure-labels/
+# https://github.com/plotly/plotly.js/issues/608
+plot_ly(x=Beta0_hat.grid, y=Beta1_hat.grid, z=SSE, type='surface') %>%
+  layout(title = '\n\nCost Function in\n"Model/Parameter Space"',
+         scene = list(xaxis=list(title="β₀"),
+                      yaxis=list(title = "β"),
+                      zaxis=list(title = "SSE"))) -> cost_function
+```
+
+### visualize the gradient descent path
+
+```{r parameter_space}
+# https://stackoverflow.com/questions/44619198/r-plot-ly-3d-graph-with-trace-line
+# https://plotly.com/r/line-and-scatter/
+cost_function %>%
+  add_trace(x = unlist(c(Betas_pars[1,])), 
+            y = unlist(c(Betas_pars[2,])),
+            z = loss_pars, 
+            type = "scatter3d",
+            mode = "lines+markers",
+            line = list(color = "red", width = 4)) -> parameter_space_plot
+parameter_space_plot
+```
+
+## Project the model space path into data space
+
+(when run this live we can click through thumbnails of each of these figures)
+
+- PollEv.com/scottschwart658
+- Each point in parameter space corresponds to a model
+- So "Parameter" and "Model" space are equivalent
+- But models live in "Data" space, so we can
+  project locations in "model/parameter" space into "data" space
+
+
+```{r model_space_projection}
+set_names(1:10) %>% map(~ data_space_plot + 
+                          geom_abline(aes(color='Model',
+                                          intercept = Betas_pars[1,.x], 
+                                          slope = Betas_pars[2,.x])) +
+                           ggtitle('Viewing a point projection from "Model Space" into "Data Space"'))
+```
+
+## Gradient Descent Re-Imagined
+
+- Imagine each prediction as a parameter of the model...
+- We can then view "data" space as "parameter/model" space
+  - the prediction value IS the parameter of the model
+  - the model wants the prediction to be like th actual value
+- The gradient of the cost function then is 
+  the prediction relative to actual value
+
+
+```{r prediction_space_plot}
+
+# http://www.cookbook-r.com/Graphs/Colors_(ggplot2)/#a-colorblind-friendly-palette
+cbbPalette <- c("#009E73", "#CC79A7","#D55E00", "#000000",
+                "#56B4E9", "#F0E442", "#0072B2", "#E69F00")
+ 
+Beta <- 0*Beta-1
+
+# https://www.r-graph-gallery.com/line-chart-several-groups-ggplot2.html
+data_space_plot + geom_abline(aes(color='Model',
+                                  intercept = Beta[1,], 
+                                  slope = Beta[2,])) +
+    geom_point(data=tibble(x=x, yhat=as.matrix(X)%*%as.matrix(Beta)),
+               mapping=aes(x=x, y=yhat, color='Predictions')) +
+    geom_line(data=tibble(x=rep(x,2),
+                          group=x,
+                          yhat=as.matrix(X)%*%as.matrix(Beta) %>% 
+                               as.tibble() %>% 
+                               bind_rows(tibble(estimate=y))), 
+              mapping=aes(x=x, group=group, y=yhat$estimate, 
+                          color='Gradients')) +
+  ggtitle('Re-Imagining "Data Spece" as "Prediction Space"...
+           ...so it\'s now a "Model" or "Parameter" space visualization')
+
+
+```
+
+### Revised Gradient Descent Specification
+
+1. The prediction IS the model...
+2. The gradient of the cost function *with respect to the model*, then, is:
+
+$$\LARGE
+\begin{align*}
+\sum_{i=1}^n (y_i - \hat y_i)^2 = {} &  (\mathbf{y}-\mathbf{\mathbf{\hat y}})^T(\mathbf{y}-\mathbf{\mathbf{\hat y}})\\
+ = {} &  \mathbf{y}^T\mathbf{y}-2\mathbf{y}^T \mathbf{\hat y}+\mathbf{\hat y}^T\mathbf{\hat y}\\
+\nabla_{\mathbf{\hat y}} \frac{1}{2} (\mathbf{\hat y}-\mathbf{\hat y})^T(\mathbf{\hat y}-\mathbf{\hat y}) = {} & \nabla_{\mathbf{\hat y}} \frac{1}{2}(\mathbf{\hat y}^T\mathbf{\hat y} -2\mathbf{\hat y}^T \mathbf{ y}+ \mathbf{ y}^T\mathbf{ y}) \\
+= {} & \frac{1}{2}(2 \mathbf{\hat y} -2\mathbf{ y}) = \mathbf{\hat y} - \mathbf{ y} 
+\end{align*}$$
+
+3. To *decrease* the cost, go in the negative direction of the gradient,
+   which points "up" relative to the cost function
+4. So if \yhat is *larger* than y, we should move in the negative direction
+
+
+
+- PollEv.com/scottschwart658
+- What is the parameter in $(\mathbf{y}-\mathbf{\mathbf{\hat y}})^T(\mathbf{y}-\mathbf{\mathbf{\hat y}})$?
+- And it's dimension?
+- What is $\nabla_{\mathbf{\hat y}} \frac{1}{2} (\mathbf{\hat y}-\mathbf{\hat y})^T(\mathbf{\hat y}-\mathbf{\hat y})  = \mathbf{\hat y} - \mathbf{ y}$?
+
+
+## Gradient Descent in "Prediction" Space
+
+### initiallize gradient descent algorithm
+
+```{r prediction_gradient_decent_setup}
+alpha_learning_rate <- 0.5
+step = 1
+Betas = Beta %>% rename_at(step, 
+                           function(x) paste0(x, as.character(step), sep=''))
+loss_pars <- c(sum((as.matrix(X)%*%as.matrix(Beta)-as.matrix(y))^2))
+```
+
+### take some gradient descent steps
+
+- this is repeatedly manually run (10 times)
+
+
+```{r prediction_gradient_decent_iteration, include=FALSE}
+
+for (i in 1:8){
+  current_yhat <- as.matrix(X) %*% as.matrix(Beta)
+  new_yhat = current_yhat - alpha_learning_rate*(current_yhat-y)
+  Beta = lm(new_yhat~x) %>% broom::tidy() %>% select(estimate)
+  new_yhat = as.matrix(X) %*% as.matrix(Beta)
+  
+  step = step+1                        
+  Betas %>% add_column(Beta) %>% 
+    rename_at(step, 
+              function(x) paste0(x, as.character(step), sep='')) -> Betas
+  
+  loss_pars <- append(loss_pars,
+                      sum((as.matrix(X)%*%as.matrix(Beta)-as.matrix(y))^2))
+}
+```
+
+```{r gradient_decent_in_PREDICTION_space}
+
+current_yhat <- as.matrix(X) %*% as.matrix(Beta)
+new_yhat = current_yhat - alpha_learning_rate*(current_yhat-y)
+Beta = lm(new_yhat~x) %>% broom::tidy() %>% select(estimate)
+new_yhat = as.matrix(X) %*% as.matrix(Beta)
+
+step = step+1                        
+Betas %>% add_column(Beta) %>% 
+  rename_at(step, 
+            function(x) paste0(x, as.character(step), sep='')) -> Betas
+
+loss_pars <- append(loss_pars,
+                    sum((as.matrix(X)%*%as.matrix(Beta)-as.matrix(y))^2))
+
+Betas %>% add_row() -> tmp
+tmp[3,]<-loss_pars
+tmp %>% knitr::kable(digits=2) %>%
+  kableExtra::kable_styling(full_width=FALSE)
+
+```
+
+### Gradient Descent in "Prediction" Space
+
+```{r prediction_space_gradient_traversing_plot}
+
+set_names(1:10) %>% map(~ data_space_plot + 
+                          geom_abline(aes(color='Model',
+                                          intercept=Betas[1,.x], 
+                                          slope=Betas[2,.x])) +
+                          geom_point(data=tibble(
+                                          x=x, 
+                                          yhat=as.matrix(X)%*%as.matrix(Betas[,.x])), 
+                                     mapping=aes(x=x, y=yhat, 
+                                                 color='Predictions')) +
+                          geom_line(data=tibble(
+                                         x=rep(x,2),
+                                         group=x,
+                                         yhat=as.matrix(X)%*%as.matrix(Betas[,.x]) %>% 
+                                         as.tibble() %>% 
+                                         bind_rows(tibble(V1=y))), 
+                                    mapping=aes(x=x, group=group, 
+                                                y=yhat$V1, 
+                                                color='Gradients')) +
+                          ggtitle('Path of Gradient Descent through "Prediction Space"'))
+```
+
+### Gradient Descent in "Parameter" Space
+
+```{r prediction_space_gradient_traversing_plot2}
+parameter_space_plot %>%
+  add_trace(x = unlist(c(Betas[1,])), 
+            y = unlist(c(Betas[2,])),
+            z = loss_pars, 
+            type = "scatter3d",
+            mode = "lines+markers",
+            line = list(color = "red", width = 4))
+```
+
+## Gradient Boosting with Gradient Boosted Trees
+
+- If we're just trying to make $\hat y$ look like $y$
+- Then why not sequentially improve $\hat y$ (towards $y$)?
+- Enter *Gradient Boosting*...
+  - which tries to follow the "gradients" in the "prediction space"
+  - in order to "non-parametrically" improve $\hat y$ (towards $y$)
+- But what's cool is 
+  - Gradient Boosting conceptualizes the gradient as a model fit instance
+  - Prediction space IS a space of models
+  - And now a step from one model to the next in this model space 
+    *IS ALSO* a model itself
+    - I.e., think of adding vectors together to move through a space
+- Gradient boosting travels through model space by adding models together which 
+  move along the gradients of the cost function with respect to $\hat y$
+  
+$$
+\LARGE
+\begin{align*}
+\mathbf{\hat y}_t = {}& \mathbf{\hat y}_{t-1}+\alpha (\mathbf{ y-\hat y}_{t-1})\\
+\mathbf{\hat y}_t = {}& \mathbf{\hat y}_{t-1}+\alpha {\boldsymbol \epsilon}_{t-1}\\
+\mathbf{\hat y}_t = {}& \mathbf{\hat y}_{t-1}+\alpha f({\boldsymbol \epsilon}_{t-1})\\
+\mathbf{\hat y}_t = {}& \mathbf{\hat y}_{t-1}+\alpha \boldsymbol{\hat \epsilon}_{t-1}
+\end{align*}
+$$
+- $\boldsymbol{\hat \epsilon}_{t-1}$ is a model
+- $\mathbf{\hat y}_{t-1}$ is a model
+- $\mathbf{\hat y}_{t} = \mathbf{\hat y}_{t-1}+\alpha \boldsymbol{\hat \epsilon}_{t-1}$ is another model
+- and $\mathbf{\hat y}_{t}$ is closer to $y$ than $\mathbf{\hat y}_{t-1}$ was...
+
+
+
+```{r gradient_boosted_trees_1}
+
+f0 <- function(x){
+  0*x
+}
+support <- seq(min(x), max(x), .01)
+
+step=1
+fhat_model <- list(f0(support))
+fhat_datas <- f0(x)
+data_space_plot + geom_line(data=tibble(x=support, y=fhat_model[[step]], 
+                                        color='GBT'),
+                            mapping=aes(x=x,y=y,color=color))
+
+y_leftover <- y
+```
+
+- we can run this a few times to watch the model move in the directions
+  dictated by the gradients
+- PollEv.com/scottschwart658
+
+```{r gradient_boosted_trees_2}
+# https://www.statmethods.net/advstats/cart.html
+# https://www.rdocumentation.org/packages/rpart/versions/4.1-15/topics/predict.rpart
+alpha_learning_rate=0.1
+
+y_leftover <- y_leftover-fhat_datas
+
+stump <- rpart(y~x, data=tibble(x=x, y=y_leftover), 
+               control=rpart.control(maxdepth=2, minbucket=1, minsplit=2, cp=0))
+fhat_datas <- alpha_learning_rate*predict(stump) 
+fhat_model <- append(fhat_model, 
+                     list(fhat_model[[step]] + alpha_learning_rate *
+                          as.numeric(predict(stump, newdata=tibble(x=support)))))
+step = step+1
+
+data_space_plot + geom_line(data=tibble(x=support, y=fhat_model[[step]], 
+                                        color='GBT'),
+                            mapping=aes(x=x,y=y,color=color))
+
+```
+
+```{r more, include=FALSE}
+# https://www.datamentor.io/r-programming/for-loop/
+for (i in 1:200){
+  y_leftover <- y_leftover-fhat_datas
+  
+  stump <- rpart(y~x, data=tibble(x=x, y=y_leftover), 
+                 control=rpart.control(maxdepth=2, minbucket=1, 
+                                       minsplit=2, cp=0))
+  fhat_datas <- alpha_learning_rate*predict(stump) 
+  fhat_model <- append(fhat_model, 
+                       list(fhat_model[[step]] + alpha_learning_rate *
+                            as.numeric(predict(stump, newdata=tibble(x=support)))))
+  step = step+1
+  
+}
+```
+
+```{r final}
+data_space_plot + geom_line(data=tibble(x=support, y=fhat_model[[step]], 
+                                        color='GBT'),
+                            mapping=aes(x=x,y=y,color=color))
+```

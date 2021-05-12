@@ -1,0 +1,40 @@
+Class Discussion: Covid Mask Articles
+
+Relate to the uncertainty discussions from last class
+I suggest you think of "personal bias" as a perspective, or model of the world, much in the same way the modeling choices you make lead to different results
+Ex 1: the "Stats Guys" climate reconstruction differs from Dr. Mann's climate reconstructions
+Ex 2: the different covid infection models from OWID probably differed for quite a few of the counties you looked at Class 8 assignment 
+So, just as we need to question "personal bias", we should question modeling assumptions
+And we should be VERY interested in uncertainty reporting about modeling results
+If possible, it's great to see a "sensitivity analysis" of modeling choices:
+I think this is what the "stats guys" "uncertainty in climate reconstruction" actually provided for us
+
+And remember -- there is often a lot of uncertainty in "reported point estimates": these are just "best guesses"
+remember our "politico article" where the guy was mad that point estimates with huge uncertainty were not spot on
+don't do that... understand that there is uncertainty in everything
+take that into account!
+
+
+Stuff I didn't do, but could possibly be designed for controlled use that would have been more effective than the attempted "class discussion".
+
+1) we just never did this one:
+
+Read 50 Reasons to Oppose Fluoridation: http://www.fluoridealert.org/wp-content/uploads/50-reasons.pdf
+Read the Chapter on Benefits (pages 13-32) in the American Dental Associations' Fluoridation Facts publication: https://www.ada.org/~/media/ADA/Files/Fluoridation_Facts.pdf?la=en
+Come to class prepared to discuss the various (de)merits of these publications!
+
+2) here we could have explored material related to presentation I gave
+
+The Polling Industry Blows it Again: https://www.politico.com/news/2020/11/06/polling-industry-blows-it-again-434591
+Note places where the information in this article could lead to hearsay if repeated (i.e., no original source given)
+Examine the references that ARE provided as interested
+Why 2016 was wrong?: https://www.politico.com/story/2017/05/04/2016-election-pollsters-react-237975
+Wisconsin Polls on FiveThirtyEight: https://projects.fivethirtyeight.com/polls/president-general/wisconsin/
+FiveThirtyEight's WI estimation: https://projects.fivethirtyeight.com/2020-election-forecast/wisconsin/
+FiveThirtyEight's FL estimation: https://projects.fivethirtyeight.com/2020-election-forecast/florida/
+FiveThirtyEight's OH estimation: https://projects.fivethirtyeight.com/2020-election-forecast/ohio/
+Trafalgar Group Georgia: https://www.thetrafalgargroup.org/news/ga-pres-0720/
+Trafalgar Group Michigan: https://www.thetrafalgargroup.org/news/mi-pres-0820/
+https://en.wikipedia.org/wiki/Margin_of_error
+Collins V Gideon ME Senatorial race: https://projects.fivethirtyeight.com/2020-election-forecast/senate/maine/
+Salazar V Shalala FL Congressional race: https://projects.fivethirtyeight.com/2020-election-forecast/house/florida/27/

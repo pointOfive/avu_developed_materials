@@ -1,0 +1,46 @@
+\documentclass[11pt, oneside]{article}   	% use "amsart" instead of "article" for AMSLaTeX format
+\usepackage{geometry}                		% See geometry.pdf to learn the layout options. There are lots.
+\geometry{letterpaper}                   		% ... or a4paper or a5paper or ... 
+%\geometry{landscape}                		% Activate for rotated page geometry
+%\usepackage[parfill]{parskip}    		% Activate to begin paragraphs with an empty line rather than an indent
+\usepackage{graphicx}				% Use pdf, png, jpg, or eps§ with pdflatex; use eps in DVI mode
+								% TeX will automatically convert eps --> pdf in pdflatex		
+\usepackage{amssymb}
+
+%SetFonts
+
+%SetFonts
+\usepackage{amsmath}
+
+\title{Brief Article}
+\author{The Author}
+%\date{}							% Activate to display a given date or no date
+
+\begin{document}
+\maketitle
+%\section{}
+%\subsection{}
+
+\begin{align*}
+  log(p/(1-p)) &= \beta_0 + \beta_1x_1,\; say \quad \text{[and this is why the first two answers are wrong]} \\
+  p/(1-p &= e^{\beta_0 + \beta_1x_1}\\
+  p^*/(1-p^*) &= e^{\beta_0 + \beta_1(x_1+1)} \quad \text{[increase by one unit]}\\
+  p^*/(1-p^*) &= e^{\beta_0 + \beta_1x_1}e^{\beta_1} \\
+    p^*/(1-p^*) &=  log(p/(1-p)) e^{\beta_1} \quad \text{[so $\beta_1$ characterizes a multiplicative increase in the odds]}\\
+\end{align*}
+
+
+\end{document}  
+
+
+
+<p><img alt="" height="317" src="https://collab.its.virginia.edu/access/content/group/c1668d79-620b-4d6b-b0ea-b4a750a5fd98/LS3q/Screen%20Shot%202020-09-17%20at%207.57.10%20AM.png" width="600" /></p>
+
+
+<ul>
+	<li>Top answer would be true if we replace &quot;probability&quot; with &quot;log odds&quot; (and I should say &quot;amount of <em>change</em>&quot; rather than increase)</li>
+	<li>Third answer is the logit so that&#39;s wrong</li>
+	<li>But, we can use the third answer to see why the second answer is correct:<br />
+	&nbsp;</li>
+	<li>And the final answer is absolutely, patently <em><strong>WRONG</strong></em>. &nbsp;<em><u>Do not think this</u>.</em></li>
+</ul>

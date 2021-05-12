@@ -1,0 +1,202 @@
+Untitled
+,Activity count,19
+,Participant count,69
+,Average responses,71.47368421052632
+
+Choose one of the following:,Activity type,Multiple choice
+,Total responses,64
+,Unique participants,64
+,Response options,Count,Percent,Correctness
+,"I pledge that all Poll Everywhere answers I submit today will (a) be my own and represent my own opinions, and (b) I will not contribute to other students' answers while the poll is active.",64,100.0,Correct
+,I will not be taking this quiz for credit.,0,0.0,Incorrect
+
+"Since our initial ""pre-course check-in"", how many chapters ahead in the <em>Deep Learning</em> textbook have you read?",Activity type,Multiple choice
+,Total responses,66
+,Unique participants,66
+,Response options,Count,Percent
+,0,18,27.27
+,1,11,16.67
+,2,21,31.82
+,3,10,15.15
+,4,4,6.06
+,5+,2,3.03
+
+"On a 1-5 scale, from <em>Intimidated</em> to <em>Excited</em>, how do you feel about the Deep Learning textbook?",Activity type,Multiple choice
+,Total responses,65
+,Unique participants,65
+,Response options,Count,Percent
+,1 (Intimidated),6,9.23
+,2,18,27.69
+,3,18,27.69
+,4,17,26.15
+,5 (Excited),6,9.23
+
+[There's a proposal from the Student Council to move from Piazza to Slack for Class Questions]<br><br>Do you prefer a Slack Channel or Piazza Assignment Folders as the location for class questions?,Activity type,Multiple choice
+,Total responses,66
+,Unique participants,66
+,Response options,Count,Percent
+,Slack,62,93.94
+,Piazza,4,6.06
+
+"To help you keep track of your efforts (and communicate your progress to me)<br><br>the ""Week X: {Landing Page}"" tabs (on the left sidebar in Collab) give weekly homework checklist.<br><br>Select the example of this below:",Activity type,Multiple choice
+,Total responses,68
+,Unique participants,68
+,Response options,Count,Percent,Correctness
+,https://s3.amazonaws.com/polleverywhere-images/39bf4460c8484e6f9fd870e740ff34b164df2a3df1139fe1e6879d31349b3419.png?pe_description=Screen+Shot+2021-01-26+at+12.15.42+PM.png,2,2.94,Incorrect
+,https://s3.amazonaws.com/polleverywhere-images/da5ca9b6cb1a9b6155431f9425954be53725b055dc870c9b9946568b1b9a7477.png?pe_description=Screen+Shot+2021-01-25+at+2.21.50+PM.png,1,1.47,Incorrect
+,https://s3.amazonaws.com/polleverywhere-images/5744c714becf099f8e640dd2af277fa4110374ea1b8babb4e8503cca7d2ab485.png?pe_description=Screen+Shot+2021-01-25+at+11.46.24+AM.png,62,91.18,Correct
+,https://s3.amazonaws.com/polleverywhere-images/566171d4e312acf1a4d6b5d7972399433e555563999bc9abd33010eff264265c.png?pe_description=Screen+Shot+2021-01-25+at+11.47.14+AM.png,2,2.94,Incorrect
+,https://s3.amazonaws.com/polleverywhere-images/6f23417c88db387cdc6c5132d6307b88bba6b5129de60fdb65e69675389a8971.png?pe_description=Screen+Shot+2021-01-25+at+2.25.46+PM.png,0,0.0,Incorrect
+,https://s3.amazonaws.com/polleverywhere-images/bf6ff13e5234bbc500fbdb73210780717ad5ecb41f86a642689fa281424dd988.png?pe_description=Screen+Shot+2021-01-25+at+1.05.34+PM.png,1,1.47,Incorrect
+
+"Homework tasks are associated with each class day in a week<br><br>as listed in the ""Class X: {Landing Page}"" tabs (on the left sidebar in Collab).<br><br>Select the example of this below:",Activity type,Multiple choice
+,Total responses,67
+,Unique participants,67
+,Response options,Count,Percent,Correctness
+,https://s3.amazonaws.com/polleverywhere-images/39bf4460c8484e6f9fd870e740ff34b164df2a3df1139fe1e6879d31349b3419.png?pe_description=Screen+Shot+2021-01-26+at+12.15.42+PM.png,0,0.0,Incorrect
+,https://s3.amazonaws.com/polleverywhere-images/da5ca9b6cb1a9b6155431f9425954be53725b055dc870c9b9946568b1b9a7477.png?pe_description=Screen+Shot+2021-01-25+at+2.21.50+PM.png,38,56.72,Correct
+,https://s3.amazonaws.com/polleverywhere-images/5744c714becf099f8e640dd2af277fa4110374ea1b8babb4e8503cca7d2ab485.png?pe_description=Screen+Shot+2021-01-25+at+11.46.24+AM.png,8,11.94,Incorrect
+,https://s3.amazonaws.com/polleverywhere-images/566171d4e312acf1a4d6b5d7972399433e555563999bc9abd33010eff264265c.png?pe_description=Screen+Shot+2021-01-25+at+11.47.14+AM.png,13,19.4,Incorrect
+,https://s3.amazonaws.com/polleverywhere-images/6f23417c88db387cdc6c5132d6307b88bba6b5129de60fdb65e69675389a8971.png?pe_description=Screen+Shot+2021-01-25+at+2.25.46+PM.png,5,7.46,Incorrect
+,https://s3.amazonaws.com/polleverywhere-images/bf6ff13e5234bbc500fbdb73210780717ad5ecb41f86a642689fa281424dd988.png?pe_description=Screen+Shot+2021-01-25+at+1.05.34+PM.png,3,4.48,Incorrect
+
+"Assignments are given their own submission pages<br><br>as listed on ""{Assignment Landing Page}"" tabs (on the left sidebar in Collab).<br><br>Select the example of this below:",Activity type,Multiple choice
+,Total responses,67
+,Unique participants,67
+,Response options,Count,Percent,Correctness
+,https://s3.amazonaws.com/polleverywhere-images/39bf4460c8484e6f9fd870e740ff34b164df2a3df1139fe1e6879d31349b3419.png?pe_description=Screen+Shot+2021-01-26+at+12.15.42+PM.png,1,1.49,Incorrect
+,https://s3.amazonaws.com/polleverywhere-images/da5ca9b6cb1a9b6155431f9425954be53725b055dc870c9b9946568b1b9a7477.png?pe_description=Screen+Shot+2021-01-25+at+2.21.50+PM.png,1,1.49,Incorrect
+,https://s3.amazonaws.com/polleverywhere-images/5744c714becf099f8e640dd2af277fa4110374ea1b8babb4e8503cca7d2ab485.png?pe_description=Screen+Shot+2021-01-25+at+11.46.24+AM.png,0,0.0,Incorrect
+,https://s3.amazonaws.com/polleverywhere-images/566171d4e312acf1a4d6b5d7972399433e555563999bc9abd33010eff264265c.png?pe_description=Screen+Shot+2021-01-25+at+11.47.14+AM.png,37,55.22,Correct
+,https://s3.amazonaws.com/polleverywhere-images/6f23417c88db387cdc6c5132d6307b88bba6b5129de60fdb65e69675389a8971.png?pe_description=Screen+Shot+2021-01-25+at+2.25.46+PM.png,10,14.93,Incorrect
+,https://s3.amazonaws.com/polleverywhere-images/bf6ff13e5234bbc500fbdb73210780717ad5ecb41f86a642689fa281424dd988.png?pe_description=Screen+Shot+2021-01-25+at+1.05.34+PM.png,18,26.87,Incorrect
+
+Select the example below showing where you can get feedback on <em>VIDEO</em> quizzes as soon as they're completed:,Activity type,Multiple choice
+,Total responses,66
+,Unique participants,66
+,Response options,Count,Percent,Correctness
+,https://s3.amazonaws.com/polleverywhere-images/39bf4460c8484e6f9fd870e740ff34b164df2a3df1139fe1e6879d31349b3419.png?pe_description=Screen+Shot+2021-01-26+at+12.15.42+PM.png,0,0.0,Incorrect
+,https://s3.amazonaws.com/polleverywhere-images/da5ca9b6cb1a9b6155431f9425954be53725b055dc870c9b9946568b1b9a7477.png?pe_description=Screen+Shot+2021-01-25+at+2.21.50+PM.png,2,3.03,Incorrect
+,https://s3.amazonaws.com/polleverywhere-images/5744c714becf099f8e640dd2af277fa4110374ea1b8babb4e8503cca7d2ab485.png?pe_description=Screen+Shot+2021-01-25+at+11.46.24+AM.png,0,0.0,Incorrect
+,https://s3.amazonaws.com/polleverywhere-images/566171d4e312acf1a4d6b5d7972399433e555563999bc9abd33010eff264265c.png?pe_description=Screen+Shot+2021-01-25+at+11.47.14+AM.png,2,3.03,Incorrect
+,https://s3.amazonaws.com/polleverywhere-images/6f23417c88db387cdc6c5132d6307b88bba6b5129de60fdb65e69675389a8971.png?pe_description=Screen+Shot+2021-01-25+at+2.25.46+PM.png,55,83.33,Correct
+,https://s3.amazonaws.com/polleverywhere-images/bf6ff13e5234bbc500fbdb73210780717ad5ecb41f86a642689fa281424dd988.png?pe_description=Screen+Shot+2021-01-25+at+1.05.34+PM.png,7,10.61,Correct
+
+"In addition to the landing pages (on the left sidebar in Collab) and the calendar in the syllabus, select (from the options below) the other place where important course dates can be reviewed:",Activity type,Multiple choice
+,Total responses,67
+,Unique participants,67
+,Response options,Count,Percent,Correctness
+,https://s3.amazonaws.com/polleverywhere-images/39bf4460c8484e6f9fd870e740ff34b164df2a3df1139fe1e6879d31349b3419.png?pe_description=Screen+Shot+2021-01-26+at+12.15.42+PM.png,64,95.52,Correct
+,https://s3.amazonaws.com/polleverywhere-images/da5ca9b6cb1a9b6155431f9425954be53725b055dc870c9b9946568b1b9a7477.png?pe_description=Screen+Shot+2021-01-25+at+2.21.50+PM.png,1,1.49,Incorrect
+,https://s3.amazonaws.com/polleverywhere-images/5744c714becf099f8e640dd2af277fa4110374ea1b8babb4e8503cca7d2ab485.png?pe_description=Screen+Shot+2021-01-25+at+11.46.24+AM.png,1,1.49,Incorrect
+,https://s3.amazonaws.com/polleverywhere-images/566171d4e312acf1a4d6b5d7972399433e555563999bc9abd33010eff264265c.png?pe_description=Screen+Shot+2021-01-25+at+11.47.14+AM.png,1,1.49,Incorrect
+,https://s3.amazonaws.com/polleverywhere-images/6f23417c88db387cdc6c5132d6307b88bba6b5129de60fdb65e69675389a8971.png?pe_description=Screen+Shot+2021-01-25+at+2.25.46+PM.png,0,0.0,Incorrect
+,https://s3.amazonaws.com/polleverywhere-images/bf6ff13e5234bbc500fbdb73210780717ad5ecb41f86a642689fa281424dd988.png?pe_description=Screen+Shot+2021-01-25+at+1.05.34+PM.png,0,0.0,Incorrect
+
+Non-Quiz Assignments,Activity type,Multiple choice
+,Total responses,66
+,Unique participants,66
+,Response options,Count,Percent,Correctness
+,"can be turned in after the due date, with a loss of 10% per day late",1,1.52,Incorrect
+,"can be turned in up to 3 days after the due date, with a loss of 10% per day late",63,95.45,Correct
+,cannot be turned in for any credit after the due date,2,3.03,Incorrect
+
+Video Quizzes,Activity type,Multiple choice
+,Total responses,67
+,Unique participants,67
+,Response options,Count,Percent,Correctness
+,"are graded if submitted by Monday, 3:30pm EST the day they're due",66,98.51,Correct
+,"are graded if submitted by Midnight Monday, the week after they are assigned",1,1.49,Incorrect
+,can be graded for partial credit even if not submitted by the due date,0,0.0,Incorrect
+
+How many tries do you get for a Video Quiz?,Activity type,Multiple choice
+,Total responses,66
+,Unique participants,66
+,Response options,Count,Percent,Correctness
+,1,66,100.0,Correct
+,2,0,0.0,Incorrect
+,3,0,0.0,Incorrect
+
+Select ALL that apply to In-Class Textbook Quizzes:,Activity type,Multiple choice
+,Total responses,199
+,Unique participants,67
+,Response options,Count,Percent,Correctness
+,"Textbook Quizzes taken ""in-class"" entail participation grades scored ""on a curve"" chosen for each quiz at the discretion of the professor",66,33.17,Correct
+,Textbook Quizzes may alternatively be completed PRIOR to the live class in a survey format and scored by raw accuracy rate (without a curve),67,33.67,Correct
+,"There are no ""extensions"" to In-Class Textbook Quizzes",66,33.17,Correct
+
+How many tries do you get for a Textbook Quiz?,Activity type,Multiple choice
+,Total responses,67
+,Unique participants,67
+,Response options,Count,Percent,Correctness
+,1,67,100.0,Correct
+,2,0,0.0,Incorrect
+,3,0,0.0,Incorrect
+
+"Addressing a due date ""after the fact""",Activity type,Multiple choice
+,Total responses,67
+,Unique participants,67
+,Response options,Count,Percent,Correctness
+,is totally fine,0,0.0,Incorrect
+,is likely going to be an unpleasant and unprofitable experience,67,100.0,Correct
+
+Student Collaboration (PART I),Activity type,Multiple choice
+,Total responses,67
+,Unique participants,67
+,Response options,Count,Percent,Correctness
+,"is 100% encouraged, except where EXPLICITLY specified",21,31.34,Correct
+,"is 110% encouraged, except where EXPLICITLY specified",0,0.0,Correct
+,"is 1000% encouraged, except where EXPLICITLY specified",45,67.16,Correct
+,might be a trap and excuse to create honor code violation charges,1,1.49,Incorrect
+
+Student Collaboration (PART II),Activity type,Multiple choice
+,Total responses,67
+,Unique participants,67
+,Response options,Count,Percent,Correctness
+,should be reported as if it were as reference or citation,67,100.0,Correct
+,should be kept a secret and never cited or admitted to,0,0.0,Incorrect
+
+"Utilized Resources (web pages, etc.)",Activity type,Multiple choice
+,Total responses,63
+,Unique participants,63
+,Response options,Count,Percent,Correctness
+,should be reported as if it were as reference or citation,63,100.0,Correct
+,should be kept a secret and never cited or admitted to,0,0.0,Incorrect
+
+Are you confused or unsure about something?,Activity type,Q&A
+,Total responses,33
+,Unique participants,33
+,Responses,Upvotes,Downvotes
+,Nope. 1000% great.,0,0
+,no,0,0
+,No,0,0
+,no,0,0
+,Can I get a key for the letters in the points schedule table?,2,0
+,No,0,0
+,nope,0,0
+,No,0,0
+,no,0,0
+,no,0,0
+,no,0,0
+,not yet,1,0
+,no,0,0
+,no,0,0
+,NO,0,0
+,not really,0,0
+,Not yet,0,0
+,"No, looking forward to the class!",0,0
+,"If you take the textbook quiz before class and show up to class, should you take it in class as well?",2,0
+,no,0,0
+,no,1,0
+,NoPe,0,0
+,no,1,0
+,no,0,0
+,no,0,0
+,no,0,0
+,no,0,0
+,no,0,0
+,no,0,0
+,Nope. 1000% great.,7,0
+,No,1,0
+,NOpe,2,0
+,no,31,0

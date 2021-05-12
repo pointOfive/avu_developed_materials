@@ -1,0 +1,28 @@
+
+Nature of Lectures?
+- 40% code walk throughs
+- 40% class polls/quizzes 
+- 20% slides
+
+Nature/Expectation of Learning
+- Read and build your own notes
+- Code, code, code
+
+Nature of grades?
+- project-based course
+- No math proofs
+
+Relatiionship to Bayes?
+- Immedaitely nothing except coding style
+
+Pre-course review?  Math?  Why?
+
+- Available in email from Lindsay
+- 2&4 (+ 5 for fun) to lighten your initial workload out of the gates
+- 6-8 if you're gettng interested/feel like you want/need to get ahead
+
+Little to no linalg/coding?
+- linalg: score what you know about the items in ch 2, see if youtube helps you get an idea about them.
+- coding: online python tutorals?  Online tensorflow/keras tutorials?
+
+Office Hours?

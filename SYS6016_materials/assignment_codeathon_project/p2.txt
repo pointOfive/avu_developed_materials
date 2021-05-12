@@ -1,0 +1,38 @@
+
+Project Part 2: Writing a Proposal Using the Formatted Conference Template
+Due: 3/8 3:30PM EST (before Class 11)
+Late: -10/day (after 3:30PM EST beginning with the start of Class 11)
+Value: 20 points (2% of class grade)
+ML4VA EPISODE 2: THE STAKE HOLDER
+
+In the project proposal, you’ll pick a project idea to work on early. If your proposed project will be done jointly with a different class’s project, you should obtain approval from the other instructor and approval from us.
+
+DIRECTIONS
+
+You will continue to work on this document for the checkpoint and final report, so make sure to get familiar with the template and how to write the research manuscript. Your project proposal should include the following information:
+
+Motivation: What problem are you tackling? Is this an application or a theoretical result?
+Dataset: Presenting a URL to a dataset you found. 
+TFDS: https://homl.info/tfds (https://www.tensorflow.org/datasets/catalog/overview)
+Google: https://datasetsearch.research.google.com/
+UC Irvine Machine Learning Repository: http://archive.ics.uci.edu/ml/
+Kaggle datasets: https://www.kaggle.com/datasets
+Amazon’s AWS datasets: https://registry.opendata.aws/
+Data Portals: http://dataportals.org/
+OpenDataMonitor: http://opendatamonitor.eu/
+Quandl: http://quandl.com/
+Wikipedia’s list of Machine Learning datasets: https://homl.info/9 (https://en.wikipedia.org/wiki/List_of_datasets_for_machine-learning_research)
+Quora.com: https://homl.info/10 (https://www.quora.com/Where-can-I-find-large-datasets-open-to-the-public)
+The datasets subreddit: https://www.reddit.com/r/datasets
+
+Related work: At least one example of prior methodology on the topic is a valuable addition (see literature review on M4).
+Intended experiments: What experiments are you planning to run? How do you plan to evaluate your machine learning algorithm?
+SUBMISSION INSTRUCTIONS
+
+Your proposal should be submitted as a PDF document (two page maximum) and include: 
+
+The title of the project
+Your full name and UVA ID
+A 300–500 word description of your proposed project
+Name your PDF file yourcomputingID_topicTitle_Proposal.pdf
+Grading: The proposal is mainly intended to make sure you decide on a project topic and get feedback from TAs early (if needed). As long as your proposal follows the instructions above and the project seems to have been thought out with a reasonable plan, you should do well on the proposal.

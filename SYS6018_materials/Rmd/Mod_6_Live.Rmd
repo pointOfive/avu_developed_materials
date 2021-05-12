@@ -1,0 +1,293 @@
+---
+title: "Mod_6_Live"
+author: "Schwartz"
+date: "10/04/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      fig.align = "center",
+                      out.width = "80%")
+```
+
+## Announcements
+- Project due Sunday
+  - I have had numerous requests for extensions
+  - I have granted none of them to date
+- References/Citations
+  - If you use something, cite it
+- hackathons! Etc.
+  - https://datascience.virginia.edu/pages/hacking-human-rights
+  - https://datascience.virginia.edu/events
+  - https://datascience.virginia.edu/pages/datapalooza-2020
+- Motivations for lecture
+  - Chapter 7 is *mostly* about making `lm` flexible (7.1)
+    - with a **splines** *basis function* approach being the central focus (7.4)
+      - polynomial terms as a basis (7.2), and
+      - step functions as a basis (7.3) 
+        were just used to build towards the spline basis approach (7.4)
+    - We say *mostly*, above, b/c smoothing splines(7.5)/loess(7.6) are distinct 
+      - though the former certainly builds on splines, while the latter is 
+        often indistinguishable in practice from the former... so they too
+        are very "spline-y"
+      - and using a GAM (7.7) fitting framework they can be added into `lm`
+        anyway to produce some additional flexibility
+  - So, I'm trying to explain truncated power basis functions
+    - and then discuss loess and smoothing splines
+    - and on the way we'll be able to address the question that came up at the
+      end of the last live session and was discussed further on the boards;
+      - namely, how a model is simultaneously too high variance or too high bias 
+        *at the same time*
+  - The code below doesn't address stuff about GAMs, and other things details
+    - so we'll do some of those ideas with some poll questions now
+
+## My questions
+
+PollEv.com/scottschwart658
+
+### setup
+
+```{r data}
+
+x <- seq(-50,50,0.1)
+
+beta_0_0 <- 1.0
+beta_1_0 <- 1.0
+beta_2_0 <- 0.1
+beta_2_1 <- 0.1
+beta_2_2 <- 0.1
+
+truncated_power_basis <- function(x,k,p=3){
+  ((x-k)*(x>k))^p
+}
+
+```
+
+
+### setup
+
+```{r ridge_shiny}
+
+library(tidyverse)
+library(shiny)
+library(latex2exp)
+
+
+# https://shiny.rstudio.com/gallery/mathjax.html
+  
+
+ui <- fluidPage(
+  titlePanel("Splines"),
+  sidebarLayout(sidebarPanel(
+    sliderInput(inputId="knot_1", label="\\( \\LARGE \\textrm{first knot} \\; \\epsilon_1 \\)", 
+                min=-49, max=-21, value=-35, step=0.1),
+    sliderInput(inputId="knot_2", label=" \\( \\LARGE \\textrm{second knot} \\; \\epsilon_2 \\)", 
+                min=-20, max=20, value=0, step=0.1),
+    sliderInput(inputId="knot_3", label="\\( \\LARGE \\textrm{third knot} \\; \\epsilon_3 \\)", 
+                min=21, max=49, value=35, step=0.1),
+    sliderInput(inputId="beta_0", label=withMathJax("\\( \\LARGE\\beta_0 \\)"), 
+                min=-100000, max=100000, value=0),
+    sliderInput(inputId="beta_1", label=withMathJax("\\( \\LARGE \\beta_1 x \\)"), 
+                min=-10000, max=10000, value=0),
+    sliderInput(inputId="beta_2", label=withMathJax("\\( \\LARGE \\beta_2 x^2 \\)"), 
+                min=-1000, max=1000, value=0, step = 0.1),
+    sliderInput(inputId="beta_3", label=withMathJax("\\( \\LARGE \\beta_3 x^3 \\)"), 
+                min=-1, max=1, value=0, step=0.01),
+    sliderInput(inputId="beta_3_1", label=withMathJax("\\( \\LARGE \\beta_{3,1} (x-\\epsilon_1)^3 1_{[x>\\epsilon_1]} \\)"), 
+                min=-10, max=10, value=0, step=0.1),
+    sliderInput(inputId="beta_3_2", label=withMathJax("\\( \\LARGE \\beta_{3,2} (x-\\epsilon_2)^3 1_{[x>\\epsilon_2]} \\)"), 
+                min=-10, max=10, value=0, step=0.1),
+    sliderInput(inputId="beta_3_3", label=withMathJax("\\( \\LARGE \\beta_{3,3} (x-\\epsilon_3)^3 1_{[x>\\epsilon_3]} \\)"), 
+                min=-100, max=100, value=0, step=1),
+    actionButton("sample", "\\( \\huge Sample \\)"),
+    sliderInput(inputId="n", label=withMathJax("\\( \\LARGE n \\)"), 
+                min=1, max=1000, value=100),
+    sliderInput(inputId="sd", label=withMathJax("\\( \\LARGE \\sigma \\)"), 
+                min=0,  max=1, value=0.1, step=0.001),
+    sliderInput(inputId="span", label="\\( \\LARGE \\textrm{loess span}\\)", 
+                min=0.001, max=1, value=0.1, step=0.001),
+    sliderInput(inputId="lambda", label="\\( \\large \\textrm{smoothing spline penalty} \\)", 
+                min=-1.5, max=3, value=0.1, step=0.001),
+    radioButtons(inputId="fit", label="\\( \\huge \\textrm{fit} \\)", 
+                 c(none='none', loess='loess', 
+                   `smoothing spline`='smoothing.spline'))),
+    mainPanel(plotOutput(outputId="blank"),
+              plotOutput(outputId="splines"),
+              plotOutput(outputId="data"),
+              plotOutput(outputId="derivatives"))))
+
+server <- function(input, output) {
+  output$blank <- renderPlot({})
+  output$splines <- renderPlot({
+    
+    k1 <- input$knot_1
+    k2 <- input$knot_2
+    k3 <- input$knot_3
+    B_0 <- input$beta_0
+    B_1 <- input$beta_1
+    B_2 <- input$beta_2
+    B_3 <- input$beta_3
+    B_3_1 <- input$beta_3_1
+    B_3_2 <- input$beta_3_2
+    B_3_3 <- input$beta_3_3
+    y <- B_0 + B_1*x + B_2*x^2 + B_3*x^3 +
+         B_3_1*truncated_power_basis(x, k1) +
+         B_3_2*truncated_power_basis(x, k2) +
+         B_3_3*truncated_power_basis(x, k3)
+
+    # http://www.sthda.com/english/wiki/ggplot2-line-types-how-to-change-line-types-of-a-graph-in-r-software
+    ggplot(tibble(x=x,y=y)) + geom_line(aes(x,y), size=2) +
+      geom_line(data=tibble(x=c(k1,k1), y=c(min(y),max(y))), 
+                mapping=aes(x,y), linetype = "dashed") +
+      geom_line(data=tibble(x=c(k2,k2), y=c(min(y),max(y))), 
+                mapping=aes(x,y), linetype = "dashed") +
+      geom_line(data=tibble(x=c(k3,k3), y=c(min(y),max(y))), 
+                mapping=aes(x,y), linetype = "dashed")
+      
+    
+  })
+
+  # https://shiny.rstudio.com/articles/action-buttons.html
+  samp <- reactiveValues(y=NULL, x=NULL, t=NULL)
+  
+  observeEvent(input$sample, {
+    n <- input$n
+    xsamp <- runif(n, min(x), max(x))
+    samp$x <- xsamp
+    k1 <- input$knot_1
+    k2 <- input$knot_2
+    k3 <- input$knot_3
+    B_0  <- input$beta_0
+    B_1  <- input$beta_1
+    B_2  <- input$beta_2
+    B_3  <- input$beta_3
+    B_3_1 <- input$beta_3_1
+    B_3_2 <- input$beta_3_2
+    B_3_3 <- input$beta_3_3
+    ysamp <- B_0 + B_1*xsamp + B_2*xsamp^2 + B_3*xsamp^3 +
+             B_3_1*truncated_power_basis(xsamp, k1) +
+             B_3_2*truncated_power_basis(xsamp, k2) +
+             B_3_3*truncated_power_basis(xsamp, k3)
+    samp$t <- B_0 + B_1*x + B_2*x^2 + B_3*x^3 +
+              B_3_1*truncated_power_basis(x, k1) +
+              B_3_2*truncated_power_basis(x, k2) +
+              B_3_3*truncated_power_basis(x, k3)
+    
+    samp$y <- ysamp + rnorm(length(xsamp), sd=input$sd*(max(ysamp)-min(ysamp)))
+  })
+
+  output$data <- renderPlot({
+    if (is.null(samp$y)) return()
+    p <- ggplot(tibble(x=samp$x, y=samp$y), mapping=aes(x,y)) + geom_point()
+    if (input$fit == 'loess'){
+      p <- p + geom_smooth(formula='y~x', method='loess', 
+                           span=input$span, size=3)
+    }
+    if (input$fit == 'smoothing.spline'){
+      p <- p + geom_smooth(formula='y~x', method='loess', 
+                           span=input$span, size=3)
+      smoothing_spline <- smooth.spline(x=samp$x, y=samp$y, spar=input$lambda,
+                                        all.knots=TRUE)
+      p <- p + geom_line(tibble(x=smoothing_spline$x, y=smoothing_spline$y),
+                         mapping=aes(x,y), size=3, color='yellow')
+    }
+    p + geom_line(data=tibble(x=x,y=samp$t), mapping=aes(x,y), size=2)
+  })
+
+  output$derivatives <- renderPlot({
+    if (input$fit == 'smoothing.spline'){
+      smoothing_spline <- smooth.spline(x=samp$x, y=samp$y, spar=input$lambda,
+                                        all.knots=TRUE)
+      f <- smoothing_spline$y
+      n <- length(f)
+      x <- smoothing_spline$x
+      f_prime <- (f[2:n]-f[1:(n-1)])/(x[2:n]-x[1:(n-1)])
+      x <- x[1:(n-1)]
+      n <- n-1
+      f_double_prime <- abs((f_prime[2:n]-f_prime[1:(n-1)])/(x[2:n]-x[1:(n-1)]))
+      f_double_prime <- mean(f_double_prime)*f_double_prime/max(f_double_prime)
+      
+      x_double_prime <- x[1:(n-1)]
+      
+      
+      ggplot(tibble(x=x, y=f_prime)) + 
+        geom_line(aes(x=x,y=y,color="g'"), size=2, alpha=0.75) +
+        geom_line(tibble(x=x_double_prime, y=f_double_prime),
+                  mapping=aes(x=x,y=y,color="|g''|"), size=2, alpha=0.75) +
+        theme(legend.text=element_text(size=30), 
+              plot.title=element_text(size=30)) +
+        scale_color_manual(values=c('blue','black')) +
+        ggtitle(TeX("$\\sum_i \\left(y_i-g(x_i)\\right)^2 + \\lambda \\int g''(t)^2 dt $"))
+      # https://stackoverflow.com/questions/20407773/increase-legend-font-size-ggplot2
+      # https://cran.r-project.org/web/packages/latex2exp/vignettes/using-latex2exp.html
+    }
+    
+  })
+  
+  
+}
+
+shinyApp(ui=ui, server=server)
+```
+
+1. what is slope and intercept doing?
+2. you have to choose your knots... how?
+3. what is strange about a parabola/quadratic 
+  - and the line?
+  - and the cubic?
+      - these are all *just shapes*!
+4. how do they play with (i.e, dominate) each other?
+5. look at what truncated power basis functions are
+  - consider the third knot
+  - or just second, or just first... 
+    - so we're just smoothly adding together cubic growths
+5. what does this get us?
+  - answer:
+    - piecewise 3rd order polynomial functions twice differentiable continuous
+  - truncated power functions form one basis to create these 
+  - B-splines are another way to to create these
+6. let's see what these can do!
+7. now let's estimate it loess
+  - how does this work?
+    - uses local points with decaying weights the further away the points are
+8. now let's estimate it with a smoothing spline
+  - what is a smoothing spline?
+    - natural cubic spline with knots at every point 
+    - shrunk based on a smoothness penalty
+9. look a little bit at how the smoothing spline works
+10. loess is more robust than smoothing splines
+11. In the same model, look at how
+  - increasing flexibility to reduce bias simultaneously overly increases variance
+  - increasing bias to reduce high variance simultaneously leads to overly high bias
+    - so you can't always get variance and bias *just right* in the same model
+12. Notice that this is a function of signal in the data
+13. And unfortunately the smoothing spline can't fix it
+  - even though it is a (natural) cubic spline with every possible knot...
+  - so it seems like it should be able to recover a nested model...
+  - but shrinkage regularization doesn't behave in a "truth" kind of way
+    - it's more raw and animalistic... it just robotically responds to stimulus
+      - i.e., large magnitudes just get shrunk to increase smoothness
+
+
+```{r basis_functions}
+library(plotly)
+
+x1 <- outer(seq(-3,3,0.01), seq(-3,3,0.01)^2, function(x, y) x )
+x2 <- outer(seq(-3,3,0.01), seq(-3,3,0.01)^2, function(x, y) y )
+plot_ly(x=x1,y=x2,z=x1+x2, type='surface') %>%
+  add_trace(x=seq(-3,3,0.01),y=seq(-3,3,0.01)^2,
+            z=seq(-3,3,0.01)+seq(-3,3,0.01)^2, type='scatter3d', mode='markers') %>%
+  add_trace(x=seq(-3,3,0.01),y=seq(-3,3,0.01)^2,
+            z=-1, type='scatter3d', mode='markers', marker=list(color="black"))
+
+# basis function for indicators?
+```
+
+
+
+## My questions
+
+PollEv.com/scottschwart658
+
+## Your questions

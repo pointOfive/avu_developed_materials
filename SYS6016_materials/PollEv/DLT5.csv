@@ -1,0 +1,425 @@
+Untitled
+,Activity count,23
+,Participant count,69
+,Average responses,75.69565217391305
+
+Choose one of the following:,Activity type,Multiple choice
+,Total responses,67
+,Unique participants,67
+,Response options,Count,Percent,Correctness
+,"I pledge that all Poll Everywhere answers I submit today will (a) be my own and represent my own understandings, and (b) I will not contribute to other students' answers while the poll is active.",67,100.0,Correct
+,I will not be taking this quiz for credit.,0,0.0,Incorrect
+
+"$$\hat y_i = \beta_0 +  x_i^T\beta_1, i=1,\cdots,n \quad$$ and $$\quad \hat y_i = b + w^Tx_i, i=1,\cdots,m \quad$$ are interchangeable",Activity type,Multiple choice
+,Total responses,68
+,Unique participants,68
+,Response options,Count,Percent,Correctness
+,True,47,69.12,Correct
+,False,21,30.88,Incorrect
+
+Model fitting implies $$E[\text{test error}] > E[\text{training error}]$$.<br><br>Failing to minimizing $$E[\text{training error}]$$ is called __________ while failing to minimize $$E[\text{test error}]-E[\text{training error}]$$ is called _________,Activity type,Multiple choice
+,Total responses,68
+,Unique participants,68
+,Response options,Count,Percent,Correctness
+,underfitting; overfitting,64,94.12,Correct
+,"overfitting, underfitting",4,5.88,Incorrect
+
+The purpose of <em>Regularization</em> is to,Activity type,Multiple choice
+,Total responses,68
+,Unique participants,68
+,Response options,Count,Percent,Correctness
+,avoid overfitting,53,77.94,Correct
+,minimize $$E[\text{test error}]-E[\text{training error}]$$,15,22.06,Correct
+
+KNN would be a _____ choice for this type of data,Activity type,Multiple choice
+,Total responses,67
+,Unique participants,67
+,Response options,Count,Percent,Correctness
+,great,21,31.34,Incorrect
+,poor,46,68.66,Correct
+
+Why?,Activity type,Q&A
+,Total responses,60
+,Unique participants,58
+,Responses,Upvotes,Downvotes
+,The euclidian distance between data points is not a great distinguishing feature.,0,0
+,"KNN will assign prediction to the class most common among k nearest neighbors, and there would be incorrect classifications based on the data points I can see",0,0
+,might get wrong groups,1,0
+,"Some data points are so close but belonging to different groups, KNN may not differentiate them",0,0
+,Feels like a KNN where k=3 would be a solid classifier given the red/blue boundary but it likely could be a poor classifier due to data limitations,1,0
+,KNN will struggle with the middle portion of the chart,0,0
+,Hard to figure out which point belongs to a class which cause  data is limited,0,0
+,KNN does not allow error,0,0
+,"I believe knn is better when the graph is more densely populated, ie not spread out.",3,0
+,KNN needs data points to be gathered in different distance,0,0
+,Center two points will be grouped as one class,1,0
+,not enough data for splits,0,0
+,Too little data,0,0
+,not enough points?,0,0
+,"There appears to be a clear linear boundry between the classes, why not use it?",0,0
+,K Nearest Neighbors would see that the two middle points are closest however they are within visually different categories. Also the distance between the clusters are very far so depending on what evaluation metric is used can be misleading.,5,0
+,The two middle points go well together but none of the others seem wisely grouped with any others. I'm not sure if there should be any clustering,2,0
+,The two middle points would throw off the data clustering,1,0
+,The value of k would have to be very small to be effective due to the size of the data.,1,0
+,Not enough data points in the graph,1,0
+,It would be hard to put data into separate groups that are meaningful,1,0
+,Equal distance between points of different clusters,0,0
+,Proximity does  not differentiate the least clear points in the middle,2,0
+,There are cases near the border for both sides,0,0
+,The points in the middle of the plot I believe would categorize any new test point incorrectly or inconclusively,1,0
+,KNN would be a poor choice due to a lack of data points and close middle points,2,0
+,two middle points are too close,0,0
+,Maybe because it has few data points,0,0
+,there is a simpler model,1,0
+,Hard to figure out which feature belongs to which cause not enough data points,0,0
+,"Not enough data points, and they are too evenly spread out",1,0
+,not enough datapoints for the dimensions,0,0
+,KNN is a poor choice because the two middle points will probably be misclassified for small K values,1,0
+,not smoothed boundaries.,0,0
+,there are not enough points,0,0
+,"Because there were two points near the middle of the graph that were near each other, but belonged in different classes.",4,0
+,KNN is a poor choice because there are not enough data points that share similarities.,1,0
+,The middle points are closer to each other than they are to the outside points,0,0
+,Not enough data,0,0
+,"because the distribution of the point is far away, also not enough points",0,0
+,Not enough data,1,0
+,not enough data points on the plot,1,0
+,"If k = 1, it would be great, but since there is a linear decision boundary, it would not do well if k>1",0,0
+,The data are so limited,6,0
+,"There seems to be more than two neighborhoods, but there are only two groups.",1,0
+,Small data size.,2,0
+,You can use a decision tree to have a better split,0,0
+,Because the choice of k seems very subjective based on the data,1,0
+,some points are too close to each other?,1,0
+,The two points in the middle have the shortest distance apart yet they are in different clusters,1,0
+,Knn can't tell which feature is most important,2,0
+,A simple linear decision boundary would be sufficient (on the x axis variable),0,0
+,Less data,1,0
+,"Those middle two points would be classified the same, but they're different",1,0
+,The data is seperated and doesnt look like it has a natural clustering to it.,0,0
+,KNN does not generalize well to small data sets,2,0
+,Few data points,1,0
+,"The two middle points are closest, so it will try to group them.",19,0
+,Very few data points,1,0
+,Not enough data points??,48,0
+
+A Decision Tree would be an _____ choice for this type of data,Activity type,Multiple choice
+,Total responses,68
+,Unique participants,68
+,Response options,Count,Percent,Correctness
+,excellent,25,36.76,Incorrect
+,inefficient,43,63.24,Correct
+
+Why?,Activity type,Q&A
+,Total responses,24
+,Unique participants,23
+,Responses,Upvotes,Downvotes
+,"Decision trees look at one variable at a time, but the boundary is along a diagonal combination of both variables",0,0
+,One dimensional,0,0
+,Decision trees subdivide into squares,0,0
+,"linear nature of the data, decision trees are better for non-linear structure",0,0
+,"Decision trees only work on the axis, so up-down left-right, and that line on the x=y plane is pretty rough for it",0,0
+,DT looks at one axis at a time and would have to make lots of branches to decide for this diagonal shape,0,0
+,The classification is split by a linear boundary,0,0
+,the dividing line (decision boundary) is a linear line that is a combination of x and y,0,0
+,"Points are not well separated into rectangular structures, so its likely to overfit",1,0
+,Classes are split along the diagonal,0,0
+,The decision boundary have to align either either x or y axis,1,0
+,Separation is not aligned with the dimensions of the 2D space,0,0
+,Decision boundary doesn't follow an axis,1,0
+,It would have difficulty classifying points on the diagonal,0,0
+,There's only one characteristic to break on and a poor decision boundary,0,0
+,it is only one decision (above/below line),3,0
+,There is a linear function that closely maps the boundary,0,0
+,Because of the diagonal decision boundary,3,0
+,Because the classes are nearly linearly separable. Use a linear model.,4,0
+,similar X ranges for similar Y values,1,0
+,RF will overfit fuzzy overlapping decision boundary,0,0
+,"linearly separable, and trees are better for non-linear structures",16,0
+,y > x is not modeled well in decision trees.,3,0
+,Decision boundary is linear,49,0
+
+"The true limitation of Decision Trees and KNN (and, for that matter, template matching methodologies) is",Activity type,Multiple choice
+,Total responses,68
+,Unique participants,68
+,Response options,Count,Percent,Correctness
+,"their ""smoothness"", or ""local constancy"" prior",25,36.76,Correct
+,the non-smooth nature of their feature space region partitions,28,41.18,Incorrect
+,the heavily parametric nature of the structure of their predictions,10,14.71,Incorrect
+,"that at their finest levels they are, in fact, only linear models",5,7.35,Incorrect
+
+This is,Activity type,Multiple choice
+,Total responses,68
+,Unique participants,68
+,Response options,Count,Percent,Correctness
+,a glamor shot session,3,4.41,Incorrect
+,a cartesian subspace of a high dimensional space,56,82.35,Correct
+,a man if old,8,11.76,Correct
+,evidence that big brother is watching,1,1.47,Incorrect
+
+Which of the following are potential benefits available from Deep Learning?,Activity type,Multiple choice
+,Total responses,242
+,Unique participants,69
+,Response options,Count,Percent,Correctness
+,"Removing the ""smoothness"", or ""local consistency"" prior",62,25.62,Correct
+,Identifying intrinsically meaningful (often lower dimensional) representations of feature space,58,23.97,Correct
+,Providing a richer set of more flexible nonlinear models with improved generalization ability,64,26.45,Correct
+,Combating the curse of dimensionality by seeking nonlocal generalizations,58,23.97,Correct
+
+The model fitting algorithm powering nearly all Deep Learning methodology is,Activity type,Open ended
+,Total responses,75
+,Unique participants,68
+,Responses
+,Maximum Likelihood Method
+,Backpropagation with gradient descent
+,gradient decent
+,Gaussian model
+,"Represent the data, add a penalty function, validate the model"
+,regularization
+,KNN
+,curve fitting
+,supervised learning ( I don't know what this question means)
+,RNN
+,machine learning algorithm
+,maximum likelihood estimation
+,Gradient descent algorithm
+,"Experience, Task, Performance? with data set, cost function, optimization, and model specs"
+,Neural network
+,"Back propagation, or stochastic gradient descendent"
+,"probably not perfect, and therefore you should be able to explain the limitations and potential pitfalls - RMSE"
+,regression
+,Gradient Descent
+,"Representation of data (and, with supervision, labels), cost function, optimization procedure (closed or iterative), model specification"
+,"neural network (ANN, FFN, KNN, etc. )"
+,manifold learning
+,xgboost?
+,backward propagation
+,backpropagation?
+,gradient descent
+,feed forward and backpropagation
+,sparse representation and independent representations
+,Gradient descent
+,gradient method
+,non linear activation functions (sigmoid or relu)
+,Back-propagation on loss functions to efficiently compute gradient descent.
+,stochastic gradient descent
+,Stochastic Gradient Descent
+,stochastic gradient descent
+,Neural Network
+,gradient descent
+,Backpropagation
+,stochastic gradient descent
+,Neural Networks?
+,stochastic gradient descent
+,Supervised
+,reinforcement learning
+,gradient decent
+,A gradient decent algorithm
+,stochastic gradient descent
+,low-dimensional representations
+,a neural network
+,Gradient descent
+,stochastic gradient descent
+,gradient descent
+,Gradient descent
+,gradient descent
+,stochastic gradient descent
+,gradient descent
+,Stochastic Gradient Descent
+,stochastic GD
+,stochastic gradient descent
+,stochastic gradient descent.
+,neural nets
+,gradient descent
+,backpropogation
+,logistic regression
+,Stochastic gradient descent!
+,gradient descent
+,Stochastic Gradient Descent
+,Stochastic gradient descent
+,Stochastic Gradient Descent (SGD)
+,stochastic gradient descent
+,optimization algorithm
+,Gradient descent
+,stochastic gradient descent
+,gradient descent
+,Stochastic Gradient Descent
+,gradient descent
+
+Why?,Activity type,Q&A
+,Total responses,25
+,Unique participants,23
+,Responses,Upvotes,Downvotes
+,Because the stochastic gradient descent is an iterative method for optimizing an objective function,0,0
+,"stochastic gradient descent, it's usually pretty good at arriving a quite fine level of the cost function fairly quickly",0,0
+,"It's faster, but not necessarily optimal, compared to regular gradient descent",0,0
+,Can be estimated using a small set of samples and it scales well,0,0
+,Stochastic Gradient Descent,0,0
+,computationally efficient,0,0
+,SGD samples mini batches and is way more efficient from a computational standpoint,0,0
+,Stochastic Gradient Descent,0,0
+,"Stochastic gradient descent approximates the expectation with a minibatch of samples, less computationally expensive",1,0
+,"its computationally feasible and its good at finding ""a good enough answer""",3,0
+,"Gradient descent takes too long as it takes the entire subspace at each step. However, for stochastic gradient descent it will take iid samples for each step so it will save computational power",11,0
+,backprop which uses the gradient I think,0,0
+,O(1) algorithm,1,0
+,Stochastic Gradient Descent,8,0
+,backpropagation,0,0
+,Gradient descent  relies on the entire dataset and is computationally expensive,1,0
+,"When combined with backpropogation, stochastic gradient descent is a great way to reweight",2,0
+,stochastic gradient descent,6,0
+,stochastic gradient descent,15,0
+,Back-propagation on loss functions to efficiently compute gradient descent.,1,0
+,because it lets you quickly find a minimum or good enough low point,1,0
+,SGD scales really well,29,0
+,gradient descent algorithm,1,0
+,gradient descent,0,0
+,gradient descent...?,10,0
+
+What are the four components of an ML algorithm?,Activity type,Q&A
+,Total responses,33
+,Unique participants,23
+,Responses,Upvotes,Downvotes
+,minimizing cost functions,0,0
+,"data, cost, model, optimizer",1,0
+,"data, cost function, loss, model",2,0
+,loss (objective) functions,1,0
+,optimizer,0,0
+,"data set, , cost func, opt, model",2,0
+,model,1,0
+,loss function,0,0
+,layers (combined into network),0,0
+,optimixation,0,0
+,"Data, Model, Cost Function, Optimization Function",6,0
+,"Dataset, cost function, optimizer, model",1,0
+,"Dataset, cost function, optimization procedure, and model",3,0
+,loss function,0,0
+,"Data, model, cost function, optimization algorithm",2,0
+,"1. loss function, 2. optimizer, 3. model, 4. data",2,0
+,Loss function,0,0
+,data,1,0
+,model,0,0
+,input data,0,0
+,"data, data, data, data",2,0
+,(1) dataset (2) cost function (3) model (4) optimization algorithm,13,0
+,data,0,0
+,"1. data
+2. model
+3. cost function
+4. optimization algorithm",14,0
+,cost function,3,0
+,"data
+model
+cost function
+optimization algorithm",1,0
+,"dataset, cost function, optimization procedure, model",8,0
+,cost function,1,0
+,"data, optimization, cost , performance",9,0
+,Modeling,1,0
+,1) Data,4,0
+,"data, loss function, optimization, model",47,0
+,optimization algorithm,6,0
+
+What are three ways unsupervised learning seeks to improve data representation?,Activity type,Q&A
+,Total responses,29
+,Unique participants,18
+,Responses,Upvotes,Downvotes
+,density estimation,0,0
+,Can you explain what these are please?,0,0
+,dimension reduction,0,0
+,clustering,1,0
+,dimension reduction,0,0
+,dimension reduction,0,0
+,simplification of dimension,0,0
+,reduce dimensionality (compression),0,0
+,lower dimensional representation,0,0
+,"sparse, lower, reduction",1,0
+,dimensionality reduction,2,0
+,independent representations,1,0
+,Dimension reduction,0,0
+,clustering,0,0
+,sparse representation,1,0
+,independent,0,0
+,Independent,0,0
+,learns to sample from the distribution,3,0
+,lower dimensional representation,3,0
+,sparse,0,0
+,clustering,5,0
+,independent,0,0
+,dimensionality reduction,4,0
+,Simplification through lower dimensionality,44,0
+,orthogonal,0,0
+,Dimension reduction,7,0
+,independent,47,0
+,sparse,35,0
+,low-dimensional,38,0
+
+The most appropriate definition of <em>cross-entropy</em> is,Activity type,Multiple choice
+,Total responses,68
+,Unique participants,68
+,Response options,Count,Percent,Correctness
+,any loss involving the negative log likelihood of the empirical data distribution,44,64.71,Correct
+,negative log-likelihood of a Bernoulli or softmax distribution,7,10.29,Incorrect
+,the Kullback-Leibler divergence $$KL[p_{data}|| p_{model}]$$,10,14.71,Incorrect
+,"Maximum likelihood estimation: $$argmax_\theta \sum_i \log p_{model}(\mathbf{x_i},\theta)$$",7,10.29,Incorrect
+
+"$$KL[\hat p_{data}|| p_{model}], \; \prod_i p_{model}(\mathbf{x_i},\theta), \;$$ and cross-entropy",Activity type,Multiple choice
+,Total responses,67
+,Unique participants,67
+,Response options,Count,Percent,Correctness
+,address different classes of problems,8,11.94,Incorrect
+,refer to the same objective function,19,28.36,Incorrect
+,have equivalent optimization solutions,40,59.7,Correct
+
+Bayesian estimation tends to generalize better than MLE because,Activity type,Multiple choice
+,Total responses,68
+,Unique participants,68
+,Response options,Count,Percent,Correctness
+,it averages over all possible models based on their uncertainty,15,22.06,Correct
+,MLE estimates tend to suffer from statistical efficiency problems,0,0.0,Incorrect
+,consistency is more challenging in MLE relative to Bayesian analysis,2,2.94,Incorrect
+,the prior provides regularization which helps improve generalization,51,75.0,Incorrect
+
+Which of following can provide regularization?,Activity type,Multiple choice
+,Total responses,179
+,Unique participants,68
+,Response options,Count,Percent,Correctness
+,$$\log p(\mathbf{x}|\theta)+\log p(\theta)$$,52,29.05,Correct
+,$$\sum_i(\mathbf{w}^T\mathbf{x}_i-y_i)^2+\lambda \mathbf{w}^T\mathbf{w}$$,64,35.75,Correct
+,$$||\mathbf{X}\mathbf{w}-\mathbf{y}||^2_2+\lambda ||\mathbf{w}||^2_2$$,63,35.2,Correct
+
+"A ""flat"" or ""wide"" prior",Activity type,Multiple choice
+,Total responses,68
+,Unique participants,68
+,Response options,Count,Percent,Correctness
+,has high entropy,40,58.82,Correct
+,has low entropy,1,1.47,Incorrect
+,expresses no preference about parameters,27,39.71,Incorrect
+
+The estimation target in Bayesian statistics is,Activity type,Multiple choice
+,Total responses,152
+,Unique participants,68
+,Response options,Count,Percent,Correctness
+,better than an MLE estimate,21,13.82,Incorrect
+,more subjective than MLE estimation,38,25.0,Incorrect
+,a probability distribution,65,42.76,Correct
+,a point estimate,10,6.58,Incorrect
+,biased in it's expected value if the alternative MLE estimator is unbiased,18,11.84,Incorrect
+
+Which concluding statement is false? Bayesian analysis,Activity type,Multiple choice
+,Total responses,109
+,Unique participants,68
+,Response options,Count,Percent,Correctness
+,allows information outside of the data to be included into the analysis,16,14.68,Incorrect
+,provides a mechanism to construct parameter regularization strategies,21,19.27,Incorrect
+,generally attempts to remove bias from the parameter estimation process,53,48.62,Correct
+,uses probability as a language to make belief statements about parameters,19,17.43,Incorrect
+
+Which concluding statement is false?  Logistic and Linear Regression,Activity type,Multiple choice
+,Total responses,0
+,Unique participants,0
+,Response options,Count,Percent
+,are both based on probability models,0,0
+,can both be optimized analytically,0,0
+,make their predictions using linear models,0,0
+,predict different kinds of response varaibles,0,0

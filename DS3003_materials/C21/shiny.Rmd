@@ -1,0 +1,310 @@
+---
+title: "Shiny"
+author: "Schwartz"
+date: "12/09/2020"
+output:
+     html_document:
+          
+          toc: TRUE
+          toc_depth: 4
+          toc_float: true
+          toc_collapsed: true
+          theme: journal
+          code_folding: show
+
+---
+<!--- runtime: shiny --->
+<!--- Change font size for headers runtime: shiny --->
+<style>
+h1.title {
+  font-size: 28px;
+}
+h1 {s
+  font-size: 22px;
+}
+h2 {
+  font-size: 18px;
+}
+h3 { 
+  font-size: 14px;
+}
+
+</style>
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo=TRUE, warning=FALSE, message=FALSE, 
+                      fig.align="center", out.width="80%")
+```
+
+## Shiny
+
+Check out all these kinds of [cool concepts](https://shiny.rstudio.com/gallery/), 
+many from the [1st Shiny Competition](https://blog.rstudio.com/2019/04/05/first-shiny-contest-winners/),
+that you can made with [Shiny](https://shiny.rstudio.com)!
+
+- There are great resources to help you [get started](https://shiny.rstudio.com/tutorial/) with Shiny
+    - picking up data dash boarding with Shiny is *not that hard*.
+- Making your [first shiny app](https://shiny.rstudio.com/tutorial/written-tutorial/lesson1/) 
+only takes two (or maybe three) lines of code:
+
+```{r hello_world}
+
+library(shiny)
+# runExample("01_hello")
+```
+*Note: actually, I ran into an error that said "could not fine `runExample("01_hello")`* and searched for previous fixes of this issue:
+
+- [One suggestion was to upgrade RStudio](https://community.rstudio.com/t/no-shiny-examples-will-run/7954)
+- [Another was to upgrade to shiny from github](https://stackoverflow.com/questions/24351036/shiny-rstudio-apps-not-working)
+- **I decided to first upgrade all my R packages:** 
+  - `Tools` > `Check for Package Updates` 
+    - and then `select all`
+  - It behaved a bit strangely but did finally work:
+      - It kept asking me to restart R, but I left it alone after doing that 
+          a few too many times and it eventually installed some updates
+      - The "restart now?" said something about loaded packages so I tried to
+          unload some of them, but they just get automatically loaded on restart,
+          so I don't hink that helped at all.
+- [Another suggestion I saw was to upgrade RStudio](https://uvastatlab.github.io/phdplus/installR.html)
+  - but I didn't need to do this after the above noted package updates finished
+
+
+<br>
+
+## `ui <- fluidPage()`
+
+
+When you run the above app you can see the code in the app,
+but let's take a look at it:
+
+    
+
+```{r shiny_ui}
+
+
+
+# The app is presented in a `fluidPage` object
+ui <- fluidPage(
+
+    # Adding a title is easy
+    titlePanel("Hello Shiny!"),
+    
+    sidebarLayout(
+      
+        # breaks into the left panel (for widgets)
+        sidebarPanel(
+                     # `inputId` is the widget handle 
+            sliderInput(inputId="bins", label="Number of bins:",
+                                     # `label` is the display text 
+                        min=1, max=50, value=30)
+                        # `sliderInput` specification
+                        
+        ),
+        
+        # and the `mainPanel` for display 
+        mainPanel(plotOutput(outputId="distPlot"))
+              # plot handle `outputId`      
+    )
+)
+```
+
+The `fluidPage` function is passed element(s) (*here, two*)
+
+1. `titlePanel`
+2. `sidebarLayout`
+    - the `sidebarLayout` requires two specifications
+        1. `sidebarPanel`
+            - the `sidebarPanel` function is passed element(s) (*here, one*)
+                - the `sliderInput` widget, with handle `inputId`
+        2. `mainPanel`
+            - the `mainPanel` function is passed passed element(s) (*here, one*)
+                - the `plotOutput` widget, with handle `outputId`
+
+<br>
+
+## The "server"
+
+```{r shiny_server}
+
+# server connect the plot with the widget
+                # `input` will "automatically" access `inputId`'s
+server <- function(input, output) {
+                       # `output` will "automatically" access `outputId`'s
+
+# server gets rerun each time `input` changes 
+# I.e., here, when `input$bins` changes (via the widget)
+# (and hence everything will be recreated and reassigned as defined below):
+
+  # built-in data set
+  x <- faithful$waiting
+
+  # `output$distPlot` defines what `plotOutput(outputId="distPlot")` above is 
+  output$distPlot <- renderPlot({ 
+                               # we use curly brackets because we're passing
+                               # multiple lines code as a "parameter" which
+                               # `renderPlot` will reuse over and over
+  # https://community.rstudio.com/t/help-understanding-shiny-function-syntax-expression-objects-and-curly-brackets/22807/2
+    
+                                           # refers to above `sliderInput(inputId="bins" ... `
+      bins <- seq(min(x), max(x), length.out=input$bins+1) # which must have just changed
+                                                           # if this function being run 
+      
+      # `output$distPlot`, i.e., `plotOutput(outputId="distPlot")` above
+      # now updated to whatever outputs when this runs (i.e., this new version):
+      hist(x, breaks=bins, 
+           col="#75AADB", border="white",
+           xlab="Waiting time to next eruption (in mins)",
+           main="Histogram of waiting times")
+      
+    })
+}
+
+```
+
+
+A `shinyApp` needs
+
+1. a `fluidPage` object (here, above, `ui`) defining the presentation layout
+    - which has `input` elements (*probably widgets*)
+    - and contains `output` elements (*probably plots*)
+2. the `server` *function* which accesses `input` and `output`
+    - and internally updates ("returns") `output` whenever `input` changes
+      based on that new current status of `input` 
+
+A `shinyApp`
+
+1. listens to `ui`
+2. calls `server` when `input` changes
+3. updates `ui` with updated `output` from `server`
+
+<br>
+
+## `shinyApp(ui, server)`
+
+```{r shiny_shinyApp}
+# run it!
+
+shinyApp(ui=ui, server=server, options=list(height=500))
+```
+
+- Embedding Shiny into a `.Rmd/html` file is [super easy and convenient](https://bookdown.org/yihui/rmarkdown/shiny-embedded.html)
+  - You just need to add `runtime: shiny` to the YAML setup
+    - and here, comment out `runExample("01_hello")` because that starts a 
+        shiny runtime process, but there can only be ONE running at a time
+  - Or you can chose "Yes, Once"/"Yes, Always" if you try to "knit" 
+    without adding `runtime: shiny` to the YAML setup
+    - If you choose "Yes, Always" the "knit" button will change to a "play" button 
+    - But you will no longer to "knit" to produce "html" files
+      - So if you want to "knit to html"
+        - remove `runtime: shiny` from the YAML setup (if present)
+        - close the Rmd file you're working in 
+        - run `rm(list=ls())`
+        - restart R session
+        - reopen the Rmd file you're working in 
+
+<br> 
+
+## Shiny Plotly
+
+As described [here](https://stackoverflow.com/questions/48017341/how-to-correctly-output-plotly-plots-in-shiny/48018438), if you want to use *plotly* inside of *shiny*, for example, by transforming
+a `ggplot` to *plotly* with [`ggplotly`](https://rdrr.io/cran/plotly/man/ggplotly.html), then
+
+- `plotOutput` in `mainPanel` needs to be changed to `plotlyOutput`
+- `renderPlot` in the `server` function that produces the `output` needs to be
+changed to `renderPlotly`
+
+```{r shiny_plotly_server}
+
+library(tidyverse)
+library(plotly)
+
+x <- faithful$waiting
+faithful_wait_min <- min(x)
+faithful_wait_max <- max(x)
+
+ui <- fluidPage(
+
+    titlePanel("Hello PlotlyShiny!"),
+    sidebarLayout(
+        sidebarPanel(
+            sliderInput(inputId="bins", label="Number of bins:",
+                        min=1, max=50, value=30)
+        ),
+        # https://stackoverflow.com/questions/48017341/how-to-correctly-output-plotly-plots-in-shiny/48018438
+        mainPanel(plotlyOutput(outputId="distPlot"))
+        )
+)
+
+server <- function(input, output) {
+
+  # https://stackoverflow.com/questions/48017341/how-to-correctly-output-plotly-plots-in-shiny/48018438
+  output$distPlot <- renderPlotly({
+    
+      bins <- seq(faithful_wait_min, faithful_wait_max, length.out = input$bins + 1)
+      faithful %>% ggplot() + geom_histogram(aes(waiting), breaks=bins,
+                                             color="#75AADB", fill="gray") +  #http://www.sthda.com/english/wiki/ggplot2-histogram-plot-quick-start-guide-r-software-and-data-visualization
+        ggtitle("\nHistogram of waiting times")  + 
+        # https://ggplot2.tidyverse.org/reference/labs.html
+        labs(x="Waiting time to next eruption (in mins)") -> tmp
+      
+      # https://rdrr.io/cran/plotly/man/ggplotly.html
+      ggplotly(tmp) %>% layout(margin=list(t = 75))
+      # https://stackoverflow.com/questions/42821171/fix-plotly-ggplotly-title-overlapping-plot-when-title-is-split-on-two-lines
+      
+           
+    })
+}
+
+shinyApp(ui=ui, server=server, options=list(height = 500))
+```
+
+
+## Epilogue
+- I got this notebook online(!): https://3tl59y-scott-schwartz.shinyapps.io/shiny/
+  - You need to connect your RStudio session to Shiny Cloud Server: 
+    `rsconnect::setAccountInfo(name='3tl59y-scott-schwartz', token='46579E366D0C03BF651A75A67CC49F86', secret='<SECRET>')`
+    - To see how to do this check out this [Quick Prerequesites Orientation](https://bookdown.org/yihui/rmarkdown/shiny-deploy.html)
+  - But, it's simple, you just [Create a Shiny Account](https://www.shinyapps.io/admin/#/dashboard)
+    - which you can do with "log in with google" [here](https://www.shinyapps.io/)
+    - and you can get the `'<SECRET>'` for `rsconnect::setAccountInfo` like this:
+      - *Shiny Dashboard > Account > Toekns > Show > Show Secret > Copy*
+  - THERE IS ONE THING TO BE CAREFUL ABOUT:
+    [You need to Open/Publish Rmd from within its Own Directory](https://community.rstudio.com/t/how-to-deploy-a-shiny-rmd-file-to-shinyapps-io/30605/3)
+
+
+## Resources
+
+### Data
+- We used the built-in `faithful` data set
+
+### Shiny Introductory Materials
+
+- [Shiny](https://shiny.rstudio.com)!
+- [1st Shiny Competition](https://blog.rstudio.com/2019/04/05/first-shiny-contest-winners/),
+- [Gallery](https://shiny.rstudio.com/gallery/)
+- [Get Started](https://shiny.rstudio.com/tutorial/)
+  - [First Shiny App](https://shiny.rstudio.com/tutorial/written-tutorial/lesson1/) 
+    - which is the first thing we went through in this document
+- ["Curly Brackets" in Shiny](https://community.rstudio.com/t/help-understanding-shiny-function-syntax-expression-objects-and-curly-brackets/22807/2)
+
+
+### Troubleshooting Shiny/Rmd Errors
+- [Embedding Shiny into a `.Rmd/html`](https://bookdown.org/yihui/rmarkdown/shiny-embedded.html)
+- [Upgrade Shiny from Github](https://stackoverflow.com/questions/24351036/shiny-rstudio-apps-not-working)
+- [Upgrade RStudio](https://community.rstudio.com/t/no-shiny-examples-will-run/7954)
+- [Upgrade RStudio Details](https://uvastatlab.github.io/phdplus/installR.html)
+
+### Troubleshooting Shiny/Plotly Errors
+- [Using Plotly with Shiny](https://stackoverflow.com/questions/48017341/how-to-correctly-output-plotly-plots-in-shiny/48018438)
+
+### Converting `ggplot` to `plotly` 
+- [`ggplotly`](https://rdrr.io/cran/plotly/man/ggplotly.html)
+
+### Quick Lookups
+- [ggplot histograms](http://www.sthda.com/english/wiki/ggplot2-histogram-plot-quick-start-guide-r-software-and-data-visualization)
+- [setting labels](https://ggplot2.tidyverse.org/reference/labs.html)
+- [fixing overlapping titles](https://stackoverflow.com/questions/42821171/fix-plotly-ggplotly-title-overlapping-plot-when-title-is-split-on-two-lines)
+
+
+

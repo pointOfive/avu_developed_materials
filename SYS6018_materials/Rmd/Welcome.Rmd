@@ -1,0 +1,148 @@
+---
+title: "Welcome"
+output: html_document
+---
+
+## Welcome to Data Mining (SYS 6018) (08/26/20)
+- I'm your host, scott.schwartz\@virginia.edu
+- with bandleader and sidekick Sanchit Sinha (ss7mu)
+- and special celebrity guest Student Success Coach Treya Lynch (tnl6m)
+    - who is also available for you and organizes study sessions every
+        - Monday 7-8 pm EST
+        - Thursday 7:30-8:30 pm EST
+        - Saturday 10-11 am EST
+- and I'll see you here every Wednesday evening from 8:15-9:15
+
+https://pollev.com/scottschwart851 (5)
+
+### HELP!
+1. Office Hours Poll [currently Thursdays 6:00-7:00 pm EST]
+    - https://PollEv.com/discourses/QLs60bU0Nyjkwo5n0oNzx/respond
+    - [submit and upvote times by 08/30/20, or don't]
+2. Collab Message Boards
+    - Ask, Talk, Share, Comment!
+    - Help your neighbor and learn a thing or two (all while I take note of the goings-on for the purposes of participation points...)
+3. Slack?
+    - I'd rather not [but I might]
+4. Email?
+    - Absolutely; but, might the message board be a better venue?
+5. Zoom one-on-ones or group sessions?
+    - Yes (https://virginia.zoom.us/j/7650778302); but, might the message board be a better venue?
+
+https://pollev.com/scottschwart851 (1)
+
+### Student Collaborations
+
+1. Generally/Usually Encouraged**\***
+
+**\*Work that you submit for the course project *must be your own***
+
+https://pollev.com/scottschwart851 (1)
+
+### Submissions
+
+1. https://cloud.r-project.org
+2. https://rstudio.com/products/rstudio/download/
+3. **Submit** *well-documented* .Rmd files (http://rmarkdown.rstudio.com)
+4. **Knit** *good-looking* html or pdf documents for presentation submissions
+
+#### Resources
+
+- It's easy to find solutions in base R, tidyverse, and python for ISL(R)
+- You're welcome to use them (and each other) to avoid getting bogged down
+- Please don't delude yourself into thinking that *copying* is the same as *knowing*...
+
+#### 
+    - if you use something from someone else  
+    - reference it and point your readers to it
+    - get in the habit of "**not plagerizing**"
+
+#### Grading
+- Have a look at the rubric in the course collab site
+- One problem is randomly chosen and graded
+- If you don't do some of your work you're risking a zero
+
+#### Due Dates
+- **Quizzes (40%)**: Due *BEFORE* the Wednesday live session
+    - Wednesday 6PM or later scores a zero
+- **Homework (20%)**: Due *BEFORE* the *next week*
+    - Midnight or later on Sunday scores a zero
+    - (Tidyverse) solutions posted next day (Monday)
+
+> - Sometimes deadlines can't be made, which means they're missed  
+> - If you think you're going to have some tight weeks you're welcome to do the opposite of procrastenate  
+> - You set and complete your priorities at your own discretion   
+
+https://pollev.com/scottschwart851 (4)
+
+### Course Project 
+
+- **Big part of grade (30%)**
+- Work in progress:
+    - if you're looking ahead (e.g., Module 3) things may change
+    - project subject to some (minor) rubric/consistency updates
+
+
+### About the course
+
+https://pollev.com/scottschwart851 (2)
+
+1. this is well designed, well organized course
+2. covering (the) fundamentally important topics
+3. content provides good extras/insights here and there
+4. but
+    i. based on "base R"
+    ii. to get the most out of the course, learn and use the tidyverse
+        - https://www.tidyverse.org
+        - `install.packages("tidyverse")`  
+        
+This is an opportunity to engage in repetitive learning, and practice real life "on the job" learning:  
+
+> 1. see how base R does it  
+> 2. see how tidyverse does it  
+> 3. submit great tidyverse code and understand why it's great relative to base R   
+
+#### Python
+
+is officially outside of the scope of this course, as currently designed; however...  
+
+- Python is allowed  
+- Both Sanchit and I can handle Python if that's what you're bringing to the dance   
+
+
+### The Data (and) Science of Learning
+
+https://pollev.com/scottschwart851 (1)
+
+1. "the tortoise beats the hare"
+   - cramming is less effective in the long-term 
+   - repeated sessions is the most effective in the long-term
+   - the more sessions you have the better 
+2. "practice makes perfect"
+   - 'testing' is better than 'studying' -- just reading is not the key
+   - being confronted with situtations demanding recall and application is the best way to learn (like immersion learning for language)
+    
+ - https://cte.virginia.edu/staff/michael-palmer
+
+#### Recommendation
+
+1. **Saturday Morning**: watch videos (~1hr) **-> (~1hr)**
+2. **Saturday Afternoon**: do the readings and re-watch videos (~2hr) -> **-> (~1hr)**
+2. **Saturday Evening**: follow along with the lab in the book (in base R) (~2hr) **-> (~1hr)**
+3. **Sunday Morning**: do quizzes (~1hr) **-> (~1hr)**
+    - most of the time you'll be able to retry these up to **three**\* times, if needed
+4. **Sunday Afternoon**: re-do the lab "follow along" using the tidyverse version (~2hr) **-> (~0hr)**
+5. **Sunday Evening**: begin homework (~2hr) **-> (~1hr)**
+6. **Monday Evening**: continue homework (~3hr) **-> (~1hr)**
+7. **Tuesday Evening**: continue homework (~3hr) **-> (~1hr)**
+8. **Wednesday Evening**: come to lecture
+   - all live session content is TBA
+   - will default to topics relevant to the current homework
+   - may revisit topics relevant to the previous homework
+
+### Announcements
+
+1. Elevator Pitches
+2. One on ones
+
+### Q&A?

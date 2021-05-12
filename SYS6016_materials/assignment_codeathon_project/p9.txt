@@ -1,0 +1,30 @@
+
+Project Part 9: Demonstration and Presentation
+Due: 5/13 3:30PM EST
+Late: 0
+Value: 20 points (2% of class grade)
+The course project will be presented as a 5–7-minute presentation (which you may pre-recorded if you wish). The presentations can be structured as an explanation of the key technical details of your model, or as a "use case story". 
+
+ML4VA EPISODE 9: MIXTURE OF EXCITEMENT & NERVES
+
+
+DIRECTIONS
+
+Each team needs to submit their slides or a URL of their recorded presentation on Collab before the specified deadline. We will grade presentations on quality, clarity, and technical content of the presentation:
+
+Content: The content includes a clear statement of purpose or theme and is creative, compelling, and clearly conveyed. Shows strong understanding and in-depth analysis about the topic.
+Organization: Media shows high degree of attention to logic and reasoning of points. Unity clearly leads the audience to conclusion and stirs thought regarding the topic.
+Discussion and Analysis: Clearly discuss what you have learned from doing the project. Main points are well developed with high quality and quantity support. Reveals high degree of critical thinking.
+WOW factors: Amazing story with lots of creativity. The approach is innovative and visually appealing.
+If you make a video, the media must reflect your own understanding of the topic and be communicated in your own words. Make sure copyright infringement has not occurred. . Academic integrity will be strictly observed for the project showcase.  Please refer to this link for more information on what copyright infringement is and how to avoid it:
+
+ https://www.legalzoom.com/articles/how-to-avoid-copyright-infringement
+
+
+SUBMISSION INSTRUCTIONS
+
+Submit your slides or URL to the recorded presentation via UVA Collab with the following format: yourcomputingID_project_presentation.*
+
+ Project Part 9: Demonstration and Presentation FIXED
+
+ SYS 6016 ML4VA Project Rubric.pdf

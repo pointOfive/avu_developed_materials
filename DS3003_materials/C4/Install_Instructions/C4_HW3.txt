@@ -1,0 +1,29 @@
+
+
+[GROUP ASSIGNMENT]: get conda/jupyter notebook up and running as a group
+
+You will be assigned to a group after class and will work with your group to complete the following steps.
+
+Important: Markdown also renders in Jupyter Notebooks, so while you won't have the "Table of Contents" as with an R knit, you should have a similar "markdown outline" in your Jupyter Notebook compared to what you submit within you .Rmd
+ 
+
+1. Use official instructions, documentation or other helpful sources available online in order to complete this assignment.
+
+2. Document and reference EVERY resource and step used accomplish the required tasks (and provide links to those resources)
+
+3. Install Conda
+
+4. Use `conda create --name <name_your_environment>` (or another means) to create an environment
+
+5. Use `conda activate <name_of_your_environment>` (or another means) and `conda install <package_name>` (or another means) to install jupyter notebooks and whatever other libraries you require in order to run the code in "for_snakes.txt" in a jupyter notebook.
+
+6. Create a team `.ipynb` which
+includes (and correctly runs) the code from "for_snakes.txt"  in a cell
+contains well-organized markdown documenting the steps done to complete this assignment (with headers, outlines, and links)
+
+7. Submit your team's shared `.ipynb` "jupyter notebook" file AND and `.html` export of the notebook.
+Your ".html export" submission must be created from your "team .ipynb" but be created on your own computer
+Confirm this with the following comment included in your submission text box: "Honor Pledge: I have recreated my groups submission using using the tools I have installed on my own computer"
+Name the files with a team name and YOUR name for your submission
+
+Each group member must be able to submit this assignment as created from their own computer.  If only some members of the group submit the required files, those group members must additionally provide a supplemental explanation along with their submission as to why other students in their group have not completed this assignment.

@@ -1,0 +1,248 @@
+Untitled
+,Activity count,27
+,Participant count,68
+,Average responses,70.55555555555556
+
+"I read Section ""6.6: Historical Notes""",Activity type,Multiple choice
+,Total responses,63
+,Unique participants,63
+,Response options,Count,Percent,Correctness
+,True,53,84.13,Correct
+,False,10,15.87,Incorrect
+
+Choose one of the following:,Activity type,Multiple choice
+,Total responses,63
+,Unique participants,63
+,Response options,Count,Percent,Correctness
+,"I pledge that all Poll Everywhere answers I submit today will (a) be my own and represent my own understandings, and (b) I will not contribute to other students' answers while the poll is active.",63,100.0,Correct
+,I will not be taking this quiz for credit.,0,0.0,Incorrect
+
+The $$\mathbf{c}$$ in $$g(\mathbf{M}^Tx+\mathbf{c})$$ is,Activity type,Multiple choice
+,Total responses,64
+,Unique participants,64
+,Response options,Count,Percent,Correctness
+,the weights,0,0.0,Incorrect
+,the biases,60,93.75,Correct
+,an activation function,0,0.0,Incorrect
+,an affine function,3,4.69,Incorrect
+,a hidden layer,1,1.56,Incorrect
+
+The $$\mathbf{M}$$ in $$g(\mathbf{M}^Tx+\mathbf{c})$$ is,Activity type,Multiple choice
+,Total responses,64
+,Unique participants,64
+,Response options,Count,Percent,Correctness
+,the weights,62,96.88,Correct
+,the biases,0,0.0,Incorrect
+,an activation function,0,0.0,Incorrect
+,an affine function,1,1.56,Incorrect
+,a hidden layer,1,1.56,Incorrect
+
+The $$g$$ in $$g(\mathbf{M}^Tx+\mathbf{c})$$ is,Activity type,Multiple choice
+,Total responses,65
+,Unique participants,65
+,Response options,Count,Percent,Correctness
+,the weights,0,0.0,Incorrect
+,the biases,0,0.0,Incorrect
+,an activation function,59,90.77,Correct
+,an affine function,6,9.23,Incorrect
+,a hidden layer,0,0.0,Incorrect
+
+$$\mathbf{M}^Tx+\mathbf{c}$$ is,Activity type,Multiple choice
+,Total responses,65
+,Unique participants,65
+,Response options,Count,Percent,Correctness
+,the weights,0,0.0,Incorrect
+,the biases,0,0.0,Incorrect
+,an activation function,0,0.0,Incorrect
+,an affine function,56,86.15,Correct
+,a hidden layer,9,13.85,Incorrect
+
+$$g(\mathbf{M}^Tx+\mathbf{c})$$ is,Activity type,Multiple choice
+,Total responses,65
+,Unique participants,65
+,Response options,Count,Percent,Correctness
+,the weights,0,0.0,Incorrect
+,the biases,0,0.0,Incorrect
+,an activation function,3,4.62,Incorrect
+,an affine function,1,1.54,Incorrect
+,a hidden layer,61,93.85,Correct
+
+FF networks and MLPs,Activity type,Multiple choice
+,Total responses,73
+,Unique participants,68
+,Response options,Count,Percent,Correctness
+,are general tools for arbitrary function estimation,34,46.58,Correct
+,have been obsolete since the second AI winter,0,0.0,Incorrect
+,are computationally tractable on modern data sets using gradient descent,37,50.68,Incorrect
+,are techniques that prevent  cost function saturation,2,2.74,Incorrect
+
+The universal approximation theorem says,Activity type,Multiple choice
+,Total responses,66
+,Unique participants,66
+,Response options,Count,Percent,Correctness
+,"a feedforward network having at least one hidden layer with any ""squashing"" activation function can approximate any function to arbitrary accuracy",50,75.76,Correct
+,no algorithm is universally better than any other algorithm at fitting a model from data that will generalize to new data,7,10.61,Incorrect
+,"given sufficient data, back-propagation and stochastic gradient descent can find a local minima approximating any function to arbitrary accuracy",9,13.64,Incorrect
+
+Kernel methods providing transformations into alternative feature spaces,Activity type,Multiple choice
+,Total responses,67
+,Unique participants,67
+,Response options,Count,Percent,Correctness
+,are empirically competitive with FFN and MLP methodologies in terms of generalization,5,7.46,Incorrect
+,"are sufficiently nonparametric and flexible so as to not require ""prior beliefs"" (e.g., architectures) like FFNs",8,11.94,Incorrect
+,"seem very flexible, but their predefined nature often does not provide the best generalization",51,76.12,Correct
+,"are computationally advantageous relative to FFN, MLP, and other deep network architectures",3,4.48,Incorrect
+
+Deep learning is interested in,Activity type,Multiple choice
+,Total responses,67
+,Unique participants,67
+,Response options,Count,Percent,Correctness
+,estimating flexible transformations $$\hat\phi(x; \theta)$$,36,53.73,Correct
+,leveraging flexible transformations $$\phi(x; \theta)$$,27,40.3,Incorrect
+,enabling and facilitating manual feature engineering efforts on $$x$$,4,5.97,Incorrect
+
+What message is this figure attempting to convey?,Activity type,Multiple choice
+,Total responses,66
+,Unique participants,66
+,Response options,Count,Percent,Correctness
+,That the key competitive advantage of deep learning frameworks is their incorporation of more modeling parameters compared to other methodologies.,2,3.03,Incorrect
+,Using rectifying non-linearities is even more important than learning the weights of the hidden layers (Jarrett et al. 2009).,4,6.06,Incorrect
+,That deeper networks have empirically consistently shown to generally provided improved generalization capability.,56,84.85,Correct
+,"That saturation leads to vanishing gradients, which makes fitting feed-forward networks very challenging",4,6.06,Incorrect
+
+Deeper networks encode a prior belief that,Activity type,Multiple choice
+,Total responses,66
+,Unique participants,66
+,Response options,Count,Percent,Correctness
+,"the ""local consistency"" or ""smoothness"" prior can be a limiting assumption",15,22.73,Incorrect
+,composition of increasingly complex features captures relevant variation,38,57.58,Correct
+,"While choosing a model implies ""prior"" beliefs, FFN give ""uninformative priors""",11,16.67,Incorrect
+,NA: in general deep networks are not Bayesian Analyses and don't have priors,2,3.03,Incorrect
+
+(a) is a symbolic representation of,Activity type,Multiple choice
+,Total responses,67
+,Unique participants,67
+,Response options,Count,Percent,Correctness
+,an affine function,8,11.94,Incorrect
+,a common hidden layer,6,8.96,Incorrect
+,a prediction and a penalty,3,4.48,Incorrect
+,multiplication,50,74.63,Correct
+
+(b) is a symbolic representation of,Activity type,Multiple choice
+,Total responses,68
+,Unique participants,68
+,Response options,Count,Percent,Correctness
+,an affine function,43,63.24,Correct
+,a common hidden layer,13,19.12,Incorrect
+,a prediction and a penalty,12,17.65,Incorrect
+,multiplication,0,0.0,Incorrect
+
+(c) is a symbolic representation of,Activity type,Multiple choice
+,Total responses,68
+,Unique participants,68
+,Response options,Count,Percent,Correctness
+,an affine function,0,0.0,Incorrect
+,a common hidden layer,66,97.06,Correct
+,a prediction and a penalty,2,2.94,Incorrect
+,multiplication,0,0.0,Incorrect
+
+(d) is a symbolic representation of,Activity type,Multiple choice
+,Total responses,68
+,Unique participants,68
+,Response options,Count,Percent,Correctness
+,an affine function,0,0.0,Incorrect
+,a common hidden layer,1,1.47,Incorrect
+,a prediction and a penalty,67,98.53,Correct
+,multiplication,0,0.0,Incorrect
+
+Select <em>ALL</em> that apply.  This is,Activity type,Multiple choice
+,Total responses,172
+,Unique participants,68
+,Response options,Count,Percent,Correctness
+,the graph created by Torch/Caffe for symbol-to-number differentiation,13,7.56,Incorrect
+,the kind of symbolic representation graph constructed in Tensorflow/Theano,56,32.56,Correct
+,The result of running a backprop algorithm,61,35.47,Correct
+,a feed-forward network,42,24.42,Correct
+
+The expressions are,Activity type,Multiple choice
+,Total responses,68
+,Unique participants,68
+,Response options,Count,Percent,Correctness
+,stochastic gradient descent,3,4.41,Incorrect
+,the backdrop algorithm,3,4.41,Incorrect
+,the chain rule,62,91.18,Correct
+
+Which of the following makes the best argument for the activation functions in the graph?,Activity type,Multiple choice
+,Total responses,68
+,Unique participants,68
+,Response options,Count,Percent,Correctness
+,use sigmoid: it avoids catastrophic forgetting,5,7.35,Incorrect
+,use softplus: its derivative is defined everywhere,8,11.76,Incorrect
+,use ReLU: it does not saturate when activated,51,75.0,Correct
+,"use tanh:  it's not immediately ""flat"" on the left like ReLU",4,5.88,Incorrect
+
+The saturation/vanishing gradient issue,Activity type,Multiple choice
+,Total responses,67
+,Unique participants,67
+,Response options,Count,Percent,Correctness
+,"has thankfully been solved with output functions that  ""undo""  activation function saturation",19,28.36,Incorrect
+,"can be mitigated by preferring activation functions incorporating ""flat"" regions",29,43.28,Incorrect
+,is best addressed by reducing the number of parameters in a FF network,3,4.48,Incorrect
+,makes (SGD) fitting of FF Networks and MLPs extremely challenging,16,23.88,Correct
+
+The principle of maximum likelihood,Activity type,Multiple choice
+,Total responses,68
+,Unique participants,68
+,Response options,Count,Percent,Correctness
+,provides a guide for how to design a good cost function for nearly any kind of output layer,53,77.94,Correct
+,is ultimately the reason why MSE or RSS don't saturate and are thus preferable cost functions,6,8.82,Incorrect
+,should be avoided in favor of output function designs focussed on addressing gradient saturation,9,13.24,Incorrect
+
+Which items below are most correctly ordered relative to: <br>(1) architecture <br>(2) activation <br>(3) output units,Activity type,Multiple choice
+,Total responses,68
+,Unique participants,68
+,Response options,Count,Percent,Correctness
+,(1) depth $$\quad$$(2) sigmoid $$\quad$$(3) maxout,26,38.24,Incorrect
+,(1) parametric ReLU $$\quad$$(2) width $$\quad$$(3) affine function,1,1.47,Incorrect
+,(1) saturation $$\quad$$(2) softplus $$\quad$$(3) vanishing gradient,0,0.0,Incorrect
+,(1) hidden units $$\quad$$(2) Leaky ReLU $$\quad$$(3) softmax,41,60.29,Correct
+
+"$$z_i - \log \sum_{j=1}^K  \exp(z_j)$$, for $$K\ge 2$$ is the $$\log$$ of what function?",Activity type,Multiple choice
+,Total responses,67
+,Unique participants,67
+,Response options,Count,Percent,Correctness
+,Maxout,6,8.96,Incorrect
+,Softmax,49,73.13,Correct
+,ReLU,4,5.97,Incorrect
+,Affine,0,0.0,Incorrect
+,Softplus,8,11.94,Incorrect
+
+"$$\max(0,W^Tx+b)$$ is what function?",Activity type,Multiple choice
+,Total responses,68
+,Unique participants,68
+,Response options,Count,Percent,Correctness
+,Maxout,19,27.94,Incorrect
+,Softmax,0,0.0,Incorrect
+,ReLU,47,69.12,Correct
+,Affine,0,0.0,Incorrect
+,Softplus,2,2.94,Incorrect
+
+"The cross-entropy of a $$logistic$$ $$regression$$ with linear form $$z$$, i.e., $$\sigma((2y-1)z)$$, can be written in terms of what function?",Activity type,Multiple choice
+,Total responses,68
+,Unique participants,68
+,Response options,Count,Percent,Correctness
+,Maxout,4,5.88,Incorrect
+,Softmax,16,23.53,Incorrect
+,ReLU,4,5.88,Incorrect
+,Affine,10,14.71,Incorrect
+,Softplus,34,50.0,Correct
+
+What function is this?,Activity type,Multiple choice
+,Total responses,66
+,Unique participants,66
+,Response options,Count,Percent,Correctness
+,Maxout,55,83.33,Correct
+,Softmax,2,3.03,Incorrect
+,ReLU,4,6.06,Incorrect
+,Affine,4,6.06,Incorrect
+,Softplus,1,1.52,Incorrect

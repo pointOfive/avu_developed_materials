@@ -1,0 +1,6 @@
+[EXTRA CREDIT]: make all of the above plots in a different data domain context for all students in the group
+
+- +1 extra credit if ALL parts in C7.HW1 above are redone
+in addition to the original assignment
+at the same level of high quality as the original assignment
+and by all members of the group each with their own data sets

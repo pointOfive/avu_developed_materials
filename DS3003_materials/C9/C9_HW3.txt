@@ -1,0 +1,28 @@
+recreate a couple of the "historical climate reconstruction" plots presented in Class 9
+
+1. Download the materials from the McShane/Myner paper discussed in the Class 9 lecture.
+
+- That's available here: https://projecteuclid.org/euclid.aoas/1300715170#supplemental
+- And specifically in the collection, you will need "bayes_recon.R"
+- Depending on where you save the download on your local machine, you will be able to get everything you need into R like this:
+`load("/path/to/what/you/downloaded/above/and/in/it/bayes_recon.R")`
+
+2. Go get the climate reconstruction data from the "Pages 2k" project
+
+That's linked to via http://pastglobalchanges.org/science/wg/2k-network/data​
+
+which sends you to https://www.ncdc.noaa.gov/paleo-search/study/16973​
+
+where you'll find the file you need which is titled: "Reconstruction v1.1.1"
+
+3. Use the `time_series_plots.Rmd` code (linked below) with the necessary edits required to make this plot:
+
+c9hw3.png
+
+4. Work through the code one step at a time, breaking it apart cumulatively by the different `%>%` "pipes" so you can see what each line of the code is doing.  Comment the code with explanations about what each step is doing. 
+
+For 4: Each group member must contribute their comments to the groups submission in order for all group members to get credit for this homework. If only some members of the group contribute in the submitted `.Rmd` file, those group members must additionally provide a supplemental explanation along with their submission as to why other students in their group have not contributed to this assignment.
+
+5. Create a time series plot with different data of your own choosing
+
+For 5: Each group member must contribute a unique figure to the groups submission in order for all group members to get credit for this homework. If only some members of the group contribute figures in the submitted `.Rmd` file, those group members must additionally provide a supplemental explanation along with their submission as to why other students in their group have not contributed to this assignment.

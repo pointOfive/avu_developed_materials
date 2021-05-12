@@ -1,0 +1,25 @@
+
+Codeathon 2: Deepfake Detection
+Due: 4/21 3:30PM EST (before Class 24)
+Late: -10/day (after 3:30PM EST beginning with the start of Class 24)
+Value: 80 points (8% of class grade)
+Today, the danger of fake news is widely acknowledged, and the spread of falsified video raises even more concern. In the past years, a powerful tool called Deepfakes has been designed for face capture and reenactment. This method was initially devoted to the creation of adult content and has not been presented in any academic publication. In his documentary, CBS News senior producer Dan Patterson declares “deepfakes are videos and images that have been digitally manipulated to depict people saying and doing things that never happened. These clips are often produced to fool viewers, and are optimized to spread rapidly on social media." On the other hand, deep learning methods have been successfully employed to detect image falsification. 
+
+In this codeathon, you will investigate a method to deal with deepfakes called MesoNet, which is described in the MesoNet paper. Fortunately, the authors have kindly shared their code with the community, and your task is to develop their code to create your own deepfake detector to deal with Deepfake-generated images. The hope is that by developing your own detector, you will be able to reproduce the result of their model, and in turn come up with new ideas on how to make it even more impactful.
+
+DIRECTIONS
+
+Watch the CBS News deepfakes documentary. 
+Read the MesoNet paper.
+Download and run the MesoNet code provided by the authors.
+Test the model on unobserved data.
+Make any modification to the model (if necessary).
+Report your best classification performance along with any justification for your model.
+SUBMISSION INSTRUCTIONS
+
+Submit the .ipynb file via UVA Collab with the following format: yourcomputingID_codeathon_2.ipynb.
+
+https://www.cbsnews.com/news/what-are-deepfakes-how-to-tell-if-video-is-fake/
+https://arxiv.org/pdf/1809.00888v1.pdf
+https://github.com/DariusAf/MesoNet
+

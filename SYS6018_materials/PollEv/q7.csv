@@ -1,0 +1,204 @@
+Untitled
+,Activity count,26
+,Participant count,19
+,Average responses,12.653846153846153
+
+"Decision Trees partition feature space as in this image, and",Activity type,Multiple choice
+,Total responses,22
+,Unique participants,15
+,Response options,Count,Percent
+,use the average (0's and 1's in the binary classification) in each partition as the prediction,6,27.27
+,thus make LESS flexible than partitions of feature space than partitions made by KNN,3,13.64
+,thus prioritize one feature over another based on predictive power at any given split,13,59.09
+
+KNN would be a _____ choice for this type of data,Activity type,Multiple choice
+,Total responses,16
+,Unique participants,16
+,Response options,Count,Percent
+,great,2,12.5
+,weird,14,87.5
+
+Why?,Activity type,Open ended
+,Total responses,0
+,Unique participants,0
+
+A Decision Tree would be a _____ choice for this type of data,Activity type,Multiple choice
+,Total responses,17
+,Unique participants,17
+,Response options,Count,Percent
+,great,6,35.29
+,weird,11,64.71
+
+Why?,Activity type,Open ended
+,Total responses,10
+,Unique participants,10
+,Responses
+,"Too much overlap in classes, especially not horizontally and vertically"
+,Trees can't make diagonals
+,there is neither a horizontal nor vertical split on the data
+,Data was modeled so that split is along a diagonal line. Decision tree not as well equipped for that
+,The data didn't split across horizontal or vertical lines
+,Not a clear split along the axis
+,Trees can only make horizontal and vertical boxes
+,threre are no clear groupings
+,I read that wrong because I am tired.
+,It would have a hard time making a good box
+
+The curse of dimensionality is _______ problematic for decision trees when compared to KNN,Activity type,Multiple choice
+,Total responses,17
+,Unique participants,17
+,Response options,Count,Percent
+,more,8,47.06
+,less,7,41.18
+,similarly,2,11.76
+
+Why?,Activity type,Open ended
+,Total responses,7
+,Unique participants,7
+,Responses
+,"A long time ago, in a galaxy far, far away......"
+,My guess is KNN performs (computationally) worse due to bigger feature space where decision trees can quickly get you back from lower dimensions.
+,"remoteness increases in higher dimensionality, making neighbors more remote, whereas decision trees do not care about point distances from region lines"
+,Decisions trees can overfit
+,KNN is worse than Trees because trees choose best predictors.
+,Arguing that KNN worse under curse of dimensionality because was considering example where very large p vs relatively small n. Decision trees don't suffer as much from this.
+,Trees with greater dimensionality due to a lack of interpretability
+
+Decision Trees,Activity type,Multiple choice
+,Total responses,14
+,Unique participants,14
+,Response options,Count,Percent
+,are by definition interaction oriented models,12,85.71
+,do NOT provide feature interaction modeling,2,14.29
+
+Decision Trees,Activity type,Multiple choice
+,Total responses,12
+,Unique participants,12
+,Response options,Count,Percent
+,Are very robust,1,8.33
+,Are NOT very robust,11,91.67
+
+Decision Trees,Activity type,Multiple choice
+,Total responses,13
+,Unique participants,13
+,Response options,Count,Percent
+,are prone to overfitting,12,92.31
+,are NOT prone to overfitting,1,7.69
+
+Regression decision trees are built using,Activity type,Multiple choice
+,Total responses,21
+,Unique participants,14
+,Response options,Count,Percent
+,"deviance: -2 log  [bernoulli] likelihood, i.e., $$\;\;-2\sum_i y_ilog(\hat p_i) + (1-y_i)log(1-\hat p_i)$$",2,9.52
+,"RSS: -2 log  [normal] likelihood (times dispersion parameter), i.e.,  $$\;\;\sum_i (y_i-\hat y_i)^2",3,14.29
+,entropy: $$\;\;-\sum_k \hat p_k log(\hat p_k) $$,8,38.1
+,Gini index (impurity measure):  $$\;\;\sum_k \hat p_k(1-\hat p_k) = 1 - \sum_k \hat p_k^2$$,8,38.1
+
+Classification decision trees are built using,Activity type,Multiple choice
+,Total responses,0
+,Unique participants,0
+,Response options,Count,Percent
+,"deviance: -2 log  [bernoulli] likelihood, i.e., $$\;\;-2\sum_i y_ilog(\hat p_i) + (1-y_i)log(1-\hat p_i)$$",0,0
+,"RSS: -2 log  [normal] likelihood (times dispersion parameter), i.e.,  $$\;\;\sum_i (y_i-\hat y_i)^2$$",0,0
+,entropy: $$\;\;-\sum_k \hat p_k log(\hat p_k) $$,0,0
+,Gini index (impurity measure):  $$\;\;\sum_k \hat p_k(1-\hat p_k) = 1 - \sum_k \hat p_k^2$$,0,0
+
+RSS/gini/entropy MUST decrease with each split.  Which are then true?,Activity type,Multiple choice
+,Total responses,42
+,Unique participants,15
+,Response options,Count,Percent
+,each decreased RSS/gini/entropy can be attributed to the feature it was split on,10,23.81
+,the proportion of the total decreased RSS/gini/entropy attributable to given feature is interesting,8,19.05
+,it suggests the relative importance of the feature in reducing RSS/gini/entropy,13,30.95
+,"this is called ""Feature Importance"" and is quite like ranking linear model coefficient by magnitude of impact",11,26.19
+
+Pre-Pruning means,Activity type,Multiple choice
+,Total responses,14
+,Unique participants,14
+,Response options,Count,Percent
+,"creating the tree with stopping rules, such as minsplit, minbucket, maxdepth, mingain",10,71.43
+,"regularizing a decision tree with $$\;\;\text{argmin} \;metric + \alpha |T|\;\;$$ (where  $$metric$$ is deviance, RSS, error-rate, etc.)",4,28.57
+
+Post-Pruning means,Activity type,Multiple choice
+,Total responses,13
+,Unique participants,13
+,Response options,Count,Percent
+,"creating the tree with stopping rules, such as minsplit, minbucket, maxdepth, mingain",0,0.0
+,"regularizing a decision tree with $$\;\;\text{argmin} \;metric + \alpha |T|\;\;$$ (where  $$metric$$ is deviance, RSS, error-rate, etc.)",13,100.0
+
+"$$\alpha$$ in $$\;\;metric + \alpha |T|\;\;$$ (where $$metric$$ is deviance, RSS, error-rate, etc.) is a model complexity",Activity type,Multiple choice
+,Total responses,13
+,Unique participants,13
+,Response options,Count,Percent
+,penalty,12,92.31
+,measure,1,7.69
+
+"$$|T|$$ in $$\;\;metric + \alpha |T|\;\;$$ (where $$metric$$ is deviance, RSS, error-rate, etc.) is a model complexity",Activity type,Multiple choice
+,Total responses,12
+,Unique participants,12
+,Response options,Count,Percent
+,penalty,0,0.0
+,measure,12,100.0
+
+A better model fit means $$\;\;\sum_i (y_i-\hat y_i)^2$$ is,Activity type,Multiple choice
+,Total responses,11
+,Unique participants,11
+,Response options,Count,Percent
+,larger (it's an objective function),0,0.0
+,smaller (it's a cost function),11,100.0
+
+A better model fit means $$\;\;-2\sum_i y_ilog(\hat p_i) + (1-y_i)log(1-\hat p_i)\;\;$$ is,Activity type,Multiple choice
+,Total responses,12
+,Unique participants,12
+,Response options,Count,Percent
+,larger (it's an objective function),4,33.33
+,smaller (it's a cost function),8,66.67
+
+A *purer* node means $$\;\;\sum_k \hat p_k (1-\hat p_k) = 1 - \sum_k \hat p_k^2 \;\;$$ is,Activity type,Multiple choice
+,Total responses,10
+,Unique participants,10
+,Response options,Count,Percent
+,smaller (closer to 0),10,100.0
+,larger (greater than 0),0,0.0
+
+A *purer* node means $$\;\;-\sum_k \hat p_k log(\hat p_k) \;\;$$ is,Activity type,Multiple choice
+,Total responses,8
+,Unique participants,8
+,Response options,Count,Percent
+,smaller (closer to 0),8,100.0
+,larger (greater than 0),0,0.0
+
+entropy means,Activity type,Multiple choice
+,Total responses,8
+,Unique participants,8
+,Response options,Count,Percent
+,more randomness (less order and structure),8,100.0
+,less randomness (more order and structure),0,0.0
+
+entropy means,Activity type,Multiple choice
+,Total responses,8
+,Unique participants,8
+,Response options,Count,Percent
+,more impurity (less order and structure),8,100.0
+,less impurity (less order and structure),0,0.0
+
+higher entropy $$\;\;-\sum_k \hat p_k log(\hat p_k) \;\;$$ means,Activity type,Multiple choice
+,Total responses,9
+,Unique participants,9
+,Response options,Count,Percent
+,"more equal probabilities (i.e., more randomness) (i.e., less order and structure) (i.e., more impurity)",9,100.0
+,"one dominant probability (i.e., less randomness) (i.e., more order and structure) (i.e., less impurity)",0,0.0
+
+higher entropy means $$\;\;-\sum_k \hat p_k log(\hat p_k) \;\;$$ is a,Activity type,Multiple choice
+,Total responses,10
+,Unique participants,10
+,Response options,Count,Percent
+,larger number,6,60.0
+,smaller number,4,40.0
+
+higher entropy means $$\;\;\sum_k \hat p_k(1-\hat p_k) = 1 - \sum_k \hat p_k^2 \;\;$$ is a,Activity type,Multiple choice
+,Total responses,10
+,Unique participants,10
+,Response options,Count,Percent
+,larger number,10,100.0
+,smaller number,0,0.0

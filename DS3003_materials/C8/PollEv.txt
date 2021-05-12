@@ -1,0 +1,54 @@
+
+q1. What do you make of this association? [q1.png]
+
+It looks strong
+It looks noteworthy
+It's unconvincing
+
+q2. What do you make of the association now (top versus bottom)? [q2.png]
+It still looks strong
+It's less impressive now
+It's still unconvincing
+
+q3. What does it mean if throwing away certain data points changes our opinion of something?
+Well, you can't just "throw away" data!
+Maybe we didn't have enough data to‎start with?
+Our impression on a set of data is guided by specific influential data points...
+
+q4. The squared correlation "R" in this data is about sqrt(2). By the way, two of these are true s*tatements. Which two are true? [q1.png]
+*Correlation is between -1 and 1
+*Slope describes the linear change in y in response‎to changes in x; Correlation describes the variability of data around the linear association
+The greater the correlation, the steeper the slope
+Correlation measures the uncertainty of the linear association
+
+q5. The plot we've been looking at uses R^2 rather than R (which we're focussing on)... have you heard R^2 described as "the proportion of variance explained"? [q1.png]
+Yes
+No
+
+q6. [You have three votes; you can choose one answer twice]: What's a good phrase to describe CORRELATION, a measure of the variability of points off of a line? [q1.png]
+Strength of Association
+Significance of Association
+Degree of Association
+Evidence of Association
+Magnitude of Association
+
+q7. [You have three votes; you can choose one answer twice]: What's a good phrase to describe SLOPE, the average change in Variable Y for a single unit increase in Variable X? [q1.png]
+Strength of Association
+Significance of Association
+Degree of Association
+Evidence of Association
+Magnitude of Association
+
+q8. [You have three votes; you can choose one answer twice]: What's a good phrase to describe STATISTICAL UNCERTAINTY in an estimate of SLOPE or CORRELATION? [q1.png]
+Strength of Association
+Significance of Association
+Degree of Association
+Evidence of Association
+Magnitude of Association
+
+q9. Leaving the question of statistical uncertainty aside for now, what's the most accurate interpretation of this plot? [q1.png]
+Countries that did not wait to institute‎masking policies prevented COVID deaths‎through masking, on average‎
+Countries tend to not institute masking‎policies until pressured to by their number‎of COVID deaths‎
+*Either or Both of the above explanations (or‎even other explanations as well) could be‎contributing to this observed association‎
+*Countries which wait longer to institute‎masking policies also tend to have more‎COVID deaths‎
+

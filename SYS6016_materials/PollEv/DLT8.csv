@@ -1,0 +1,224 @@
+Untitled
+,Activity count,23
+,Participant count,67
+,Average responses,54.82608695652174
+
+0-1 loss doesn't work for SGD because,Activity type,Multiple choice
+,Total responses,64
+,Unique participants,64
+,Response options,Count,Percent,Correctness
+,"If your value is 1 (e.g., at x=-1), there's no derivative (e.g., down is left or right?) that leads parameters in a direction where they achieve a value of 0",51,79.69,Correct
+,"It does work, but just doesn't get used that much because it's numerically unstable (i.e., has a high condition number)",2,3.13,Incorrect
+,"It does work, but just doesn't get used that much because it's gradients are unstable (i.e., has exploding and vanishing gradients)",11,17.19,Incorrect
+
+Choose one of the following:,Activity type,Multiple choice
+,Total responses,66
+,Unique participants,66
+,Response options,Count,Percent,Correctness
+,"I pledge that all Poll Everywhere answers I submit today will (a) be my own and represent my own understandings, and (b) I will not contribute to other students' answers while the poll is active.",62,93.94,Correct
+,I will not be taking this quiz for credit.,4,6.06,Incorrect
+
+$$\sigma/\sqrt{n}$$ is,Activity type,Multiple choice
+,Total responses,66
+,Unique participants,66
+,Response options,Count,Percent,Correctness
+,the reason most optimization algorithms converge much faster (in terms of total computation) when allowed to approximate estimates of the gradient,51,77.27,Correct
+,the central limit theorem,11,16.67,Incorrect
+,"what introduces ""jitter"" (i.e., noise) in the gradient estimates that hurts regularization efforts",4,6.06,Incorrect
+
+What differentiates a Machine Learning problem from an Optimization problem?,Activity type,Multiple choice
+,Total responses,67
+,Unique participants,67
+,Response options,Count,Percent,Correctness
+,Machine learning is interested in finding optimal $$\theta$$ for problems of the form $$y = f_\theta(x)$$,4,5.97,Incorrect
+,"We are trying to optimizing $$E_{(x,y)\sim p_{data}} L(f(\theta; X), Y)$$ by instead optimizing $$E_{(x,y)\sim \hat p_{data}} L(f(\theta; X), Y) + \alpha\Omega(\theta)$$",51,76.12,Correct
+,Machine Learning stops when the gradient of it's objective function is close to $$0$$,2,2.99,Incorrect
+,Optimization is an analytical or computational task whereas Machine Learning is a predictive task,10,14.93,Incorrect
+
+Which of the following IS NOT a challenge facing empirical risk minimization?,Activity type,Multiple choice
+,Total responses,64
+,Unique participants,64
+,Response options,Count,Percent,Correctness
+,High capacity models are prone to overfitting/training set memorize,1,1.56,Incorrect
+,Surrogate loss functions only provide a proxy for the risk of interest,23,35.94,Incorrect
+,Optimization for neural networks suffers greatly in big data contexts,39,60.94,Correct
+,Vanishing gradients in neural networks stalls parameter updating,1,1.56,Incorrect
+
+This figure shows that,Activity type,Multiple choice
+,Total responses,67
+,Unique participants,67
+,Response options,Count,Percent,Correctness
+,local minima are often the reason for poor neural network performance,4,5.97,Incorrect
+,training has been effective despite not arriving at any local minima,63,94.03,Correct
+
+randomizing weight initializations can help by [hint: last question],Activity type,Multiple choice
+,Total responses,67
+,Unique participants,67
+,Response options,Count,Percent,Correctness
+,creating a variety of different activation functions,48,71.64,Correct
+,biasing against vanishing or exploding activations,19,28.36,Incorrect
+
+appropriately scaling weight initializations can help by [hint: next question],Activity type,Multiple choice
+,Total responses,67
+,Unique participants,67
+,Response options,Count,Percent,Correctness
+,creating a variety of different activation functions,11,16.42,Incorrect
+,biasing against vanishing or exploding activations,56,83.58,Correct
+
+If the distribution of activations at each subsequent layer is rapidly changing,Activity type,Multiple choice
+,Total responses,67
+,Unique participants,67
+,Response options,Count,Percent,Correctness
+,correspondingly increasing or decreasing the scale of weight parameter initialization could help,62,92.54,Correct
+,the number of layers in the network should be reduced,5,7.46,Incorrect
+
+If the distribution of gradients at each backprop layer is very small,Activity type,Multiple choice
+,Total responses,67
+,Unique participants,67
+,Response options,Count,Percent,Correctness
+,increasing the scale of weight parameter initialization could help,23,34.33,Correct
+,the number of layers in the network should be reduced,44,65.67,Incorrect
+
+This describes,Activity type,Multiple choice
+,Total responses,66
+,Unique participants,66
+,Response options,Count,Percent,Correctness
+,Momentum,54,81.82,Correct
+,SGD,4,6.06,Incorrect
+,Nesterov Momentum,4,6.06,Incorrect
+,Adam,0,0.0,Incorrect
+,AdaGrad,0,0.0,Incorrect
+,RMSProp,1,1.52,Incorrect
+,RMSProp with Nesterov Momentum,3,4.55,Incorrect
+
+"What imagery below best captures the notion of ""momentum"" in the context of gradient descent?",Activity type,Multiple choice
+,Total responses,64
+,Unique participants,64
+,Response options,Count,Percent,Correctness
+,"An in-motion skier who attempts to follow the ""down"" direction based on where they currently are",15,23.44,Correct
+,"An in-motion skier who attempts to follow the ""down"" direction based on where they predict they will momentarily be",1,1.56,Incorrect
+,"A stationary hiker whose next ""down"" direction step takes into account the steepnesses of all directions they've encountered so far",7,10.94,Incorrect
+,"A stationary hiker whose next ""down"" direction step preferentially takes into account the more recent steepnesses of all directions they've encountered so far",2,3.13,Incorrect
+,"An in-motion skier whose next attempt at ""down"" direction effort preferentially takes into account the more recent steepnesses of all directions they've encountered so far",28,43.75,Incorrect
+,"An in-motion skier whose next attempt at ""down"" direction effort preferentially takes into account the more recent steepnesses of all directions they've encountered so far, including that of where they predict they will momentarily be",11,17.19,Incorrect
+
+This describes,Activity type,Multiple choice
+,Total responses,67
+,Unique participants,67
+,Response options,Count,Percent,Correctness
+,Momentum,0,0.0,Incorrect
+,SGD,1,1.49,Incorrect
+,Nesterov Momentum,65,97.01,Correct
+,Adam,0,0.0,Incorrect
+,AdaGrad,1,1.49,Incorrect
+,RMSProp,0,0.0,Incorrect
+,RMSProp with Nesterov Momentum,0,0.0,Incorrect
+
+"What imagery below best captures the notion of ""Nesterov momentum"" in the context of gradient descent?",Activity type,Multiple choice
+,Total responses,67
+,Unique participants,67
+,Response options,Count,Percent,Correctness
+,"An in-motion skier who attempts to follow the ""down"" direction based on where they currently are",0,0.0,Incorrect
+,"An in-motion skier who attempts to follow the ""down"" direction based on where they predict they will momentarily be",62,92.54,Correct
+,"A stationary hiker whose next ""down"" direction step takes into account the steepnesses of all directions they've encountered so far",1,1.49,Incorrect
+,"A stationary hiker whose next ""down"" direction step preferentially takes into account the more recent steepnesses of all directions they've encountered so far",0,0.0,Incorrect
+,"An in-motion skier whose next attempt at ""down"" direction effort preferentially takes into account the more recent steepnesses of all directions they've encountered so far",4,5.97,Incorrect
+,"An in-motion skier whose next attempt at ""down"" direction effort preferentially takes into account the more recent steepnesses of all directions they've encountered so far, including that of where they predict they will momentarily be",0,0.0,Incorrect
+
+"What imagery below best captures the notion of ""AdaGrad"" in the context of gradient descent?",Activity type,Multiple choice
+,Total responses,67
+,Unique participants,67
+,Response options,Count,Percent,Correctness
+,"An in-motion skier who attempts to follow the ""down"" direction based on where they currently are",0,0.0,Incorrect
+,"An in-motion skier who attempts to follow the ""down"" direction based on where they predict they will momentarily be",0,0.0,Incorrect
+,"A stationary hiker whose next ""down"" direction step takes into account the steepnesses of all directions they've encountered so far",53,79.1,Correct
+,"A stationary hiker whose next ""down"" direction step preferentially takes into account the more recent steepnesses of all directions they've encountered so far",2,2.99,Incorrect
+,"An in-motion skier whose next attempt at ""down"" direction effort preferentially takes into account the more recent steepnesses of all directions they've encountered so far",11,16.42,Incorrect
+,"An in-motion skier whose next attempt at ""down"" direction effort preferentially takes into account the more recent steepnesses of all directions they've encountered so far, including that of where they predict they will momentarily be",1,1.49,Incorrect
+
+This describes,Activity type,Multiple choice
+,Total responses,67
+,Unique participants,67
+,Response options,Count,Percent,Correctness
+,Momentum,0,0.0,Incorrect
+,SGD,2,2.99,Incorrect
+,Nesterov Momentum,0,0.0,Incorrect
+,Adam,1,1.49,Incorrect
+,AdaGrad,59,88.06,Correct
+,RMSProp,4,5.97,Incorrect
+,RMSProp with Nesterov Momentum,1,1.49,Incorrect
+
+This describes,Activity type,Multiple choice
+,Total responses,67
+,Unique participants,67
+,Response options,Count,Percent,Correctness
+,Momentum,0,0.0,Incorrect
+,SGD,1,1.49,Incorrect
+,Nesterov Momentum,0,0.0,Incorrect
+,Adam,4,5.97,Incorrect
+,AdaGrad,0,0.0,Incorrect
+,RMSProp,61,91.04,Correct
+,RMSProp with Nesterov Momentum,1,1.49,Incorrect
+
+"What imagery below best captures the notion of ""RMSProp"" in the context of gradient descent?",Activity type,Multiple choice
+,Total responses,67
+,Unique participants,67
+,Response options,Count,Percent,Correctness
+,"An in-motion skier who attempts to follow the ""down"" direction based on where they currently are",0,0.0,Incorrect
+,"An in-motion skier who attempts to follow the ""down"" direction based on where they predict they will momentarily be",0,0.0,Incorrect
+,"A stationary hiker whose next ""down"" direction step takes into account the steepnesses of all directions they've encountered so far",0,0.0,Incorrect
+,"A stationary hiker whose next ""down"" direction step preferentially takes into account the more recent steepnesses of all directions they've encountered so far",66,98.51,Correct
+,"An in-motion skier whose next attempt at ""down"" direction effort preferentially takes into account the more recent steepnesses of all directions they've encountered so far",1,1.49,Incorrect
+,"An in-motion skier whose next attempt at ""down"" direction effort preferentially takes into account the more recent steepnesses of all directions they've encountered so far, including that of where they predict they will momentarily be",0,0.0,Incorrect
+
+This describes,Activity type,Multiple choice
+,Total responses,0
+,Unique participants,0
+,Response options,Count,Percent,Correctness
+,Momentum,0,0,Incorrect
+,SGD,0,0,Incorrect
+,Nesterov Momentum,0,0,Incorrect
+,Adam,0,0,Correct
+,AdaGrad,0,0,Incorrect
+,RMSProp,0,0,Incorrect
+,RMSProp with Nesterov Momentum,0,0,Incorrect
+
+"What imagery below best captures the notion of ""Adam"" in the context of gradient descent?",Activity type,Multiple choice
+,Total responses,0
+,Unique participants,0
+,Response options,Count,Percent,Correctness
+,"An in-motion skier who attempts to follow the ""down"" direction based on where they currently are",0,0,Incorrect
+,"An in-motion skier who attempts to follow the ""down"" direction based on where they predict they will momentarily be",0,0,Incorrect
+,"A stationary hiker whose next ""down"" direction step takes into account the steepnesses of all directions they've encountered so far",0,0,Incorrect
+,"A stationary hiker whose next ""down"" direction step preferentially takes into account the more recent steepnesses of all directions they've encountered so far",0,0,Incorrect
+,"An in-motion skier whose next attempt at ""down"" direction effort preferentially takes into account the more recent steepnesses of all directions they've encountered so far",0,0,Correct
+,"An in-motion skier whose next attempt at ""down"" direction effort preferentially takes into account the more recent steepnesses of all directions they've encountered so far, including that of where they predict they will momentarily be",0,0,Incorrect
+
+"What imagery below best captures the notion of ""RMSProp with Nesterov momentum"" in the context of gradient descent?",Activity type,Multiple choice
+,Total responses,0
+,Unique participants,0
+,Response options,Count,Percent,Correctness
+,"An in-motion skier who attempts to follow the ""down"" direction based on where they currently are",0,0,Incorrect
+,"An in-motion skier who attempts to follow the ""down"" direction based on where they predict they will momentarily be",0,0,Incorrect
+,"A stationary hiker whose next ""down"" direction step takes into account the steepnesses of all directions they've encountered so far",0,0,Incorrect
+,"A stationary hiker whose next ""down"" direction step preferentially takes into account the more recent steepnesses of all directions they've encountered so far",0,0,Incorrect
+,"An in-motion skier whose next attempt at ""down"" direction effort preferentially takes into account the more recent steepnesses of all directions they've encountered so far",0,0,Incorrect
+,"An in-motion skier whose next attempt at ""down"" direction effort preferentially takes into account the more recent steepnesses of all directions they've encountered so far, including that of where they predict they will momentarily be",0,0,Correct
+
+"In Chapter 8 of the Deep Learning Textbook, $$H' = \gamma\frac{H-\mu}{\sigma} + \beta$$ specifies",Activity type,Multiple choice
+,Total responses,67
+,Unique participants,67
+,Response options,Count,Percent,Correctness
+,batch normalization,58,86.57,Correct
+,Z-scores,1,1.49,Incorrect
+,standardization,2,2.99,Incorrect
+,normalization,6,8.96,Incorrect
+
+What's good about batch normalization $$H' = \gamma\frac{H-\mu}{\sigma} + \beta$$?,Activity type,Multiple choice
+,Total responses,0
+,Unique participants,0
+,Response options,Count,Percent,Correctness
+,It allows us to speed up convergence by increasing the batch size,0,0,Incorrect
+,It reduces the number of parameters in a neural network,0,0,Incorrect
+,It causes weight changes in previous layers to not change the scale of batch normalization layer activations,0,0,Correct
+,"It generalizes ""center and scale"" from class ML to DL",0,0,Incorrect

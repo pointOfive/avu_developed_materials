@@ -1,0 +1,16 @@
+
+
+
+
+Adam: links awesome, wonderful legend/color usage, really col, mape slider size (shiny?), plotly title, over time?
+
+
+
+
+
+
+# https://stackoverflow.com/questions/42821171/fix-plotly-ggplotly-title-overlapping-plot-when-title-is-split-on-two-lines
+ggplotly(some_ggplot_object) %>% layout(margin=list(t = 75))
+
+
+

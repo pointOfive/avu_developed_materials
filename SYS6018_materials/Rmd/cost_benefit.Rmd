@@ -1,0 +1,100 @@
+---
+title: "Cost Benefit Analysis"
+author: "Schwartz"
+date: "10/24/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r data}
+n_F <- 100000
+p_F <- rbeta(n_F, 1, 7)
+n_T <- 2000
+p_T <- rbeta(n_T, 7, 1)
+
+library(tidyverse)
+synth_dat <- tibble(p=p_T,y='T') %>% bind_rows(tibble(p=p_F,y='F'))
+
+synth_dat %>% ggplot(aes(x=p, fill=y), color='black') + 
+  geom_histogram(alpha=0.5) +
+  scale_fill_manual(values=c('forestgreen','purple')) 
+
+```
+
+## Guestimates
+
+- Suppose we think there are 2000 cases.
+- Suppose a successful support operation costs $1000
+- Suppose we have a budget of $2,000,000
+  - So hypothetically we *could* save everybody (of our "estimated" 2000 cases)
+- Suppose the cost of a FP is $300 (out and back logistics)
+- Suppose, from some sort of public opinion/operation effectiveness 
+  perspective, anything at or below supporting 80% of the ("estimated")
+  2000 displaced cases would be considered a disaster effort failure 
+  - here's some (very debatable) back of the envelope logic on FN cost
+    - 80% of 2000 cases is 400 cases and 2M/400=$5000
+    - If the project is "valued" at 2M, and we're allowed 400 "misses"
+    - then each "miss" (up to 400) contributes $5000 of linear failure cost
+
+Very sketchy, admittedly; but -- nonetheless -- 
+this let's us propose a cost-benefit matrix:
+
+|        | $F$ | $T$ |
+|--------|-----|-----|
+|$\hat F$|  0  |-5000|
+|$\hat T$|-300 |-1000|
+
+Notes: 
+
+- Don't forget that the name "cost-benefit" matrix is a misnomer.
+  - This would be better called a "cost" matrix.
+- My "cost" matrix is mixing imaginary "public opinion/project performance"
+  cost with actual relief expenditure costs; but attempts to capture
+  "catastrophic failure" at 80% or less of needed support rendered valued at
+  the (hypothetically) "budgeted" resources of the project.
+
+```{r decisions}
+
+Confusion_Matrix <- set_names(seq(0.01,0.99,0.01)) %>% 
+  map( ~ table(factor(ifelse(synth_dat$p>=.x,'T','F')), factor(synth_dat$y)))
+
+Cost_Benefit_Matrix <- matrix(c(0,-5000,-300,-1000), nrow=2, ncol=2, byrow=TRUE)
+  
+Cost <- Confusion_Matrix %>%
+  map( ~ sum(.x * Cost_Benefit_Matrix))
+
+Cost_actual <- Confusion_Matrix %>%
+  map( ~ sum((.x*Cost_Benefit_Matrix)[2,]))
+
+tibble(threshold=as.numeric(names(Cost)), 
+       cost=unlist(Cost), cost_actual=unlist(Cost_actual)) %>%
+  ggplot() + geom_line(aes(x=threshold, y=cost, color='perceived'), size=3) +
+  geom_line(aes(x=threshold, y=cost_actual, color='actual'), 
+            size=2, linetype='dotted') +
+  ylim(c(-4000000,0)) + scale_fill_manual(values=c('forestgreen','purple')) +
+  geom_abline(slope=0, intercept=-2000000)
+```
+
+## Findings
+
+- So I'd *want* to use the $\approx 0.55$ threshold to keep my "costs" 
+as calculated with my "cost-benefit" matrix idea from getting too great
+- But I'd end up going with a $\approx 0.60$ threshold, becaue that's what I can actually
+support with my budget
+
+```{r results}
+print(Confusion_Matrix[[60]])
+print(Confusion_Matrix[[60]]*Cost_Benefit_Matrix)
+```
+
+My actual choice then is driven by this cost-benefit matrix and my 
+availble budget of $2,000,000
+
+|        | $F$ | $T$ |
+|--------|-----|-----|
+|$\hat F$|  0  |  0  |
+|$\hat T$|-300 |-1000|

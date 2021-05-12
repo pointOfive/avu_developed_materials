@@ -1,0 +1,63 @@
+
+PROJECT PART 1: LITERATURE REVIEW
+
+Due: 2/22 3:30PM EST (before Class 5)
+Late: -10/day (after 3:30PM EST beginning with the start of Class 5)
+Value: 50 points (5% of class grade)
+ML4VA EPISODE 1: THE PASSION PROJECT
+
+Our course project is titled Machine Learning for Virginia (ML4VA). Through this semester long project, you will be working to use deep learning to make a meaningful contribution to the well-being of the state of Virginia and its residents. The project will provide you with a unique opportunity for exploring one or more areas of deep learning that we covered in the course.
+
+TOPIC GENERATION
+
+You may already have ideas about what you'd like to do, or you may not.  To generate ideas and explore feasibility of different possible projects, you should give yourself some time to comfortably review these potential data resources (and any additional data sources you identify):
+
+TFDS: https://homl.info/tfds (https://www.tensorflow.org/datasets/catalog/overview)
+Google: https://datasetsearch.research.google.com/
+UC Irvine Machine Learning Repository: http://archive.ics.uci.edu/ml/
+Kaggle datasets: https://www.kaggle.com/datasets
+Amazon’s AWS datasets: https://registry.opendata.aws/
+Data Portals: http://dataportals.org/
+OpenDataMonitor: http://opendatamonitor.eu/
+Quandl: http://quandl.com/
+Wikipedia’s list of Machine Learning datasets: https://homl.info/9 (https://en.wikipedia.org/wiki/List_of_datasets_for_machine-learning_research)
+Quora.com: https://homl.info/10 (https://www.quora.com/Where-can-I-find-large-datasets-open-to-the-public)
+The datasets subreddit: https://www.reddit.com/r/datasets
+
+You can also review chapter two of the Hands-On Machine Learning (Géron) textbook where (most of) the above are sourced from:
+
+https://learning.oreilly.com/library/view/Hands-On+Machine+Learning+with+Scikit-Learn,+Keras,+and+TensorFlow,+2nd+Edition/9781492032632/ch02.html#project_chapter
+
+Visit the UVA Library: https://search.lib.virginia.edu/
+Search for the textbook: "Hands-On Machine Learning with Scikit-Learn, Keras, and TensorFlow, 2nd Edition"
+Select Online Access by clicking the button for Library Catalog (Access Online) 
+Then, on the next screen, click on the O’Reilly Learning Platform link to access the textbook online 
+NOTE:  The first time I did this, the O’Reilly platform will prompt you to select my institution/University. I couldn’t find UVA/University of Virginia on the list so I selected ‘Not On the List’ which I believe was at the top and was then able to enter my Virginia.edu email address to get access.
+
+DIRECTIONS
+
+A review of the literature is a classification and evaluation of what accredited scholars and researchers have written on a topic. In writing a literature review, your purpose is to convey what knowledge and ideas have been established on a topic, and what their strengths and weaknesses are. A literature review consists of an overview, a summary, and an evaluation/critique of the current state of knowledge about a specific area of research. It may also include a discussion of methodological issues and suggestions for future study. As you have selected a topic of interest, it would be to your benefit to expand your knowledge about the topic. A literature review should demonstrate the following:
+
+Be organized around and related directly to the topic or research question you are developing
+Synthesize results into a summary of what is and is not known
+Identify areas of controversy in the literature 
+Formulate questions that need further research
+OVERLEAF AS PAPER WRITING
+
+For this project, Overleaf is strongly recommended to collaborate and share your latex document throughout the semester. UVA has an agreement with Overleaf, and as a UVA student, you can sign up for free at www.overleaf.com. 
+
+After you have signed up for an account:
+
+Log in and click New Project, then click Academic Journal from the templates. 
+In the template gallery, select the Style and Template for Preprints (arXiv, bio-arXiv) template.
+Click Open Template and start editing the document template. 
+Note that the template already has some existing text, which you may overwrite for your project, but keep some LaTeX Structures (i.e., subsection, figure, reference, etc) just in case you need them later.
+
+ 
+
+SUBMISSION INSTRUCTIONS
+
+Save your file as a PDF with 3-5 pages in length and submit it through Collab.
+Ensure to include your name and UVA computing ID in your document.
+Name your PDF file yourcomputingID_topic_LitRev.pdf
+

@@ -1,0 +1,34 @@
+
+
+Project Part 7: Model Deployment and Scale Up
+Due: 5/3 3:30PM EST (before Class 27)
+Late: 0 (after 3:30PM EST beginning with the start of Class 27)
+Value: 20 points (2% of class grade)
+In this checkpoint, you will provide steps to deploy your model on Google Cloud AI Platform and scale up your service. The Google Cloud AI Platform will require some setup to connect to your account, including billing information, your project, and your model version. You will also have to consider deploying your project to a mobile app, embedded devices, or a web app.
+
+ML4VA EPISODE 7: YOU'RE OVERLOADING ME
+
+
+DIRECTIONS
+
+Your deployment plan should include the full names of all your team members and state the full title of your project. Your document should be at most two pages and include:
+
+Abstract: A short summary describing your project.
+Platform: What platform did you decide to pursue and why?
+Model Deployment Setup: Describe how your model will interact with the user. If your team decides to set up your model on the cloud, you will need to describe how you configure the AI platform for prediction service.
+Scale up Plan: Given your results, what are the next steps that you’re considering for scaling up your service?
+Each team needs to submit one PDF on Collab. It is mostly intended to get feedback from TAs to make sure you’re making a reasonable plan. As long as you follow the instructions above and you seem to have tested any assumptions that might prevent your team from completing the project, you should do well on this milestone.
+
+ 
+
+SUBMISSION INSTRUCTIONS
+
+Be sure to include the following in your team document:
+
+The title of the project
+The full names and UVA IDs of team members
+Designate a single team member to submit your document titled as: 
+
+"projectTitle_teamMemberComputingIDs_deployment.pdf"
+
+

@@ -1,0 +1,514 @@
+---
+title: "Mod_8_Live"
+author: "Schwartz"
+date: "10/10/2020"
+output: html_document
+---
+
+
+## Announcements
+
+- +2 points for midterm poll
+- questions to end
+
+### Motivation
+As a very ubiquitous building block of the ensemble methods topic of module 8, it's important to understand decisions trees construction (from module 7), so I did want to reference them with a little bit of discussion time
+- how they're built, generally
+- the specific details of split decisions in regression and classification (RSS and gini/entropy)
+- and their general character and behavior as data models, per se
+
+I did not explicitly address bagging as a topic because the idea of "x-bar" I think is familiar enough; however
+- the notion that when you "average trees" (fit on the similar variations data set created via bootstrapping), you're averaging "correlated things" and you would instead get more information if you average "uncorrelated things" is an important concept for Random Forests
+- This realization is what leads to the "number of variables randomly available for splitting" mechanism employed by Random Forests as a means to help "decorrelate trees" as much as possible before they're averaged
+
+Everything above is what underlies and defines random forests, and since nothing there is particularly "counter-intuitive" there, I decided that what I should focus on is that "counter" to the "intuitive" understanding that "linear models are interpretable and 'black-box' machine learning algorithms are not", in fact -- on the contrary -- "black box" machine learning algorithms are extremely interpretable; hence,
+- a focus on Feature Importance as an analog of the information provided by "coefficients" in linear model was included
+  - this necessitated further discussion about the construction of Feature Importances
+    - version 1 (not actually used): predictive gain attributable to features by splitting
+    - version 2 (what is used): shuffling, i.e., "permuting and breaking" a column to see it's relative degradation impact on the models predictive performance
+- a focus on the "hold all other features fixed and increase one X by on unit" interpretation employed by linear models was then examined
+  - which naturally leads to the understanding that this can be done (using the synthetic data technique I described) for all predictive models -- not just linear regression models -- so in the end there's not really a whole lot left in terms of "interpretation capability" offered by linear regression that's actually unique
+    - though of course linear/logistic regression is a linear model... so that particular mode of interpretation/understandability of course remains specific to linear/logistic regression methodologies
+Finally, I think it's important to have an intuition on what gradient boosting is (the key points of which are discussed above), so in my materials I tried to emphasize that
+- it's a sequential model fitting technique that's unlike any of our other ML methodologies
+- it has lots of tuning dials
+  - two incredably important ones are the learning rate and the number of trees as they control over and under (i.e., totally wrong) fitting
+  - but the other tuning dials are incredibly important as well for fine tuning and totall maximizing predictive performance 
+- it's incredibly computationally expensive, which appears to be the primary barrier for its general use
+- because, otherwise, no other single ML algorithm can compete with gradient boosting when it comes to getting the right model flexibility (optimizing the bias/variance tradeoff across all parts of the model) correct
+  - it was my intention to emphasize that while we cannot say gradient boosting is universally "better" than the other methodologies we have at our disposal, empirically speaking, gradient boosting generally is better than the other methodologies
+
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      fig.align = "center",
+                      out.width = "80%")
+```
+
+# Random Forest
+
+```{r pdp_1}
+boston <- data.frame(scale(MASS::Boston))
+boston$rad <- factor(boston$rad)
+
+rf.pdp <- caret::train(medv~., data=boston, method='rf', 
+                       #preProcess='scale',
+                       nodesize=30, importance=TRUE,
+                       tuneGrid=data.frame(mtry=1:(ncol(boston)-1)),
+                       trControl=caret::trainControl("cv", number=5))
+```
+
+- I'm standardizing -- don't need to
+  - but I'm doing it later for `lm` so coefficient magnitudes mean something
+- RF are my favorite
+- RF are very robust against overfitting
+  - but of course they *are* a model so they _certainly_ *can* overfit
+- **how is a random forest built??**
+
+# Linear Model
+
+```{r pdp_2}
+
+lm.pdp <- caret::train(medv~I(crim^2)+I(indus^2)+chas+I(nox^2)+I(rm^2)+I(age^2)+
+                       I(dis^2)+rad+I(tax^2)+I(ptratio^2)+I(black^2)+I(lstat^2)+
+                       (crim+zn+indus+nox+rm+age+dis+tax+ptratio+black+lstat)^2,
+                       data=boston, method='lm',
+                       trControl=caret::trainControl("none"))
+
+lm.pdp$finalModel %>% broom::tidy()
+```
+# Coefficients
+
+```{r pdp_3}
+lm.pdp$finalModel %>% broom::tidy() %>% dplyr::arrange(estimate) %>%
+  dplyr::mutate(term = factor(term, levels=term)) %>%
+  ggplot(aes(y=term, x=estimate)) + geom_bar(stat='identity', orientation='y')
+```
+
+- these are on the same scale so they're interpretable, relatively speaking
+
+# Feature Importances
+
+```{r pdp_3}
+importance <- randomForest::importance(rf.pdp$finalModel)
+importance %>% as_tibble(importance) %>%
+  tibble::add_column(feature=rownames(importance)) %>% 
+  dplyr::arrange(`%IncMSE`) %>% 
+  dplyr::mutate(feature = factor(feature, levels=feature)) %>%
+  ggplot(aes(y=feature, x=`%IncMSE`)) + 
+    geom_bar(stat='identity', orientation='y')
+```
+
+- but look, we can do this with a random forest -- and it's even simpler!
+  - measure increased OOB error (MSE) when a feature is shuffled
+  - the more MSE is hurt, the more important the feature is in the model!
+  - *ONLY use this OOB error for feature importance (`importance=TRUE`)*
+  - calculating the reduction in MSE due to each split is biased to the fit
+  - OOB error/MSE is an "out-of-sample" score!
+- ... 
+- okay, fine; but, we have those coeficients that we can interpret
+  - and they mean something!:
+  - hold everything else fixed, and the coefficients are then the change 
+    for one unit increase in the feature!
+    - like this, below!:
+
+# Partial Dependency Plots
+
+```{r pdp_5}
+PDP <- function(lstat_setting, mod, func){
+  boston_permuted$lstat <- lstat_setting
+  predict(mod, newdata=boston_permuted) %>% func
+}
+trend_sd_func <- function(x) sd(x)/sqrt(length(x))
+
+boston_permuted <- boston
+m <- 50
+boston %>% dplyr::select(lstat) %>% modelr::seq_range(n=m) %>%
+  purrr::set_names() %>% purrr::map(~ PDP(.x, rf.pdp, mean)) -> rf.trend
+boston %>% dplyr::select(lstat) %>% modelr::seq_range(n=m) %>%
+  purrr::set_names() %>% 
+  purrr::map(~ PDP(.x, rf.pdp, trend_sd_func)) -> rf.trend_sd
+boston %>% dplyr::select(lstat) %>% modelr::seq_range(n=m) %>%
+  purrr::set_names() %>% purrr::map(~ PDP(.x, lm.pdp, mean)) -> lm.trend
+boston %>% dplyr::select(lstat) %>% modelr::seq_range(n=m) %>%
+  purrr::set_names() %>% 
+  purrr::map(~ PDP(.x, lm.pdp, trend_sd_func)) -> lm.trend_sd
+
+# http://www.cookbook-r.com/Graphs/Colors_(ggplot2)/#a-colorblind-friendly-palette
+cbbPalette <- c("#009E73", "#CC79A7", "#000000", "#E69F00", 
+                "#F0E442", "#56B4E9", "#0072B2", "#D55E00")
+ggplot() + 
+  geom_line(data=tibble::tibble(lstat=as.numeric(names(unlist(rf.trend))),
+                                `ave(y) and sd(ave(y))`=unlist(rf.trend)), 
+            mapping=aes(x=lstat, y=`ave(y) and sd(ave(y))`, color='RF')) +
+  geom_ribbon(data=tibble::tibble(
+                   upper=unlist(rf.trend)+2*unlist(rf.trend_sd),
+                   lower=unlist(rf.trend)-2*unlist(rf.trend_sd),
+                   lstat=as.numeric(names(unlist(rf.trend)))), 
+              mapping=aes(x=lstat, ymin=lower, ymax=upper), 
+              fill = "black", alpha = 0.2) +
+  geom_line(data=tibble::tibble(lstat=as.numeric(names(unlist(lm.trend))),
+                                `ave(y) and sd(ave(y))`=unlist(lm.trend)), 
+            mapping=aes(x=lstat, y=`ave(y) and sd(ave(y))`, color='LM')) +
+  geom_ribbon(data=tibble::tibble(
+                   upper=unlist(lm.trend)+2*unlist(lm.trend_sd),
+                   lower=unlist(lm.trend)-2*unlist(lm.trend_sd),
+                   lstat=as.numeric(names(unlist(lm.trend)))), 
+              mapping=aes(x=lstat, ymin=lower, ymax=upper), 
+              fill = "black", alpha = 0.2) +
+  scale_colour_manual(values=cbbPalette)
+
+```
+
+- oh...
+  - ...so...
+    - you can hold everything else fixed and move x...
+      - that's the  definition of "intepretability" in lm...
+      - you can do that in other models as well...
+    - lm is actually not so much more interpretable than *ANYTHING ELSE*...?!?!?
+- the `gbm` library calls these "Marginal plots" (`?gbm::plot.gbm`)
+- they are also called partial dependence plots 
+  - and are similar to partial effects plots
+  - https://stats.stackexchange.com/questions/371439/partial-effects-plots-vs-partial-dependence-plots-for-random-forests
+
+# Gradient Boosting
+
+```{r GB_1}
+set.seed(1)
+gbt.caret <- caret::train(medv~., data=boston, method='gbm', verbose=FALSE,
+                          tuneGrid=expand.grid(n.trees=1:10000, 
+                                              shrinkage=c(0.001, 0.01, 0.1, 1.0),
+                                              interaction.depth=c(1,4),
+                                              n.minobsinnode=10),
+                          trControl=caret::trainControl("cv", number=5))
+```
+
+- RF is my favorite, but Gradient Boosting wins all the competitions
+  -  or, actually, stacking wins all the competitions, but, GB wins 1v1's
+    - well, actually, deep learning wins all the competitions, but...
+- GB can be done with any models -- the most "vanilla" version uses
+   stumps -- i.e., simple trees.
+    
+# Gradient Boosting: Tuning/Overfitting
+
+```{r GB_2}
+rf.pdp
+```
+
+```{r GB_3}
+cbbPalette <- c("#009E73", "#CC79A7", "#000000", "#E69F00", 
+                "#F0E442", "#56B4E9", "#0072B2", "#D55E00")
+# https://www.r-graph-gallery.com/line-chart-several-groups-ggplot2.html
+gbt.caret$results %>% dplyr::mutate(tuning = paste("LR",shrinkage,"DP",interaction.depth)) %>%
+  ggplot(aes(x=n.trees, y=RMSE, group=tuning, color=tuning)) +
+  geom_line(size=2) + scale_colour_manual(values=cbbPalette) +
+  ggtitle("K-folds average out-of-sample RMSE")
+```
+
+- there are a lot of dials in gradient boosting
+
+
+```{r GB_3}
+gbt.caret$results
+gbt.caret$bestTune %>% inner_join(gbt.caret$results)
+```
+
+
+# a deeper look a the models we're working with...
+
+
+```{r data}
+carseats <- ISLR::Carseats
+
+#High=factor(ifelse(Sales<=8,"No","Yes"))
+High <- factor(ifelse(carseats$Sales<=8, "No", "Yes"))
+
+library(tidyverse)
+#Carseats=data.frame(Carseats,High)
+carseats <- tibble(carseats) %>% add_column(High)
+```
+
+
+```{r sample}
+carseats %>% ggplot(aes(x=Price, y=CompPrice, color=High)) +
+  geom_point()
+```
+
+```{r knn}
+carseats.knn_fits <- caret::train(High~Price+CompPrice, data=carseats, 
+                                   method='knn', 
+                                   tuneGrid=data.frame(k=seq(1,101,2)),
+                      trControl=caret::trainControl("cv", number=5))
+
+m=50
+Price.support <- carseats %>% dplyr::select(Price) %>% modelr::seq_range(n=m)
+CompPrice.support <- carseats %>% 
+  dplyr::select(CompPrice) %>% modelr::seq_range(n=m)
+Price.grid <- outer(Price.support, CompPrice.support, function(x1, x2) x1)
+CompPrice.grid <- outer(Price.support, CompPrice.support, function(x1, x2) x2)
+
+carseats.knn_fits <- update(carseats.knn_fits, param=list(k=3))
+phat <- predict(carseats.knn_fits, type='prob',
+                newdata=tibble(Price=c(Price.grid),
+                               CompPrice=c(CompPrice.grid)))
+phat <- matrix(phat$Yes, nrow=m, ncol=m) 
+
+
+# https://plotly.com/r/3d-axes/
+# https://plotly.com/r/3d-surface-plots/
+plotly::plot_ly(x=Price.grid, y=CompPrice.grid, z=phat, type='surface') %>%
+  layout(title = "knn.phat",
+         scene = list(xaxis=list(title="Price"),
+                      yaxis=list(title = "CompPrice"),
+                      zaxis=list(title = "p-hat", range=c(-1,2)))) %>%
+  add_surface(contours = list(z = list(show=TRUE, 
+                                       usecolormap=TRUE, 
+                                       highlightcolor="#ff0000",
+                                       project=list(z=TRUE),
+                                       start = 0, end = 1,
+                                       size = 1/length(unique(c(phat))))))
+
+
+```
+
+```{r dt}
+
+carseats.dt_fits <- rpart::rpart(High~Price+CompPrice, data=carseats, 
+                                 method='class', 
+                                 control=rpart::rpart.control(minsplit=6, 
+                                                              minbucket=3, 
+                                                              cp=0, xval=10,
+                                                              maxdepth=9))
+#prune_level <- carseats.dt_fits$cptable[10,'CP']
+#carseats.dt_fits.prune <- rpart::prune(carseats.dt_fits, 
+#                                       cp=prune_level)
+nodes <- sort(as.numeric(row.names(carseats.dt_fits$frame)))
+
+prune_level <- 5
+carseats.dt_fits.prune <- carseats.dt_fits
+for (i in length(nodes):prune_level){
+  #https://www.rdocumentation.org/packages/rpart/versions/4.1-15/topics/snip.rpart
+  carseats.dt_fits.prune <- rpart::snip.rpart(carseats.dt_fits.prune, nodes[i])
+}
+
+phat <- predict(carseats.dt_fits.prune, type='prob',
+                newdata=tibble(Price=c(Price.grid),
+                               CompPrice=c(CompPrice.grid)))
+phat <- matrix(phat[,'Yes'], nrow=m, ncol=m) 
+
+# https://plotly.com/r/3d-axes/
+# https://plotly.com/r/3d-surface-plots/
+plotly::plot_ly(x=Price.grid, y=CompPrice.grid, z=phat, type='surface') %>%
+  layout(title="knn.phat",
+         scene=list(xaxis=list(title="Price"),
+                    yaxis=list(title="CompPrice"),
+                    zaxis=list(title="p-hat", range=c(-1,2)))) %>%
+  add_surface(contours=list(z=list(show=TRUE, 
+                                   usecolormap=TRUE, 
+                                   highlightcolor="#ff0000",
+                                   project=list(z=TRUE),
+                                   start=0, end=1,
+                                   size=1/length(unique(c(phat))))))
+
+
+```
+
+
+
+```{r rf}
+#https://machinelearningmastery.com/tune-machine-learning-algorithms-in-r/
+
+# randomForest tuning pars: nodesize, maxnodes, sampsize
+rfs <- purrr::set_names(1:100) %>% 
+  purrr::map( (function(.x=.x){ set.seed(1); 
+               caret::train(High~Price+CompPrice, data=carseats, method='rf', 
+                            ntree=.x, nodesize=30, tuneGrid=data.frame(mtry=1),
+                            trControl=caret::trainControl('none'))}))
+
+phat <- predict(rfs[[100]], type='prob',
+                newdata=tibble(Price=c(Price.grid),
+                               CompPrice=c(CompPrice.grid)))
+phat <- matrix(phat$Yes, nrow=m, ncol=m) 
+
+plotly::plot_ly(x=Price.grid, y=CompPrice.grid, z=phat, type='surface') %>%
+  layout(title="rf.phat",
+         scene=list(xaxis=list(title="Price"),
+                    yaxis=list(title="CompPrice"),
+                    zaxis=list(title="p-hat", range=c(-1,2)))) %>%
+  add_surface(contours=list(z=list(show=TRUE, 
+                                   usecolormap=TRUE, 
+                                   highlightcolor="#ff0000",
+                                   project=list(z=TRUE),
+                                   start=0, end=1,
+                                   size=1/length(unique(c(phat))))))
+
+```
+
+
+```{r gbt}
+carseats.gbt_fits <- caret::train(High~Price+CompPrice, data=carseats, 
+                                  method='gbm',verbose=FALSE,
+                     tuneGrid=expand.grid(n.trees=1:5000, 
+                                          shrinkage=0.01,
+                                          interaction.depth=4,
+                                          n.minobsinnode=10),
+                     trControl=caret::trainControl("cv", number=5))
+
+carseats.gbt_fits.step <- update(carseats.gbt_fits, 
+  param=list(n.trees=500, shrinkage=0.01,
+             interaction.depth=4, n.minobsinnode=10))
+
+phat <- predict(carseats.gbt_fits.step, type='prob',
+                newdata=tibble(Price=c(Price.grid),
+                               CompPrice=c(CompPrice.grid)))
+phat <- matrix(phat$Yes, nrow=m, ncol=m) 
+
+plotly::plot_ly(x=Price.grid, y=CompPrice.grid, z=phat, type='surface') %>%
+  layout(title = "knn.phat",
+         scene = list(xaxis=list(title="Price"),
+                      yaxis=list(title="CompPrice"),
+                      zaxis=list(title="p-hat", range=c(-1,2)))) %>%
+  add_surface(contours=list(z=list(show=TRUE, 
+                                   usecolormap=TRUE, 
+                                   highlightcolor="#ff0000",
+                                   project=list(z=TRUE),
+                                   start=0, end=1,
+                                   size=1/length(unique(c(phat))))))
+```
+
+
+```{r shiny}
+
+library(shiny)
+
+ui <- fluidPage(
+  titlePanel("Dials"),
+  sidebarLayout(sidebarPanel(
+    sliderInput(inputId="knn", label="K for KNN", 
+                min=1, max=49, value=1, step=2),
+    sliderInput(inputId="dt", label="Nodes in Decision Tree", 
+                min=1, max=length(nodes)-1, value=1, step=1),
+    sliderInput(inputId="rf", label="Trees in Random Forest", 
+                min=1, max=100, value=1, step=1),
+    textInput(inputId="gbt", label="Steps in Gradient Boosted Trees", "1")),
+    mainPanel(fluidRow(splitLayout(cellWidths=c("50%","50%"),
+                                   plotlyOutput(outputId="knn_p"),
+                                   plotlyOutput(outputId="dt_p"))),
+              fluidRow(splitLayout(cellWidths=c("50%","50%"),
+                                   plotlyOutput(outputId="rf_p"),
+                                   plotlyOutput(outputId="gbt_p"))))))
+              
+
+server <- function(input, output) {
+  
+  output$knn_p <- renderPlotly({
+  
+    carseats.knn_fits <- update(carseats.knn_fits, 
+                                param=list(k=as.integer(input$knn)))
+    phat <- predict(carseats.knn_fits, type='prob',
+                    newdata=tibble(Price=c(Price.grid),
+                                  CompPrice=c(CompPrice.grid)))
+    phat <- matrix(phat$Yes, nrow=m, ncol=m) 
+
+    # https://plotly.com/r/3d-axes/
+    # https://plotly.com/r/3d-surface-plots/
+    plotly::plot_ly(x=Price.grid, y=CompPrice.grid, z=phat, type='surface') %>%
+      layout(title="knn.phat",
+             scene=list(xaxis=list(title="Price"),
+                      yaxis=list(title="CompPrice"),
+                      zaxis=list(title="p-hat", range=c(-1,2)))) %>%
+      add_surface(contours=list(z=list(show=TRUE, 
+                                       usecolormap=TRUE, 
+                                       highlightcolor="#ff0000",
+                                       project=list(z=TRUE),
+                                       start=0, end=1,
+                                       size=1/length(unique(c(phat))))))
+  })
+  
+  output$dt_p <- renderPlotly({   
+    
+    prune_level <- input$dt
+    carseats.dt_fits.prune <- carseats.dt_fits
+    for (i in length(nodes):prune_level){
+      #https://www.rdocumentation.org/packages/rpart/versions/4.1-15/topics/snip.rpart
+      carseats.dt_fits.prune <- rpart::snip.rpart(carseats.dt_fits.prune, nodes[i])
+    }
+
+    phat <- predict(carseats.dt_fits.prune, type='prob',
+                    newdata=tibble(Price=c(Price.grid),
+                                   CompPrice=c(CompPrice.grid)))
+    phat <- matrix(phat[,'Yes'], nrow=m, ncol=m) 
+
+    # https://plotly.com/r/3d-axes/
+    # https://plotly.com/r/3d-surface-plots/
+    plotly::plot_ly(x=Price.grid, y=CompPrice.grid, z=phat, type='surface') %>%
+      layout(title="dt.phat",
+             scene=list(xaxis=list(title="Price"),
+                        yaxis=list(title="CompPrice"),
+                        zaxis=list(title="p-hat", range=c(-1,2)))) %>%
+  add_surface(contours=list(z=list(show=TRUE, 
+                                   usecolormap=TRUE, 
+                                   highlightcolor="#ff0000",
+                                   project=list(z=TRUE),
+                                   start=0, end=1,
+                                   size=1/length(unique(c(phat))))))
+  })
+
+  output$rf_p <- renderPlotly({
+    
+    phat <- predict(rfs[[as.integer(input$rf)]], type='prob',
+                newdata=tibble(Price=c(Price.grid),
+                               CompPrice=c(CompPrice.grid)))
+    phat <- matrix(phat$Yes, nrow=m, ncol=m) 
+
+    plotly::plot_ly(x=Price.grid, y=CompPrice.grid, z=phat, type='surface') %>%
+      layout(title="rf.phat",
+             scene=list(xaxis=list(title="Price"),
+                        yaxis=list(title="CompPrice"),
+                        zaxis=list(title="p-hat", range=c(-1,2)))) %>%
+      add_surface(contours=list(z=list(show=TRUE, 
+                                       usecolormap=TRUE, 
+                                       highlightcolor="#ff0000",
+                                       project=list(z=TRUE),
+                                       start=0, end=1,
+                                       size=1/length(unique(c(phat))))))
+  })
+
+  output$gbt_p <- renderPlotly({
+        
+    carseats.gbt_fits.step <- update(carseats.gbt_fits, 
+    param=list(n.trees=as.integer(input$gbt), shrinkage=0.01,
+               interaction.depth=4, n.minobsinnode=10))
+
+    phat <- predict(carseats.gbt_fits.step, type='prob',
+                    newdata=tibble(Price=c(Price.grid),
+                                   CompPrice=c(CompPrice.grid)))
+    phat <- matrix(phat$Yes, nrow=m, ncol=m) 
+
+    plotly::plot_ly(x=Price.grid, y=CompPrice.grid, z=phat, type='surface') %>%
+      layout(title = "gbt.phat",
+             scene = list(xaxis=list(title="Price"),
+                          yaxis=list(title="CompPrice"),
+                          zaxis=list(title="p-hat", range=c(-1,2)))) %>%
+      add_surface(contours = list(z=list(show=TRUE, 
+                                          usecolormap=TRUE, 
+                                          highlightcolor="#ff0000",
+                                          project=list(z=TRUE),
+                                          start=0, end=1,
+                                          size=1/length(unique(c(phat))))))
+  })
+}   
+
+shinyApp(ui=ui, server=server)
+
+```
+
+
+## My questions
+
+- no questions this time
+- what does multicollinearity do in random forests?
+
+PollEv.com/scottschwart658
+

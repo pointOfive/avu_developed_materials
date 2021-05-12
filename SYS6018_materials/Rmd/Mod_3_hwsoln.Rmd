@@ -1,0 +1,643 @@
+---
+title: "Some tidyverse solutions for ISLR chapter 4"
+author: "**Schwartz**"
+date: "09/01/2020"
+output: html_document
+---
+
+<!--- Below are global settings for knitr. You can override any of them by adding the changes to individual chunks --->
+```{r global_options, include=FALSE}
+knitr::opts_chunk$set(error=TRUE,        # Keep compiling upon error
+                      collapse=FALSE,    # collapse by default
+                      echo=TRUE,         # echo code by default
+                      comment = "#>",    # change comment character
+                      fig.width = 5.5,     # set figure width
+                      fig.align = "center",# set figure position
+                      out.width = "80%", # set width of displayed images
+                      warning=FALSE,     # do not show R warnings
+                      message=FALSE)     # do not show R messages
+```
+
+<!--- Change font size for headers --->
+<style>
+h1.title {
+  font-size: 28px;
+}
+h1 {
+  font-size: 22px;
+}
+h2 {
+  font-size: 18px;
+}
+h3 { 
+  font-size: 14px;
+}
+
+</style>
+
+## 5. Conceptual {.tabset}
+
+### (a) L/QDA
+
+If the decision boundary is linear, then allowing for a quadratic decision 
+boundary only serves to open your model fit up to identifying curvature in a 
+training data set that *can not possibly* generalize to future samples which
+originate from a linearly separating space.  Sure, QDA -- a more flexible model 
+-- will almost necessarily perform better in a training context than LDA
+(though note here that when we introduce the K-folds cross-validation 
+out-of-sample performance based training paradigm we will have a way to simulate 
+a testing set using our training data and so this statement will become to some
+degree somewhat obsolete and "less true" at that time); but, we are only risking 
+over-fitting with the QDA approach in this context, and so we should expect to 
+see LDA perform better when it comes to testing data. 
+
+### (b) Q/LDA
+
+In the reverse context of a non-linearly separating space, the conclusions are
+somewhat the opposite in that QDA is going to have a better chance to outperform
+LDA in *both* the training *and* testing contexts.  But with that said, what
+does non-linear decision boundary mean here?  How non-linear, exactly?  Sure,
+QDA is non-linear, but it's not *EVERY* kind of non-linear.  It might be that
+QDA itself is not quite flexible enough as a model to really provide much more
+over what LDA might be able to provide.  Like, imagine a decision boundary 
+that's basically linear but snakes around back and fourth between either side
+of that general boundary.  I  could see LDA perhaps outperforming QDA here,
+because the kind of non-linearity that's present is not the kind of 
+non-linearity that QDA can provide in terms of model fitting capability. 
+
+### (c) n
+
+Generally speaking, with greater n comes greater responsibility.  You've got
+more data!! You should be trying to do more with it!! I.e., use a more flexible
+model that can capture more precise trend generalizations that might exist in
+the data!  If the non-linear modeling capability that QDA can provide will 
+benefit the fit of the model on the data (i.e., there is a true trend in the
+data that QDA could advantageously model beyond what LDA could) then you're 
+going to reap that gain in BOTH your training and testing context with increased
+n.
+
+### (d) again
+
+False.  Just... false.  The above answers should have clarified this. 
+But just to rehash the rationale here, suppose you find some spurious, i.e., 
+not real quadratic trend in your trained decision boundary.  That's wrong.
+So you're now telling me you want to hope to "get lucky" again with the test
+data set and bet that it will exhibit and follow the same 
+*NOT TRUE(/generalizable)* characteristic observed in a training data set?? No.
+What you want to do is find trends that *generalize* outside of your training
+data set to *other* data sets.  Who cares how well you model performs on 
+data that it already knows the answer too!
+
+
+## 10 Weekly {.tabset}
+
+### (a) First Impressions
+
+Volatility in weekly percentage return (`Today`) is not constant over time, and 
+there is a increase in `Volume` over the time series, particularly towards the 
+end of the series. Otherwise, this series appears to exhibit a somewhat typical 
+random walk around a stationary distribution, as judged by a sliding window 
+average on `Direction`, and there are no missing values.
+
+`install.packages('slider')`
+```{r first_impressions}
+# First, I'm not keen just yet to "just trust" the order.
+# - `?Weekly` doesn't convince me
+# - It shows 1089, which I confirm `Weekly %>% dim()`
+# - And I can see the years ARE increasing:
+# `Weekly %>% mutate(Year_delta = Year-lag(Year)) %>% 
+#    dplyr::select(Year_delta) %>% summary()`
+# - And that it IS the right number of weeks in a year:
+# `Weekly %>% dplyr::select(Year) %>% table()`
+# Okay -- I'm going to *trust* the row order...
+
+# to start with I am *NOT* interested in the auto-regressive properties,
+# i.e., lag 1, 2, etc.: let's *just* look at the trends in the primary variables
+
+library(tidyverse)
+library(ISLR)
+library(slider)
+Weekly %>% mutate(Up = slider::slide_dbl(as.numeric(Direction)-1, mean, 
+                                        .before=5, .after=5)) %>%
+  pivot_longer(cols=c(Volume, Today, Up), 
+               names_to="variable", values_to="value") %>% 
+  ggplot(aes(x=seq_along(value), y=value)) + geom_path() + 
+  facet_wrap(vars(variable), nrow=3, scale='free') + xlab('Week') +
+  theme(axis.text.x=element_blank(), axis.ticks.x=element_blank())
+
+# There are no missing values
+Weekly %>% dplyr::select(-Direction) %>% colMeans()
+Weekly %>% dplyr::select(Direction) %>% table()
+```
+
+### (b) glm(..., family=binomial)
+
+`Lag2` appears interesting at the $\alpha=0.05$ level.
+
+```{r logistic_regression}
+lr.up.fit <- glm(Direction~.-Year-Today, family=binomial, data=Weekly) 
+lr.up.fit %>% broom::tidy()
+```  
+
+### (c) Confusion Matrix
+
+Going with a `Lag2` only model (since we didn't see evidence encouraging the use 
+of the other features from the significance values above) and a decision 
+threshold right at the sample average "Up percentage" (i.e., the intercept of 
+the "Up" prediction model) gives us the confusion matrix below. This "sample 
+'Up' average" classification threshold rule sacrifices slightly worse 
+*False Negative ("downs")* performance in order to reduce 
+*False Positives ("ups")*.  So we are generally better at our calls when
+we predict "Up" relative to when we predict "Down".  This is probably the right
+sort of orientation for this application -- we don't want to find ourselves in
+the position of betting on "Ups" and have the actual result being a "Down" too
+often. But in that respect, we'll probably want to change our threshold to a 
+less aggressive "Up" caller.  We're *still* making calls with an awful lot of 
+*False Positives*...
+
+```{r confusion_matrix}
+lr.up.lag2.fit <- glm(Direction~Lag2, family=binomial, data=Weekly) 
+# Up=1 ---> `contrasts(Weekly[['Direction']])`
+Dir_levs <- levels(Weekly[['Direction']])
+Intercept <- lr.up.lag2.fit %>% broom::tidy() %>% 
+  dplyr::select(estimate) %>% slice(1) %>% pull()
+
+library(yardstick)
+lr.up.lag2.fit %>% broom::augment() %>%
+  mutate(.pred = ifelse(.fitted>Intercept, 'Up', 'Down')) %>%
+  mutate(.pred = forcats::as_factor(.pred)) %>%
+  mutate(.pred = forcats::fct_relevel(.pred, Dir_levs)) %>%
+  conf_mat(truth=Direction, estimate=.pred)
+```  
+
+### (d) Lag2 redux
+
+Lucky for me I already noticed that I should reduce my model down to using just
+the `Lag2` feature given the significance results from part (b).  
+
+I did not, however, use a train/test split framework for that analysis. Instead, 
+I just relied upon the statistical significance measures provided by logistic
+regression to inform my opinions regarding my modeling choices.  This is quite 
+"okay" in the context of logistic regression, but for other methodologies that 
+are not designed around producing statistical significance measures, we 
+definitely need to place our analysis squarely within a train/test
+framework.  You're going to quickly find out that the models we're able to use 
+easily become *far* too flexible to attempt to use them without a train/test to 
+approach to protect us from over-fitting. Fortunately, it's shockingly simple 
+and ridiculously easy to set up and use a train/test framework, as you can see 
+below.
+
+
+```{r train_test}
+train_indices <- Weekly %>% rowid_to_column() %>% 
+  filter(Year >= 1990, Year <= 2008) %>% dplyr::select(rowid) %>% pull()
+lr.up.lag2.train_fit <- glm(Direction~Lag2, family=binomial, 
+                            data=Weekly[train_indices,]) 
+lr.up.lag2.train_fit.intercept <- lr.up.lag2.train_fit %>% broom::tidy() %>% 
+  dplyr::select(estimate) %>% slice(1) %>% pull()
+
+lr.up.lag2.train_fit.test_conf_mat <- lr.up.lag2.train_fit %>%
+   broom::augment(newdata=Weekly[-train_indices,]) %>%
+  mutate(.pred = ifelse(.fitted>lr.up.lag2.train_fit.intercept, 'Up', 'Down')) %>%
+  mutate(.pred = forcats::as_factor(.pred)) %>%
+  mutate(.pred = forcats::fct_relevel(.pred, Dir_levs)) %>%
+  conf_mat(truth=Direction, estimate=.pred)
+lr.up.lag2.train_fit.test_conf_mat
+```
+
+
+### (e) LDA: shared covaraince
+
+LDA is a linear classifier, and as such LDA model fits are extremely correlated 
+with logistic regression model fits.  The difference between the two models is
+that LDA is a *generative model* while logistic regression is a purely 
+*predictive model*.  While the above noted correlation between LDA and 
+logistic regression suggests that this "generative versus predictive" might not
+be so important, in fact, this difference is extremely noteworthy and gernerally
+very significant as far as models go.  As a generative model, LDA models 
+$f(x|y)$ [as (multivariate) normal distribution], while logistic regression 
+models $f(y|x)$ directly with no distributional assumptions on $x$.  Logistic 
+regression is able to learn its prediction rule through the use of a link 
+function which maps the observed 0/1 outcomes into a space where the population 
+proportions driving these 0/1 outcomes can be interpolated using what 
+essentially amounts to a least squares optimization procedure (just like in 
+normal linear regression) but done in this transformed space that can legally 
+support hyperplanes (unlike a space constrained by 0's and 1's for which an 
+unconstrained hyperplane would soon map you below 0 and above 1 in different 
+parts of the feature space).  
+
+The thing about generative approaches that model $f(x|y)$, though, is that
+they can use Bayes' Theorem to reverse the conditional and arrive at a model for
+$f(y|x)$, which is just what the predictive methodologies are designed to do 
+(right off the bat) without needing to flip around the conditional with Bayes.
+So then the difference, then, between LDA and logistic regression is that 
+logistic regression is using a link function assumption to get its version of 
+$f(x|y)$, while LDA is using a (multivariate) normality assumption to 
+back-calculate that $f(x|y)$.  But the upside of this for us is that in simple
+cases such as a `log2` only model, these two assumptions (and therefore, 
+approaches) are not going to be tremendously divergent.  So what *I'm* going to 
+do -- the point of me telling you all of this -- is go straight to the `Log2` 
+only model for LDA. This way I'm less concerned with the normality assumption 
+for every feature.  And anyway, if logistic regression is finding no separation 
+capability from the other `lag` features -- i.e., when it's looking *exactly* 
+for differences in Up/Down proportions observable along these feature axes -- 
+then the locations of the normal distributions along these axes feature that LDA
+detects are not going to show any separation either.  So in this context I feel 
+very comfortable guiding my LDA feature support choices based on what I've 
+already learned from my logistic regression analysis results. That's my point. 
+
+Now, the data is *imbalanced* between classes, meaning here that there are more
+"Up" outcomes than "Down" outcomes.  This makes sense given that our economy
+has historically always had an upward trajectory (over time in a global sense --
+certainly there have been some bear market periods in certain local time
+windows). Given this, it definitely makes sense to use this *class imbalance*
+to our advantage.  Things more often than not do go up, so guessing "Up" is a 
+slightly better guess than guessing down, just on the face of it.  However, what 
+I did in the logistic regression context was to ignore this "average rate of 
+increase" and only call "Up" when the prediction was truly an "above average" 
+chance for "Up". This has the effect of being a little more conservative, which, 
+here I think is not that bad of an idea. *Of course* we can set our threshold 
+higher or lower in order to be as conservative or aggressive/optimistic as we 
+like.  But, to keep things apples-to-apples versus our logistic regression 
+analysis (which used the "above average" rule by making the threshold the model 
+intercept, i.e., the "sample average"), we need to tell LDA that we are not 
+interested in treating the class imbalance as being informative for our 
+predictions. To do this, we need to supply the `prior=c(0.5,0.5)` argument flag 
+to the `lda` function.  If we don't use set this flag then the LDA fit will 
+assume that the "Up" class is more common in general according to the overall
+(prior) probability  of "Up" observed in the sample data, and will take this
+into account when it makes it's predictions. 
+
+Now, it is *of course* true that in this data "Up" happens more likely than 
+down. And you most certainly *could easily* argue that you *should* take this
+into account when making predictions. But another thing you could do -- *and it 
+can be shown to be equivalent in LDA!* -- would be to just change your 
+prediction threshold.  E.g., call "Up" when the `.fitted_value` exceeds `0`, 
+rather than (the population "Up" average) `lr.up.lag2.train_fit.intercept`.  And 
+yet ANOTHER thing that you could do -- *and it could AGAIN be shown to be 
+equivalent in LDA!* -- would be to change your perspective on what your prior
+is encoding.  I.e., setting `prior=c(0.05,0.95)` would be saying that *a pirori*
+you're expecting to be willing to call "Up" five percent of the time.  It's 
+like a specification of how your risk tolerance is going to play out in terms of
+actually calling "Up".  And then LDA would give you the *a posteriori* 
+probability that you'd call "Up" after you've seen the data. All of these 
+approaches are very cool formulations. 
+
+So, with all this in mind, but choosing to go with the specification that 
+allows for an apples-to-apples comparison, we find that the confusion matrix for 
+the LDA model is  qualitatively similar to the confusion matrix we originally 
+observed in the logistic regression context. 
+
+
+```{r lda}
+library(MASS)
+lda.up.lag2.train_fit <- lda(Direction~Lag2, prior=c(0.5,0.5), 
+                             data=Weekly[train_indices,])
+lda_test_preds <- predict(lda.up.lag2.train_fit, 
+                          newdata=Weekly[-train_indices,])$class 
+lda.up.lag2.train_fit.test_conf_mat <- Weekly[-train_indices,] %>% 
+  add_column(tibble(.pred=lda_test_preds)) %>% 
+  conf_mat(truth=Direction, estimate=.pred)
+lda.up.lag2.train_fit.test_conf_mat
+```
+
+### (f) QDA: unique covaraince
+
+The only difference between the LDA and QDA methodologies is that in LDA the
+variance matrix of all class multivariate normal distributions is assumed to
+be the same, whereas in QDA each classes multivariate normal distribution is
+unique and specific to the class. If we're just using the `Lag2` only model,
+this just means the normal distributions for the "Up" and "Down" classes have
+uniquely estimated variance parameters.  Interestingly, only this slight 
+change alone seems to make quite an impact on the QDA confusion matrix 
+compared to the LDA confusion matrix, as seen below.
+
+```{r qda}
+qda.up.lag2.train_fit <- qda(Direction~Lag2, prior=c(0.5,0.5), 
+                             data=Weekly[train_indices,])
+qda_test_preds <- predict(qda.up.lag2.train_fit, 
+                          newdata=Weekly[-train_indices,])$class 
+qda.up.lag2.train_fit.test_conf_mat <- Weekly[-train_indices,] %>% 
+  add_column(tibble(.pred=qda_test_preds)) %>% 
+  conf_mat(truth=Direction, estimate=.pred)
+qda.up.lag2.train_fit.test_conf_mat
+```
+
+### (g) KNN (k=1)
+
+With KNN we again have the *imbalanced class* issue.  And at $k=1$ there's 
+nothing we can do about it except manipulate our sample by either dropping
+some rows from the majority class or attempting some sort of up-sampling on the
+minority class.  If $k>>1$, we might begin considering re-weighting the samples; 
+but, because of the discrete nature of "neighbors, or not neighbors", such 
+data point weighting is not really going to smoothly address class imbalance in 
+KNN predictions for most choices of $k$.  E.g., if $k=3$ and the samples are 
+re-weighted by class weights of 0.6 and 0.4 it's still 2 out of 3 wins anyway.  
+The predicted probabilities would be improved a little bit, though.  E.g., if 
+"Up" is the majority class, and there are two "Ups", then Pr("Up") would be
+$\frac{1\times\frac{0.5}{0.6}+1\times\frac{0.5}{0.6}+0\times\frac{0.5}{0.4}}{2\times\frac{0.5}{0.6}+1\times\frac{0.5}{0.4}} \approx 0.57$, 
+as opposed to $2/3$.
+
+The `knn` function we're using here doesn't even provide an option to weight 
+data points though; and actually, it's just not particularly common to do so 
+anyway. That's probably because (a) there are so many other more powerful 
+methods than KNN that can address class imbalance in more natural ways, and (b) 
+class imbalance is better addressed via thresholding, anyway, which works best 
+for "smoother" prediction methodologies as apposed to the voting system (or even 
+weighted-voting system described above) that is present in KNN.  
+
+So, all that is to say that *this time* -- for KNN -- we're not going to 
+attempt to level the playing field between the approaches. This means that KNN
+will naturally use the fact that there are more "Ups" than "Downs".  I.e., it
+is more likely *a priori* that a neighbor will be an "Up" as opposed to a 
+"Down".
+
+```{r knn}
+library(class)
+knn.up.lag2.train_fit <- knn(cbind(Weekly[['Lag2']][train_indices]), 
+                             cbind(Weekly[['Lag2']][-train_indices]),
+                             cbind(Weekly[['Direction']][train_indices]), k=1)
+levels(knn.up.lag2.train_fit) <- c("Down", "Up")
+knn.up.lag2.train_fit.test_conf_mat <- 
+  tibble(yhat = knn.up.lag2.train_fit, 
+         y = Weekly[['Direction']][-train_indices]) %>%
+  conf_mat(truth=y, estimate=yhat)
+knn.up.lag2.train_fit.test_conf_mat
+```
+
+
+
+
+### (h) Comparision
+
+As noted, LR and LDA have qualitatively similar performance. QDA, however,
+which allows for a much more complex parametric form, seems to have suffered
+substantial performance losses (in the False Negatives category) in the testing 
+set.  Firstly, it may *actually* be that the QDA model is in fact really working 
+quite well, but therefore is much more sensitive to the choice to ignore the 
+general "more 'Ups' than 'Downs'" trend encoded in the `prior=c(0.5,0.5)` 
+specification, which of course could hurt it's predictive power given that the
+data set *IS* in fact truly imbalanced.  However, it could also be the
+case that while the parametric form of the QDA model is richer, it is still
+overly ridged; namely, since QDA is based on a normality assumption, if the 
+tails of the distribution are not behaving normally, then both the location
+and (especially) the variance component estimates of the QDA model could be to
+some degree compromised.  QDA would then function like the old saying: "trying
+to fit a square peg into a round hole".  Mathematically it might be trying
+to fit a parabola through some points, but a few influential outliers are 
+pulling that parabola way out and messing it up for the rest of the data points.
+
+As a final note, $k=1$ KNN is the approach that has performed the best on the
+testing set thus far.  But (a) there's a lot to explore here yet, and (b) I
+know that KNN was the only algorithm that was allowed to use the class 
+imbalance in the data to help it's predictions.  I'll take a look at all these
+issues in the next part of the problem, which, conveniently, asks that I we do
+something exactly like that!
+
+```{r comps}
+results <- pairlist(LR=lr.up.lag2.train_fit.test_conf_mat,
+                    LDA=lda.up.lag2.train_fit.test_conf_mat,
+                    QDA=qda.up.lag2.train_fit.test_conf_mat,
+                    KNN=knn.up.lag2.train_fit.test_conf_mat)
+library(gridExtra)
+grid.arrange(grobs=purrr::map2(results, names(results),
+                               (function(x,id) autoplot(x, type='heatmap') + 
+                                               ggtitle(id))))
+```
+
+### (i) Experimentation
+
+I'm first going to try a saturated, second order linear model specification with 
+first order pairwise interactions for logistic regression; and, if that's 
+promising, I'm going to use what I find to see if I can set up a QDA model 
+that's competitive with that.  From there I'll run a sweep over $k$ for KNN and 
+see if KNN still comes out on top after this additional model building effort
+on the LR and QDA fronts (*AND* allowing those methodologies to now leverage the 
+class imbalances too as well, since KNN already gets to).
+
+
+```{r experiment}
+
+# parsed through my LM search like this: 
+glm(Direction~(Lag1+Lag2+Lag3+Lag4+Lag5+Volume)^2, 
+    family=binomial, data=Weekly[train_indices,]) %>% 
+  broom::tidy() %>% arrange(p.value)
+glm(Direction~poly(Lag1,2)+poly(Lag2,2)+poly(Lag3,2)+
+              poly(Lag4,2)+poly(Lag5,2)+poly(Volume,2), 
+    family=binomial, data=Weekly[train_indices,]) %>% 
+  broom::tidy() %>% arrange(p.value)
+glm(Direction~poly(Lag1,2)+poly(Lag2,2)+poly(Volume,2), 
+    family=binomial, data=Weekly[train_indices,]) %>% 
+  broom::tidy() %>% arrange(p.value)
+glm(Direction~Lag1*Lag2+I(Lag1^2)+I(Lag2^2), 
+    family=binomial, data=Weekly[train_indices,]) %>% 
+  broom::tidy() %>% arrange(p.value)
+# and I arrived at this model:
+lr.up.lag1n2.train_fit <- glm(Direction~Lag1+Lag2, family=binomial, 
+                              data=Weekly[train_indices,]) 
+# this was helpful along the way the check significances:
+#lr.up.lag1n2.train_fit %>%
+#  broom::tidy() %>% arrange(p.value)
+
+# I will see if QDA adds anything here 
+qda.up.lag1n2.train_fit <- qda(Direction~Lag1+Lag2, family=binomial, 
+                               data=Weekly[train_indices,])
+
+
+k <- purrr::set_names(seq(1,451,2))
+knn.fit.accuracy <- function(k){
+  pred <- knn(as.matrix(Weekly[train_indices,c('Lag1','Lag2')]), 
+              as.matrix(Weekly[-train_indices,c('Lag1','Lag2')]),
+              cbind(Weekly[['Direction']][train_indices]), k=k)
+  mean(pred!=as.numeric(Weekly[['Direction']][-train_indices]))
+}
+knn.fit.errors <- purrr::map(k, knn.fit.accuracy)
+knn.fit.errors <- tibble(k=as.numeric(names(knn.fit.errors)), 
+                         error.rate=unlist(knn.fit.errors))
+# I like k=311
+knn.fit.errors %>% ggplot(aes(x=k, y=error.rate)) + 
+  geom_line() + ggtitle('KNN')
+# great band
+knn.up.lag1n2.train_fit <- knn(as.matrix(Weekly[train_indices,c('Lag1','Lag2')]), 
+                               as.matrix(Weekly[-train_indices,c('Lag1','Lag2')]),
+                               cbind(Weekly[['Direction']][train_indices]), k=311)
+# I.e., I don't put too much stake in whatever parameter setting happened
+# to "luck out" and win in the test data set sweepstakes this time around.
+# I just like to be in "about" the right region with my parameters.
+# A new test set, and a new winner... no need play that game.
+```
+
+#### Winners
+and the winner is...
+
+```{r experiment_2, fig.width=6, fig.height=2}
+# LR?
+lr.up.lag1n2.train_fit.test_conf_mat <- lr.up.lag1n2.train_fit %>%
+   broom::augment(newdata=Weekly[-train_indices,]) %>% 
+  mutate(.pred = ifelse(.fitted>0, 'Up', 'Down')) %>%
+  mutate(.pred = forcats::as_factor(.pred)) %>%
+  mutate(.pred = forcats::fct_relevel(.pred, Dir_levs)) %>%
+  conf_mat(truth=Direction, estimate=.pred)
+
+# QDA?
+qda_lag1n2_test_preds <- predict(qda.up.lag1n2.train_fit, 
+                                 newdata=Weekly[-train_indices,])$class
+qda.up.lag1n2.train_fit.test_conf_mat <- Weekly[-train_indices,] %>% 
+  add_column(tibble(.pred=qda_lag1n2_test_preds)) %>% 
+  conf_mat(truth=Direction, estimate=.pred)
+
+# KNN?
+levels(knn.up.lag1n2.train_fit) <- c("Down", "Up")
+knn.up.lag1n2.train_fit.test_conf_mat <- 
+  tibble(yhat = knn.up.lag1n2.train_fit, 
+         y = Weekly[['Direction']][-train_indices]) %>%
+  conf_mat(truth=y, estimate=yhat)
+
+
+final_results <- pairlist(LR=lr.up.lag1n2.train_fit.test_conf_mat,
+                    QDA=qda.up.lag1n2.train_fit.test_conf_mat,
+                    KNN=knn.up.lag1n2.train_fit.test_conf_mat)
+grid.arrange(grobs=purrr::map2(final_results, names(final_results),
+                               (function(x,id) autoplot(x, type='heatmap') + 
+                                               ggtitle(id))), ncol=3)
+
+```
+
+And it's logistic regression, by two False Negatives!
+
+## 11 {.tabset}
+
+### (a)-(b) mpg01
+
+*ALL* of these features look like they're going to be interesting relative to
+`mpg01`.
+
+```{r mpg01}
+Auto_mpg01 <- Auto %>% mutate(mpg01 = mpg > median(mpg))
+
+Auto_mpg01 %>% pivot_longer(
+  cols=c(cylinders,displacement,horsepower,weight,acceleration,year,origin), 
+  names_to="variable", values_to="value") %>% 
+  ggplot(aes(x=value, fill=mpg01)) + 
+  geom_histogram(alpha = 0.5, position="identity") +
+  facet_wrap(vars(variable), nrow=4, scale='free')
+```
+
+### (c)-(d) LDA
+```{r lda_2}
+n <- Auto_mpg01 %>% (function(x) dim(x)[1])
+# it's a good idea to shuffle your data set, 
+# in case there's any entry order bias.
+Auto_mpg01 <- Auto_mpg01[sample(n),]
+n_train <- seq(1,as.integer(.8*n))
+
+lda.mpg01.full.train_fit <- lda(mpg01~cylinders+displacement+horsepower+
+                                      weight+acceleration+year+origin, 
+                                data=Auto_mpg01[n_train,])
+
+lda.mpg01.full.train_fit.test_pred <- predict(lda.mpg01.full.train_fit,
+                                              newdata=Auto_mpg01[-n_train,])$class
+
+library(caret)
+confusionMatrix(reference=as.factor(Auto_mpg01[-n_train,'mpg01']), 
+                data=lda.mpg01.full.train_fit.test_pred)
+```
+
+### (e) QDA
+```{r qda_2}
+
+qda.mpg01.full.train_fit <- qda(mpg01~cylinders+displacement+horsepower+
+                                      weight+acceleration+year+origin, 
+                                data=Auto_mpg01[n_train,])
+
+qda.mpg01.full.train_fit.test_pred <- predict(qda.mpg01.full.train_fit,
+                                              newdata=Auto_mpg01[-n_train,])$class
+
+confusionMatrix(reference=as.factor(Auto_mpg01[-n_train,'mpg01']), 
+                data=qda.mpg01.full.train_fit.test_pred)
+
+```
+
+### (f) LR
+```{r lr}
+
+lr.mpg01.full.train_fit <- glm(mpg01~cylinders+displacement+horsepower+
+                                     weight+acceleration+year+origin, 
+                               family=binomial, data=Auto_mpg01[n_train,])
+
+lr.mpg01.full.train_fit.test_pred <- lr.mpg01.full.train_fit %>% 
+   broom::augment(newdata=Auto_mpg01[-n_train,]) %>% 
+  mutate(.pred = ifelse(.fitted>0, TRUE, FALSE)) %>%
+  mutate(.pred = forcats::as_factor(.pred)) %>%
+  mutate(mpg01 = forcats::as_factor(mpg01))
+
+caret::confusionMatrix(reference=lr.mpg01.full.train_fit.test_pred[['mpg01']],
+                       data=lr.mpg01.full.train_fit.test_pred[['.pred']])
+```
+
+### (g) KNN
+
+I haven't bothered to harp on this so far, but now that the number of features 
+under consideration is so many, and *most importantly* for this point, the 
+*SCALE* of these features is so different, the time has come: KNN is what's 
+called a *metric* or *distance*-based method.  Why so?  We'll, to find your 
+"neighbors" you need to have a way to tell *how close* all the data points 
+around you are so you can choose the closest $k$.  I.e., you need a ruler. You
+need distance.  So what happens if features are on tremendously different 
+scales? Are all features equal?  Well no, you may be really similar in a bunch
+of indicator levels, but, say 10-years apart on a time scale, and then all of 
+a sudden you're probably way farther apart then if you differed on all the 0/1
+indicators, but had the same year value.  So you need to address this somehow.
+What *I'm* going to do is standardize my numeric features, so now *at least*
+the features aren't grossly misrepresented in terms of scale.
+
+
+```{r knn_2}
+# all the featurs are <dbl> numerics
+Auto_mpg01 %>% as_tibble() %>% head(1)
+# remember this awesome recipe tool that manages your train/test transformations
+library(tidymodels)
+rec <- recipes::recipe(mpg01~cylinders+displacement+horsepower+
+                             weight+acceleration+year+origin, 
+                       data=Auto_mpg01[n_train,])
+scaled_trans <- rec %>%  recipes::step_center(-mpg01) %>%
+                         recipes::step_scale(-mpg01)
+scaled_obj <- recipes::prep(scaled_trans, training=Auto_mpg01[n_train,])
+Auto_mpg01.train.transformed <- recipes::bake(scaled_obj, Auto_mpg01[n_train,])
+Auto_mpg01.test.transformed <- recipes::bake(scaled_obj, Auto_mpg01[-n_train,])
+
+# here's a cool function that returns a function
+# this is better than how this was done in the lab
+make_knn.fit <- function(X, Y, X_test){
+  knn.fit <- function(k){ knn(X, X_test, Y, k) }
+  knn.fit
+}
+X <- Auto_mpg01.train.transformed %>% 
+  dplyr::select(cylinders:origin) %>% as.matrix()
+Y <- Auto_mpg01.train.transformed %>% 
+  dplyr::select(mpg01) %>% as.matrix()
+X_test <- Auto_mpg01.test.transformed %>% 
+  dplyr::select(cylinders:origin) %>% as.matrix()
+knn.fit <- make_knn.fit(X, Y, X_test)
+
+make_knn.fit.error <- function(Y_test){
+  knn.fit.error <- function(knn.fit){ mean(knn.fit!=Y_test) }
+  knn.fit.error
+}
+Y_test <- Auto_mpg01.test.transformed[['mpg01']]
+knn.fit.error <- make_knn.fit.error(Y_test)
+
+library(purrr)
+k <- purrr::set_names(seq(1,51,2))
+knn.fits.errors <- k %>%
+  purrr::map(knn.fit) %>%
+  purrr::map(knn.fit.error)
+knn.fits.errors <- tibble(k=as.numeric(names(knn.fits.errors)), 
+                         error.rate=unlist(knn.fits.errors))
+# looks like plain 'ol k=1 works the best for this!
+knn.fits.errors %>% ggplot(aes(x=k, y=error.rate)) + 
+  geom_line() + ggtitle('KNN')
+
+caret::confusionMatrix(reference=as.factor(Y_test), data=knn.fit(1))
+```
+

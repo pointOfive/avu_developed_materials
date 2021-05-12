@@ -1,0 +1,186 @@
+---
+title: "Animations"
+author: "Schwartz"
+date: "12/07/2020"
+output:
+     html_document:
+          toc: TRUE
+          toc_depth: 4
+          toc_float: true
+          toc_collapsed: true
+          theme: journal
+          code_folding: hide
+---
+
+<!--- Change font size for headers --->
+<style>
+h1.title {
+  font-size: 28px;
+}
+h1 {
+  font-size: 22px;
+}
+h2 {
+  font-size: 18px;
+}
+h3 { 
+  font-size: 14px;
+}
+
+</style>
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo=TRUE, warning=FALSE, message=FALSE, 
+                      fig.align="center", out.width="80%")
+```
+
+# Covid Testing
+
+Returning to the [Our World in Data](https://ourworldindata.org/) (OWID) 
+[covid data](https://ourworldindata.org/covid-deaths), we will now add in
+data on [covid testing](https://ourworldindata.org/grapher/full-list-total-tests-for-covid-19).
+
+## Initialization
+
+- Loading tidyverse and data
+  - It turns out that the original covid data we downloaded 
+  (while having columns labeled as containing covid testing counts) did not 
+  actually include any data on covid testing (because all the entries were `NA`).
+  - Perhaps for download bandwidth requirements on the part of [OWID](https://ourworldindata.org/coronavirus#deaths-due-to-covid-19)?
+  - Regardless, the data on covid testing that we're looking for *IS* available
+  from OWID and can be found [here](https://ourworldindata.org/grapher/full-list-total-tests-for-covid-19)!
+ 
+```{r data}
+
+library(tidyverse)
+
+# covid testing data is actually just NA's in this file!
+# perhaps for download bandwidth requirements on the part of OWID
+d1 <- "PLAY_BUTTON/owid-covid-data.csv" 
+OWID_covid <- read_csv(d1)
+
+d2 <- "PLAY_BUTTON/full-list-total-tests-for-covid-19.csv"
+OWID_covid_tests <- read_csv(d2)
+
+
+OWID_covid_tests <- OWID_covid_tests %>% 
+  rename(location=Entity, date=Day) %>% 
+  left_join(OWID_covid, by=c("location","date"))
+
+OWID_covid_tests
+```
+
+## Clean-up
+
+
+1. To examine the association between covid deaths in a country, and covid 
+   testing, we are going to use the ratio (i.e., the odds) of tests over deaths.
+2. To make our figure render smoothly, the `frames` 
+   [feature of plotly](https://plotly.com/r/animations/) that we'll animate
+   our plot with needs each country to have data at every date being animated
+    - There cannot be any `NA`'s or the `frames` rendering system won't be able
+    to maintain the identity of the points and will track them incorrectly 
+    - We'll address this issue by first expanding the data to each date with the 
+    tidy `complete` function, and then forward and back filling all the `NA`'s 
+    within each country the tidy `group_by`, `fill`, and `ungroup` functions.
+3. The `frames` feature currently doesn't animate dates, so the we'll enumerate
+   the days starting at `2019-12-31` to present  
+    - but we'll filter our data to start 100 days after `2019-12-31` as the data
+    is fairly sparse before that date.
+
+```{r cleaning}
+# https://www.r-bloggers.com/2018/07/the-notin-operator/
+`%notin%` <- Negate(`%in%`)
+
+OWID_covid_tests <- OWID_covid_tests %>% 
+  select(location, total_tests.x, total_deaths,
+      population, continent, date) %>%
+  mutate(tests2deathsOR=total_tests.x/total_deaths) %>%
+  # https://stackoverflow.com/questions/48633460/r-fill-missing-dates-by-group
+  complete(location, date) %>%
+  group_by(location) %>%
+  fill(continent, .direction="down") %>%
+  fill(continent, .direction="up") %>%
+  # https://stackoverflow.com/questions/43332417/how-to-use-fill-by-function-with-na-approx-linear-interpolation-inside-dpl
+#  mutate(tests2deathsOR=zoo::na.approx(tests2deathsOR,na.rm=FALSE)) %>%
+#  mutate(total_deaths=zoo::na.approx(total_deaths,na.rm=FALSE)) %>%
+#  mutate(population=zoo::na.approx(population,na.rm=FALSE)) %>%
+#  fill(tests2deathsOR, total_deaths, population, .direction="down") %>%
+#  fill(tests2deathsOR, total_deaths, population, .direction="up") %>%
+  ungroup(location) %>%
+  # https://www.displayr.com/r-date-conversion/
+  mutate(DaysSince2019_12_31 = as.Date(date)-as.Date("2019-12-31")) %>%
+  filter(DaysSince2019_12_31>100)
+
+OWID_covid_tests
+```
+
+## Animate!
+
+The `frames` [feature of plotly](https://plotly.com/r/animations/) makes
+animating a scatter (or bubble) plot super easy!
+
+- Check out the "testing response" to the initial covid wave
+- And the subsequent "second wave" apparent in the data
+
+```{r plotly_animate}
+library(plotly)
+
+fig <- OWID_covid_tests %>% rename(`2020 Day`=DaysSince2019_12_31) %>%
+  # https://www.r-bloggers.com/2018/07/the-notin-operator/
+  #filter(continent %notin% c("Asia", "North America", "Oceania", 
+  #                           "Europe", "South America")) %>% # "Africa", 
+  plot_ly(
+    y = ~total_deaths, 
+    x = ~tests2deathsOR,
+    size = ~population, 
+    # https://stackoverflow.com/questions/38400343/r-plotly-smaller-markers-in-bubble-plot
+    marker = list(sizeref=.03),
+    color = ~continent, 
+    # https://community.plotly.com/t/making-persistant-selections-in-plotlys-legend-for-animations/5640
+    # https://plotly.com/r/legend/#grouped-legend
+    frame = ~`2020 Day`, 
+    text = ~location, 
+    hoverinfo = "text",
+    type = 'scatter',
+    mode = 'markers'
+  )
+
+# https://plotly.com/r/text-and-annotations/
+# https://plotly.com/r/axes/#manual-ranges
+fig <- fig %>% layout(xaxis=list(type="log", 
+                                 title="Odds Ratio:\nTests/Deaths",
+                                 range=c(2, 4)), 
+                      yaxis=list(type="log",
+                                 title='Total Reported Deaths',
+                                 range=c(0, 6))) %>%
+       # https://plotly.com/r/cumulative-animations/
+       animation_opts(redraw=FALSE)
+fig
+```
+
+
+
+# Utilized Resources
+
+## Data
+
+- [Our World in Data](https://ourworldindata.org/) 
+  - [covid deaths](https://ourworldindata.org/covid-deaths)
+  - [covid testing](https://ourworldindata.org/grapher/full-list-total-tests-for-covid-19)
+  - [covid data](https://ourworldindata.org/coronavirus#deaths-due-to-covid-19)
+
+## Plotly
+- [Plotly Animations](https://plotly.com/r/animations/) 
+  - [`animation_opts`](https://plotly.com/r/cumulative-animations/)
+  - [1easing`](https://github.com/plotly/plotly.js/blob/master/src/plots/animation_attributes.js)
+- [Legend/Animation](https://community.plotly.com/t/making-persistant-selections-in-plotlys-legend-for-animations/5640)
+  - [`legendgroup`](https://plotly.com/r/legend/#grouped-legend)
+- [Axis Labels](https://plotly.com/r/text-and-annotations/)
+- [Axis Limits](https://plotly.com/r/axes/#manual-ranges)
+
+## One-Off's
+- [`%notin%`](https://www.r-bloggers.com/2018/07/the-notin-operator/)
+- [forward fill](https://stackoverflow.com/questions/48633460/r-fill-missing-dates-by-group)
+- [linear interpolation](https://stackoverflow.com/questions/43332417/how-to-use-fill-by-function-with-na-approx-linear-interpolation-inside-dpl)
+- [date conversions](https://www.displayr.com/r-date-conversion/)

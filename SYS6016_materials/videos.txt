@@ -1,0 +1,12 @@
+
+Applications of Matrices: https://www.youtube.com/watch?v=rowWM-MijXU
+Ian Goodfellow - Numerical Computation for Deep Learning: https://www.youtube.com/watch?v=XlYD8jn1ayE&feature=emb_imp_woyt
+DLTc2: LinAlg
+DLTc4: Computation
+
+Attention Is All You Need video explanation https://www.youtube.com/watch?v=iDulhoQ2pro&t=1310s and paper https://arxiv.org/abs/1706.03762 and the Dive Into Deep Learning Textbook https://d2l.ai/chapter_attention-mechanisms/index.html
+
+BERT video explanation https://www.youtube.com/watch?v=-9evrZnBorM, paper https://arxiv.org/abs/1810.04805, the Dive Into Deep Learning Textbook https://d2l.ai/chapter_natural-language-processing-pretraining/bert-pretraining.html
+
+https://medium.com/mindboard/generating-adversarial-samples-in-keras-tutorial-f881ac836246
+https://www.youtube.com/watch?v=5BrNt38OraE

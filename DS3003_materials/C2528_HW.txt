@@ -1,0 +1,15 @@
+1. Pick HALF (rounded up) of the day's presentation which you thought were "the best"
+2. Reply to at least THREE project post in the discussion forums from this classes presentations with a question or comment about the presentation
+- PRESENTERS: monitor and respond to questions!!
+3. Make a distinct plot using some of the data from the class presentations you've seen so far 
+I.e., if you've already made a certain kind of plot for these exercises, e.g., a scatter plot, your plot must be a different kind of plot 
+Each submission must use data you not yet used; and must be cumulative (i.e., contain all plots made so far)
+Provide an explanation of the data set, the subset of the data set you're using, and the the plot you created
+Include comments in your code which would allow someone else to readily understand each code line of your implementation
+Submit a nice looking .Rmd knitted .html
+
+Include either of the following in your submission text box: 
+
+- "Honor Pledge: I have [given and/or received] the following help [to and/or from] <student> to complete this submission: <explain help utilized>"
+
+- "Honor Pledge: I have neither given nor received aid on this assignment."

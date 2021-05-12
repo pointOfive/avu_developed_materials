@@ -1,0 +1,93 @@
+SYS 6016
+,Activity count,5
+,Participant count,49
+,Average responses,37.8
+
+What word most closely describes your current thoughts about the upcoming SYS 6016 Deep Learning/Machine Learning?,Activity type,Multiple choice
+,Total responses,49
+,Unique participants,49
+,Response options,Count,Percent,Correctness
+,Enthusiastic,21,42.86,Incorrect
+,Interested,17,34.69,Incorrect
+,Apathetic,0,0.0,Incorrect
+,Disinterested,0,0.0,Incorrect
+,Concerned,5,10.2,Incorrect
+,Fearful,6,12.24,Incorrect
+,Upset,0,0.0,Correct
+
+"If you were to have concerns about the class, what would they be?",Activity type,Multiple choice
+,Total responses,48
+,Unique participants,48
+,Response options,Count,Percent
+,Time Demands,7,14.58
+,Linear Algebra/Math,21,43.75
+,Coding/Python,3,6.25
+,General Preparedness/Readiness,7,14.58
+,Online/Covid Format,9,18.75
+,Something Else,1,2.08
+
+"Of the provided preparation material, how many chapters do you have an interest in reading/expect to read before the course starts?",Activity type,Multiple choice
+,Total responses,47
+,Unique participants,47
+,Response options,Count,Percent
+,1,8,17.02
+,2,13,27.66
+,3,17,36.17
+,4,5,10.64
+,5,0,0.0
+,6,4,8.51
+
+Are there any specific questions you would like addressed in our pre-course Q&A session?,Activity type,Q&A
+,Total responses,30
+,Unique participants,24
+,Responses,Upvotes,Downvotes
+,no,0,0
+,What specific topics or tasks are we expected to be proficient in prior to week 1? What study / preparation materials should we use if we are not prepared for certain topics?,0,0
+,Why sort of commitment to quality are you willing to make up front? Quality control has been and issue with courses in the last. This topic seems like it will be difficult and we need an instructor who can keep the course well taught and organized to get through it successfully.,0,0
+,2. Are there any good tutorials or books for Keras/PyTorch that you would recommend?,0,0
+,"1. Could you please record the Q&A session? Due to visa restrictions, I am currently staying in China, which is 13 hours ahead of the US eastern time zone.  So I will not be able to attend it.",0,0
+,What will the format of the class look like?,0,0
+,Will there be proofs?,0,0
+,"Will it be flipped classroom? If so, will we be given in class time to do homework?",0,0
+,How many hours a week should we be expecting to spend on the course?,0,0
+,what packages will be use in this class?,0,0
+,"I'm also interested in hearing about the online format, but would really, really like to know how to make the best use of the time available for this class.",0,0
+,Nope,0,0
+,3. What are the most difficult things for students to learn/understand in this course?,0,0
+,2. Do you tend to show examples in class? Or will I have to teach myself another course?,0,0
+,1. What would you say are the 5 most basic fundamental building block concepts or ideas that when put together and manipulated make up this course's content?,0,0
+,"How do you envision organizing and running the course? Have any plans changed in response to the virtual format? In years past, what do you feel works well in this class? What do you think you could have improved on?",0,0
+,"Would this course build more material on the Bayesian Machine Learning class? Would you recommend reviewing the Bayes material prior to class? If so, which sections?",0,0
+,I found it is very easy to learn in this virtual environment if professor comes with prepared notes and goes over them during the zoom session. What will be your teaching format next semester?,0,0
+,Will the course be project based or exam based?,0,0
+,No questions - really excited to get going in this class!,0,0
+,No,0,0
+,Which areas of math should study over break?,0,0
+,Where are the preparation materials?,0,0
+,How to prepare for the course when you have limited coding background and a limited background in linear algebra,0,0
+,How to prepare for the course,0,0
+,Will there be mathematical proofs or derivations required for this course?,0,0
+,Not really,0,0
+,"Why are we expected to do so much preparation for this course? It honestly doesn't seem reasonable and makes me concerned for the class. Also, I am concerned about the compressed semester. Will the course load be adjusted accordingly?",0,0
+,nothing yet!,0,0
+,No,0,0
+
+"Is there anything else that you'd like to comment on or share, either directly or tangentially related to SYS 6016?",Activity type,Open ended
+,Total responses,15
+,Unique participants,15
+,Responses
+,no
+,"Will the class work be exclusively be in Python, R, or other languages?"
+,No. Thank you very much!
+,"I hope our cohort is not split in half for this class; I prefer maximizing our ""classroom"" time"
+,Nope
+,Does your course discuss explainable AI or neural net visualization?
+,How much time can you commit for office hours?
+,I am really looking forward to this class!
+,"I was great at math in undergrad, but have felt unprepared for the math-centric teaching in other MSDS courses like Bayes. I simply don't learn just by being shown equations. Please don't teach this way."
+,n/a
+,No
+,n/a
+,I am excited to learn more about deep learning!
+,"I think a lot of us were very overwhelmed by Bayesian machine learning this past semester, so there may be some wariness and weariness to overcome."
+,No

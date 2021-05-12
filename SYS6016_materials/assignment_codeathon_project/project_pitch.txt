@@ -1,0 +1,55 @@
+
+
+60-90 second project pitches for selected projects (approximately half the class)
+NOTE I WILL CUT OFF LONG RUNNING PITCHES AND MOVE ON TO THE NEXT ONE
+Presenters ("at bat" and "on deck", and if not "passing"):  
+share screen with a (single) slide containing
+a project title (providing a good sense of your proposal)
+your name and project id number <- "project id number" will be provided to you in time to add to your slide
+[OPTIONALLY] a graphic or diagram that helps give a sense or a "hook" for your project
+a link to your data (to eventually be clicked and briefly described)
+state your name
+state your "project id number"
+state your project title
+describe your project (proposal)
+show data set landing page and briefly describe your data
+Audience  
+Write Presenter Name
+Write Presenters "Project Id Number"
+Write Presenter "Project Title"
+Take Notes on Topic as needed
+Determine a minimum of 5 and maximum of 10 projects you'd enjoy working on
+Each student turns in three `dicts`:  
+`{your_project_id_number: (id_1_ideal_project_match, id_2_ideal_project_match, ...)} # INCLUDING YOUR OWN IF YOU REMAIN INTERESTED IN YOUR OWN PROJECT`
+`{your_project_id_number: your_name}`
+`{your_project_id_number: your_project_title}`
+[OPTIONALLY] some redundancy notes to provide a way to confirm accuracy of the above in case something goes wrong `{project_id_number_1: "identify information like student name and project name", project_id_number_1: "identify information like student name and project name", ...}`
+
+
+
+Have Your Project Pitches Ready for Next Class
+
+60-90 second project pitches for selected projects (approximately half the class)
+NOTE I WILL CUT OFF LONG RUNNING PITCHES AND MOVE ON TO THE NEXT ONE
+Presenters ("at bat" and "on deck", and if not "passing"):  
+share screen with a (single) slide containing
+a project title (providing a good sense of your proposal)
+your name and project id number <- "project id number" will be provided to you in time to add to your slide
+[OPTIONALLY] a graphic or diagram that helps give a sense or a "hook" for your project
+a link to your data (to eventually be clicked and briefly described)
+state your name
+state your "project id number"
+state your project title
+describe your project (proposal)
+show data set landing page and briefly describe your data
+Audience  
+Write Presenter Name
+Write Presenters "Project Id Number"
+Write Presenter "Project Title"
+Take Notes on Topic as needed
+Determine a minimum of 5 and maximum of 10 projects you'd enjoy working on
+Each student turns in three `dicts`:  
+`{your_project_id_number: (id_1_ideal_project_match, id_2_ideal_project_match, ...)} # INCLUDING YOUR OWN IF YOU REMAIN INTERESTED IN YOUR OWN PROJECT`
+`{your_project_id_number: your_name}`
+`{your_project_id_number: your_project_title}`
+[OPTIONALLY] some redundancy notes to provide a way to confirm accuracy of the above in case something goes wrong `{project_id_number_1: "identify information like student name and project name", project_id_number_1: "identify information like student name and project name", ...}`

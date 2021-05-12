@@ -1,0 +1,147 @@
+Untitled
+,Activity count,17
+,Participant count,17
+,Average responses,8.823529411764707
+
+MODULE 4 (the stuff you just turned in over the weekend): Videos+Reading+Lab+HW (no tidyverse) took,Activity type,Multiple choice
+,Total responses,1
+,Unique participants,1
+,Response options,Count,Percent
+,$$<5$$ hrs,1,100.0
+,$$5$$$$-$$$$10$$ hrs,0,0.0
+,$$10$$$$+$$ hrs,0,0.0
+
+MODULE 4 (the stuff you just turned in over the weekend): Time Spent on Tidyverse,Activity type,Multiple choice
+,Total responses,0
+,Unique participants,0
+,Response options,Count,Percent
+,$$0$$ hrs,0,0
+,$$1$$$$-$$$$2$$ hrs,0,0
+,$$3$$$$-$$$$5$$ hrs,0,0
+,$$6$$$$-$$$$10$$ hrs,0,0
+,$$11$$$$+$$ hrs,0,0
+
+MODULE 5 (the current module): Videos+Reading+Lab+HW (no tidyverse) took,Activity type,Multiple choice
+,Total responses,0
+,Unique participants,0
+,Response options,Count,Percent
+,$$<5$$ hrs,0,0
+,$$5$$$$-$$$$10$$ hrs,0,0
+,$$10$$$$+$$ hrs,0,0
+,$$<5$$  (but I'm almost done),0,0
+,$$5$$$$-$$$$10$$ hrs (but I'm almost done),0,0
+,$$10$$$$+$$ hrs (but I'm almost done),0,0
+,$$<5$$  (but I've still got quite a bit to do),0,0
+,$$5$$$$-$$$$10$$ hrs (but I've still got quite a bit to do),0,0
+,$$10$$$$+$$ hrs (but I've still got quite a bit to do),0,0
+
+MODULE 5 (the current module): Time Spent on Tidyverse,Activity type,Multiple choice
+,Total responses,0
+,Unique participants,0
+,Response options,Count,Percent
+,$$0$$ hrs,0,0
+,$$1$$$$-$$$$2$$ hrs,0,0
+,$$3$$$$-$$$$5$$ hrs,0,0
+,$$6$$$$-$$$$10$$ hrs,0,0
+,$$11$$$$+$$ hrs,0,0
+
+Time spent on Course Project so far?,Activity type,Multiple choice
+,Total responses,17
+,Unique participants,17
+,Response options,Count,Percent
+,$$<$$$$5$$ hrs,7,41.18
+,$$5$$$$-$$$$10$$ hrs,6,35.29
+,$$10$$$$-$$$$15$$ hrs,1,5.88
+,$$15$$$$-$$$$20$$ hrs,2,11.76
+,$$21$$$$+$$ hrs,1,5.88
+
+The x-axis is probably,Activity type,Multiple choice
+,Total responses,16
+,Unique participants,16
+,Response options,Count,Percent
+,a ridge or lasso tuning parameter: $$\lambda$$,2,12.5
+,number of data points: $$n$$,0,0.0
+,KNN tuning parameter: $$k$$,8,50.0
+,number of features: $$p$$,6,37.5
+
+"For a given data set, you can compare two competing linear regression models, each with a different selection (but same total number) of $$p'$$ features, using",Activity type,Multiple choice
+,Total responses,15
+,Unique participants,14
+,Response options,Count,Percent
+,Adjusted $$R^2$$ (or BIC/AIC or Mallows Cp),11,73.33
+,"$$R^2$$, RSS, or deviance",4,26.67
+
+"According to this plot, respectively, (a) ridge and (b) lasso shrink coefficient values",Activity type,Multiple choice
+,Total responses,15
+,Unique participants,15
+,Response options,Count,Percent
+,(a) more strongly at for coefficients of larger magnitude and (b) equally regardless of magnitude,8,53.33
+,(a) equally regardless of magnitude and (b) more strongly at for coefficients of larger magnitude,7,46.67
+
+Backwards and Forwards selection will never outperform Best Subset selection,Activity type,Multiple choice
+,Total responses,17
+,Unique participants,17
+,Response options,Count,Percent
+,True,4,23.53
+,False,13,76.47
+
+"As in the image, the highest red contour will always hit ______ for lasso regularization and ______ for ridge regularization",Activity type,Multiple choice
+,Total responses,11
+,Unique participants,11
+,Response options,Count,Percent
+,the corner of the $$l_1$$ boundary; the edge of the $$l_2$$ boundary,3,27.27
+,the edge of the $$l_2$$ boundary; the corner of the $$l_1$$ boundary,2,18.18
+,"The first answer, except we don't always have to ""hit the corner"" of the $$l_1$$ boundary",5,45.45
+,"The first and third answer, but also we can hit the ""corner"" of the $$l_2$$ boundary as well",1,9.09
+
+Large $$\lambda$$ for ridge/lasso means,Activity type,Multiple choice
+,Total responses,10
+,Unique participants,10
+,Response options,Count,Percent
+,more regularization,10,100.0
+,less regularization,0,0.0
+
+One form of regularization is,Activity type,Multiple choice
+,Total responses,13
+,Unique participants,13
+,Response options,Count,Percent
+,coefficient shrinkage,12,92.31
+,larger KNN k,1,7.69
+
+Ridge regularization uses an ___ penalty while lasso regularization uses an ___ penalty,Activity type,Multiple choice
+,Total responses,0
+,Unique participants,0
+,Response options,Count,Percent
+,$$l_1$$; $$\;l_2$$,0,0
+,$$l_2$$; $$\;l_1$$,0,0
+
+The following coefficient priors provide a Bayesian implementation of,Activity type,Multiple choice
+,Total responses,9
+,Unique participants,9
+,Response options,Count,Percent
+,"ridge and lasso regularization, respectively",6,66.67
+,"lasso and ridge regularization, respectively",1,11.11
+,kurtosis,2,22.22
+
+PCR is,Activity type,Multiple choice
+,Total responses,14
+,Unique participants,14
+,Response options,Count,Percent
+,polymerase chain reaction,0,0.0
+,a variable selection method,4,28.57
+,principal components analysis,10,71.43
+
+Partial least squares (PLS),Activity type,Multiple choice
+,Total responses,12
+,Unique participants,12
+,Response options,Count,Percent
+,often utilizes standardized features,3,25.0
+,leverages principal components analysis (PCA),7,58.33
+,"tends to perform better than PCR in practice because of it's ""supervised"" nature",2,16.67
+
+Did you complete all assigned readings?,Activity type,Multiple choice
+,Total responses,0
+,Unique participants,0
+,Response options,Count,Percent
+,Yes,0,0
+,No,0,0

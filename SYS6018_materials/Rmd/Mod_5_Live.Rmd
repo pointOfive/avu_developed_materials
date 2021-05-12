@@ -1,0 +1,460 @@
+---
+title: "Mod_5_Live"
+author: "Schwartz"
+date: "09/26/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      fig.align = "center",
+                      out.width = "80%")
+```
+
+## Announcements
+- Project "Collaboration"
+  - "I'm getting this weird error -- has anyone cracked this?" 
+  - "I don't know how to make an ROC or what it is... help?"
+- Reminder regarding learning
+- Motivation for Live Session:
+  - Regularization (via K-folds) is what ML predictive modeling is
+  - Going to explore lasso/ridge a little bit further
+  - Trying *HARD* to keep the live session time to a minimum...
+  - So we'll just do this one example and see what happens...
+
+## Data
+
+### setup
+
+```{r setup}
+library(tidyverse)
+college <- ISLR::College %>% tibble::as_tibble()
+
+# shake
+set.seed(0)
+college <- dplyr::slice_sample(college, n=nrow(college)) %>% 
+  tibble::rowid_to_column()
+
+# save
+college_FHO <- dplyr::slice_sample(college, prop=0.2)
+college <- college[-college_FHO$rowid,]
+```
+
+- The uz(ual)
+- Very interesting conversation about final hold out data sets...
+
+### first pass
+
+```{r first_order}
+
+college_1stOrder <- college %>% dplyr::select(4:19) %>%
+  tibble::add_column(college['Private']) %>% tibble::add_column(college['Apps'])
+college_FHO_1stOrder <- college_FHO %>% dplyr::select(4:19) %>%
+  tibble::add_column(college_FHO['Private']) %>%
+  tibble::add_column(college_FHO['Apps'])
+
+```
+
+- first order main effect terms only
+
+### Ridge: first pass
+
+```{r ridge_1stOrder}
+lambdas_grid <- 10^seq(9,-1,length=100)
+# https://statisticaloddsandends.wordpress.com/2018/11/15/a-deep-dive-into-glmnet-standardize/
+apps_1stOrder.ridge_fit <- caret::train(Apps~., data=college_1stOrder, 
+                           method='glmnet', standardize=TRUE, #TRUE *IS* default
+                           lambda=lambdas_grid,
+                           tuneGrid=data.frame(alpha=0, 
+                                               lambda=lambdas_grid),
+                           trControl=caret::trainControl("cv", number=5,
+                                                         returnResamp='all'))
+```
+
+### Ridge: dial
+
+```{r ridge_dial}
+
+# shrinkage plot
+
+apps_1stOrder.ridge_fit$finalModel$beta %>%
+  as.matrix() %>% t() %>% as_tibble() %>%
+  dplyr::mutate_all(~ ifelse(.x>0,log(.x+1),-log(-.x+1))) ->
+  apps_1stOrder.ridge_fit.shrinkage.log_coef
+
+apps_1stOrder.ridge_fit.shrinkage.log_coef %>% 
+  tibble::add_column(lambda=apps_1stOrder.ridge_fit$finalModel$lambda) %>%
+  tidyr::pivot_longer(-lambda, names_to="feature", values_to="coef") %>%
+  ggplot(aes(x=lambda, y=coef, color=feature)) + geom_line() +
+  scale_x_log10() + #ylim(-900000,1200000) +
+  labs(y='"log" Coefficient Value', x="Lambda Tuning Parameter Value") +
+  ggtitle("Ridge Regularization") -> apps_1stOrder.ridge_fit.shrinkage.plot
+
+# RMSE plot
+
+yhats <- lambdas_grid %>% purrr::set_names() %>%
+  purrr::map(~ predict(apps_1stOrder.ridge_fit$finalModel, 
+                       newx=data.matrix(college_FHO_1stOrder)[,1:17], s=.x))
+
+RMSEs <- yhats %>% purrr::map(~ caret::RMSE(.x, college_FHO$Apps)) %>%
+  unlist(use.names=FALSE)
+
+apps_1stOrder.ridge_fit.shrinkage.RMSE.plot <- ggplot() +
+  geom_line(data=tibble(RMSE=RMSEs, lambda=lambdas_grid),
+            mapping=aes(x=lambda, y=RMSE, color='FHO')) +
+  geom_line(data=apps_1stOrder.ridge_fit$results,
+            mapping=aes(x=lambda, y=RMSE, color='K-Folds\nout o sample')) +
+  scale_x_log10() + scale_y_log10() + labs(x="Lambda Tuning Parameter Value") +
+  geom_point(apps_1stOrder.ridge_fit$resample,
+             mapping=aes(x=lambda, y=RMSE, 
+                         color='K-Folds\nout o sample'), size=0.1)
+
+# if we wanted to add a line: might look good...?  had to move on though w/o
+#points <- geom_line(data=tibble(
+#      y=c(min(data.matrix(coefs_shrinkage)[50-i+1,]),
+#          max(data.matrix(coefs_shrinkage)[50-i+1,])),
+#      lambda=apps_2ndOrder.ridge_fit$finalModel$lambda[50-i+1]),
+#      mapping=aes(x=lambda, y=y), color='black', feature='dial')
+# also adding some transparency could be cool looking?
+```
+
+### Ridge: shiny
+
+```{r ridge_shiny}
+
+library(shiny)
+library(plotly)
+
+# https://shiny.rstudio.com/gallery/mathjax.html
+
+ui <- fluidPage(
+  titlePanel(withMathJax("Shrinkage: \\( \\min \\left[ \\sum_{i=1}^n (y_i - x_i\\beta)^2 + \\lambda \\sum_{k=1}^p \\beta_k^2 \\right] \\)")),
+  sidebarLayout(sidebarPanel(sliderInput(inputId="lambda",
+                                         label="lambda index:",
+                                         min=1, max=100, value=1)),
+                mainPanel(plotlyOutput(outputId="coef"),
+                          plotlyOutput(outputId="rmse"))))
+
+server <- function(input, output) {
+  output$coef <- renderPlotly({
+    
+    i <- as.integer(input$lambda)
+    
+    tibble(coef=as.numeric(apps_1stOrder.ridge_fit.shrinkage.log_coef[100-i+1,]), 
+           lambda=apps_1stOrder.ridge_fit$finalModel$lambda[100-i+1],
+           feature=colnames(apps_1stOrder.ridge_fit.shrinkage.log_coef)) %>%
+      geom_point(mapping=aes(y=coef, x=lambda, color=feature)) -> current_coefs
+
+    plotly::ggplotly(apps_1stOrder.ridge_fit.shrinkage.plot+current_coefs)
+  })
+  
+  output$rmse <- renderPlotly({
+    
+    i <- as.integer(input$lambda)
+  
+    RMSE_KFolds <- apps_1stOrder.ridge_fit$results[i,]
+    RMSE_FHO <- tibble(RMSE=RMSEs[100-i+1], lambda=lambdas_grid[100-i+1])
+    RMSE_FHO <- geom_point(RMSE_FHO, mapping=aes(x=lambda, y=RMSE, color='FHO'))
+    RMSE_KFolds <- geom_point(RMSE_KFolds, 
+                   mapping=aes(x=lambda, y=RMSE, color='K-Folds\nout o sample')) 
+
+    plotly::ggplotly(apps_1stOrder.ridge_fit.shrinkage.RMSE.plot + 
+                     RMSE_KFolds + RMSE_FHO)
+    
+    #plotly::subplot(p1, p2, nrows=2)
+    #gridExtra::grid.arrange(grobs=list(p1, p2), ncol=1)
+    })
+}
+shinyApp(ui = ui, server = server)
+
+```
+
+
+### Lasso: first pass
+
+```{r lasso_1stOrder}
+lambdas_grid <- 10^seq(4,-1,length=100)
+apps_1stOrder.lasso_fit <- caret::train(Apps~., data=college_1stOrder, 
+                           method='glmnet', standardize=TRUE, #TRUE *IS* default
+                           lambda=lambdas_grid,
+                           tuneGrid=data.frame(alpha=1, 
+                                               lambda=lambdas_grid),
+                           trControl=caret::trainControl("cv", number=5,
+                                                         returnResamp='all'))
+```
+
+### Lasso: dial
+
+```{r lasso_dial}
+
+# shrinkage plot
+
+apps_1stOrder.lasso_fit$finalModel$beta %>%
+  as.matrix() %>% t() %>% as_tibble() %>%
+  dplyr::mutate_all(~ ifelse(.x>0,log(.x+1),-log(-.x+1))) ->
+  apps_1stOrder.lasso_fit.shrinkage.log_coef
+
+apps_1stOrder.lasso_fit.shrinkage.log_coef %>% 
+  tibble::add_column(lambda=apps_1stOrder.lasso_fit$finalModel$lambda) %>%
+  tidyr::pivot_longer(-lambda, names_to="feature", values_to="coef") %>%
+  ggplot(aes(x=lambda, y=coef, color=feature)) + geom_line() +
+  scale_x_log10() + #ylim(-900000,1200000) +
+  labs(y='"log" Coefficient Value', x="Lambda Tuning Parameter Value") +
+  ggtitle("Lasso Regularization") -> apps_1stOrder.lasso_fit.shrinkage.plot
+
+# RMSE plot
+
+yhats <- lambdas_grid %>% purrr::set_names() %>%
+  purrr::map(~ predict(apps_1stOrder.lasso_fit$finalModel, 
+                       newx=data.matrix(college_FHO_1stOrder)[,1:17], s=.x))
+
+RMSEs <- yhats %>% purrr::map(~ caret::RMSE(.x, college_FHO$Apps)) %>%
+  unlist(use.names=FALSE)
+
+apps_1stOrder.lasso_fit.shrinkage.RMSE.plot <- ggplot() +
+  geom_line(data=tibble(RMSE=RMSEs, lambda=lambdas_grid),
+            mapping=aes(x=lambda, y=RMSE, color='FHO')) +
+  geom_line(data=apps_1stOrder.lasso_fit$results,
+            mapping=aes(x=lambda, y=RMSE, color='K-Folds\nout o sample')) +
+  scale_x_log10() + scale_y_log10() + labs(x="Lambda Tuning Parameter Value") +
+  geom_point(apps_1stOrder.lasso_fit$resample,
+             mapping=aes(x=lambda, y=RMSE, 
+                         color='K-Folds\nout o sample'), size=0.1)
+
+```
+
+
+### Lasso: shiny
+
+```{r lasso_shiny}
+# https://shiny.rstudio.com/gallery/mathjax.html
+ui <- fluidPage(
+  titlePanel(withMathJax("Shrinkage: \\( \\min \\left[\\sum_{i=1}^n (y_i - x_i\\beta)^2 + \\lambda \\sum_{k=1}^p |\\beta_k| \\right] \\)")),
+  sidebarLayout(sidebarPanel(sliderInput(inputId="lambda",
+                                         label="lambda index:",
+                                         min=1, max=100, value=1)),
+                mainPanel(plotlyOutput(outputId="coef"),
+                          plotlyOutput(outputId="rmse"))))
+
+server <- function(input, output) {
+  output$coef <- renderPlotly({
+    
+    i <- as.integer(input$lambda)
+    
+    tibble(coef=as.numeric(apps_1stOrder.lasso_fit.shrinkage.log_coef[100-i+1,]), 
+           lambda=apps_1stOrder.lasso_fit$finalModel$lambda[100-i+1],
+           feature=colnames(apps_1stOrder.lasso_fit.shrinkage.log_coef)) %>%
+      geom_point(mapping=aes(y=coef, x=lambda, color=feature)) -> current_coefs
+
+    plotly::ggplotly(apps_1stOrder.lasso_fit.shrinkage.plot+current_coefs)
+  })
+  
+  output$rmse <- renderPlotly({
+    
+    i <- as.integer(input$lambda)
+  
+    RMSE_KFolds <- apps_1stOrder.lasso_fit$results[i,]
+    RMSE_FHO <- tibble(RMSE=RMSEs[100-i+1], lambda=lambdas_grid[100-i+1])
+    RMSE_FHO <- geom_point(RMSE_FHO, mapping=aes(x=lambda, y=RMSE, color='FHO'))
+    RMSE_KFolds <- geom_point(RMSE_KFolds, 
+                   mapping=aes(x=lambda, y=RMSE, color='K-Folds\nout o sample')) 
+
+    plotly::ggplotly(apps_1stOrder.lasso_fit.shrinkage.RMSE.plot + 
+                     RMSE_KFolds + RMSE_FHO)
+    
+    #plotly::subplot(p1, p2, nrows=2)
+    #gridExtra::grid.arrange(grobs=list(p1, p2), ncol=1)
+    })
+}
+shinyApp(ui = ui, server = server)
+
+```
+
+
+### poly
+
+```{r poly}
+
+features_2_square <- names(college)[4:19] %>% purrr::set_names() 
+poly2_transforms <- features_2_square %>% purrr::map(~ poly(college[[.x]], 2))
+
+transform_features <- function(feature){
+  poly2_transforms[[feature]] %>% 
+    as_tibble() %>%
+    dplyr::rename_with(~ paste0(feature,"_poly",.x))
+}
+
+college_2ndOrder <- features_2_square %>% 
+       purrr::map(~ transform_features(.x)) %>%
+       dplyr::bind_cols() %>% 
+       tibble::add_column(college['Private']) %>% 
+       tibble::add_column(college['Apps'])
+
+transform_NEW_features <- function(feature){
+  predict(poly2_transforms[[feature]], college_FHO[[feature]]) %>% as_tibble() %>%
+    dplyr::rename_with(~ paste0(feature,"_poly",.x))
+}
+
+college_FHO_2ndOrder <- features_2_square %>% 
+                          purrr::map(~ transform_NEW_features(.x)) %>%
+                          dplyr::bind_cols() %>% 
+                          tibble::add_column(college_FHO['Private']) %>%
+                          tibble::add_column(college_FHO['Apps'])
+
+```
+
+- using poly
+
+### second order saturated model 
+
+```{r 2nd_order}
+lm_2ndOrder <- paste('Apps~(',
+                     paste0(features_2_square, '_poly1', collapse='+'),
+                     '+Private)^2+',
+                     paste0(features_2_square, '_poly2', collapse='+'),
+                     sep='')
+
+```
+
+- all interactions
+- all self interactions (2nd order terms)
+
+
+### Ridge: second pass
+
+```{r ridge2}
+lambdas_grid <- 10^seq(9,-1,length=100)
+apps_2ndOrder.ridge_fit <- caret::train(formula(lm_2ndOrder), 
+                                        data=college_2ndOrder, 
+                           method='glmnet', standardize=TRUE, #TRUE *IS* default
+                           lambda=lambdas_grid,
+                           tuneGrid=data.frame(alpha=0, 
+                                               lambda=lambdas_grid),
+                           trControl=caret::trainControl("cv", number=5,
+                                                         returnResamp='all'))
+```
+
+
+### Ridge: dial
+
+```{r ridge2_dial_shrinkage}
+
+# shrinkage plot
+
+apps_2ndOrder.ridge_fit$finalModel$beta %>%
+  as.matrix() %>% t() %>% as_tibble() ->
+  apps_2ndOrder.ridge_fit.shrinkage.log_coef
+
+apps_2ndOrder.ridge_fit.shrinkage.log_coef %>% 
+  tibble::add_column(lambda=apps_2ndOrder.ridge_fit$finalModel$lambda) %>%
+  tidyr::pivot_longer(-lambda, names_to="feature", values_to="coef") %>%
+  ggplot(aes(x=lambda, y=coef, color=feature)) + geom_line() +
+  scale_x_log10() + #ylim(-900000,1200000) +
+  labs(y='"log" Coefficient Value', x="Lambda Tuning Parameter Value") +
+  ggtitle("Lasso Regularization") -> apps_2ndOrder.ridge_fit.shrinkage.plot
+
+
+plotly::ggplotly(apps_2ndOrder.ridge_fit.shrinkage.plot)
+plotly::ggplotly(apps_1stOrder.ridge_fit.shrinkage.plot)
+```
+
+```{r ridge2_dial_shrinkage}
+
+# RMSE plot
+
+newX <- model.matrix(lm(formula(lm_2ndOrder), data=college_FHO_2ndOrder))
+yhats <- lambdas_grid %>% purrr::set_names() %>%
+  purrr::map(~ predict(apps_2ndOrder.ridge_fit$finalModel, 
+                       newx=newX[,2:170], s=.x))
+
+RMSEs <- yhats %>% purrr::map(~ caret::RMSE(.x, college_FHO$Apps)) %>%
+  unlist(use.names=FALSE)
+
+apps_2ndOrder.ridge_fit.shrinkage.RMSE.plot <- ggplot() +
+  geom_line(data=tibble(RMSE=RMSEs, lambda=lambdas_grid),
+            mapping=aes(x=lambda, y=RMSE, color='FHO')) +
+  geom_line(data=apps_2ndOrder.ridge_fit$results,
+            mapping=aes(x=lambda, y=RMSE, color='K-Folds Out of Sample')) +
+  scale_x_log10() + scale_y_log10() + labs(x="Lambda Tuning Parameter Value") +
+  geom_point(apps_2ndOrder.ridge_fit$resample,
+             mapping=aes(x=lambda, y=RMSE, 
+                         color='K-Folds Out of Sample'), size=0.1)
+
+plotly::ggplotly(apps_2ndOrder.ridge_fit.shrinkage.RMSE.plot)
+plotly::ggplotly(apps_1stOrder.ridge_fit.shrinkage.RMSE.plot)
+```
+
+
+### Lasso: second pass
+
+```{r ridge2}
+
+lambdas_grid <- 10^seq(4,-1,length=100)
+apps_2ndOrder.lasso_fit <- caret::train(formula(lm_2ndOrder), 
+                                        data=college_2ndOrder, 
+                           method='glmnet', standardize=TRUE, #TRUE *IS* default
+                           lambda=lambdas_grid,
+                           tuneGrid=data.frame(alpha=1, 
+                                               lambda=lambdas_grid),
+                           trControl=caret::trainControl("cv", number=5,
+                                                         returnResamp='all'))
+```
+
+
+### Lasso: dial
+
+```{r lasso2_dial_shrinkage}
+
+# shrinkage plot
+
+apps_2ndOrder.lasso_fit$finalModel$beta %>%
+  as.matrix() %>% t() %>% as_tibble() ->
+  apps_2ndOrder.lasso_fit.shrinkage.log_coef
+
+apps_2ndOrder.lasso_fit.shrinkage.log_coef %>% 
+  tibble::add_column(lambda=apps_2ndOrder.lasso_fit$finalModel$lambda) %>%
+  tidyr::pivot_longer(-lambda, names_to="feature", values_to="coef") %>%
+  ggplot(aes(x=lambda, y=coef, color=feature)) + geom_line() +
+  scale_x_log10() + ylim(-500000,500000) +
+  labs(y='"log" Coefficient Value', x="Lambda Tuning Parameter Value") +
+  ggtitle("Lasso Regularization") -> apps_2ndOrder.lasso_fit.shrinkage.plot
+
+
+plotly::ggplotly(apps_2ndOrder.lasso_fit.shrinkage.plot)
+plotly::ggplotly(apps_1stOrder.lasso_fit.shrinkage.plot)
+```
+
+
+```{r lasso2_dial_shrinkage}
+
+# RMSE plot
+
+newX <- model.matrix(lm(formula(lm_2ndOrder), data=college_FHO_2ndOrder))
+yhats <- lambdas_grid %>% purrr::set_names() %>%
+  purrr::map(~ predict(apps_2ndOrder.lasso_fit$finalModel, 
+                       newx=newX[,2:170], s=.x))
+
+RMSEs <- yhats %>% purrr::map(~ caret::RMSE(.x, college_FHO$Apps)) %>%
+  unlist(use.names=FALSE)
+
+apps_2ndOrder.lasso_fit.shrinkage.RMSE.plot <- ggplot() +
+  geom_line(data=tibble(RMSE=RMSEs, lambda=lambdas_grid),
+            mapping=aes(x=lambda, y=RMSE, color='FHO')) +
+  geom_line(data=apps_2ndOrder.lasso_fit$results,
+            mapping=aes(x=lambda, y=RMSE, color='K-Folds Out of Sample')) +
+  scale_x_log10() + scale_y_log10() + labs(x="Lambda Tuning Parameter Value") +
+  geom_point(apps_2ndOrder.lasso_fit$resample,
+             mapping=aes(x=lambda, y=RMSE, 
+                         color='K-Folds Out of Sample'), size=0.1)
+
+plotly::ggplotly(apps_2ndOrder.lasso_fit.shrinkage.RMSE.plot)
+plotly::ggplotly(apps_1stOrder.lasso_fit.shrinkage.RMSE.plot)
+```
+
+
+
+## My questions
+
+PollEv.com/scottschwart658
+
+## Your questions

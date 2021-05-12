@@ -1,0 +1,189 @@
+Untitled
+,Activity count,23
+,Participant count,0
+,Average responses,0.0
+
+Roll Call,Activity type,Open ended
+,Total responses,0
+,Unique participants,0
+
+Variance is,Activity type,Multiple choice
+,Total responses,0
+,Unique participants,0
+,Response options,Count,Percent
+,"a distributional characteristic of a random variable; namely, $$\;\sigma^2_X = Var(X) =  E\left[(X-E[X])^2\right]$$",0,0
+,"a statistic calculated from data; namely, $$\;s^2 = \sum_{I=1}^n \frac{(x_i-\bar x_i)^2}{n-1}$$",0,0
+,a part of the Variance-Bias partitioning of expected sample-to-sample squared error in  fitted values  produced by a model: $$\;E\left[(y-\hat f(x_0))^2\right] = Var\left(\hat f (x_0) \right)+\left[Bias\left(\hat f(x_0)\right)\right]^2+Var(\epsilon),0,0
+,"a part of the phrase ""high variance model"", which means the model fit is generally sensitive to sampling variation at the current sample sizes",0,0
+
+Why is our model wrong *right now*?,Activity type,Multiple choice
+,Total responses,0
+,Unique participants,0
+,Response options,Count,Percent
+,Model Variance: $$\;Var\left(\hat f (x_0) \right)>0$$ means it's quite possible that the fitted $$\hat f (x_0) \ne E[y]$$,0,0
+,Model Bias: $$\;Bias\left(\hat f(x_0)\right)\ne0$$  means it's very likely that the fitted $$\hat f (x_0) \ne E[y]$$,0,0
+,Irreducible Error: $$\;\hat f (x_0) \ne y$$ because $$Var(\epsilon)>0$$,0,0
+
+Do you like this analogy: $$\;\;$$Known Knowns $$= \hat f \;\;$$ Known Unknowns $$=\epsilon\;\;$$ Unknown Unknowns $$=f\;\;$$ Unknown Knowns $$= Var(\hat f)\;\&\;Bias(\hat f)$$,Activity type,Multiple choice
+,Total responses,0
+,Unique participants,0
+,Response options,Count,Percent
+,Yep,0,0
+,Nope,0,0
+
+"From the previous question, which of these are irreducible and reducible error? $$\;\;$$Known Knowns $$= \hat f \;\;$$ Known Unknowns $$=\epsilon\;\;$$ Unknown Unknowns $$=f\;\;$$ Unknown Knowns $$= Var(\hat f)\;\&\;Bias(\hat f)$$",Activity type,Multiple choice
+,Total responses,0
+,Unique participants,0
+,Response options,Count,Percent
+,$$\hat f$$,0,0
+,$$\epsilon$$,0,0
+,$$f$$,0,0
+,$$ Var(\hat f)\;\&\;Bias(\hat f)$$,0,0
+
+"Deep ML has become enamored with the terms ""Aleatoric"" and ""Epistemic"" for describing uncertainty. Aleatoric refers to ""dice roller's"" chance; whereas Epistemic uncertainty refers epistemology, i.e., ""uncertainty in what we know"".",Activity type,Multiple choice
+,Total responses,0
+,Unique participants,0
+,Response options,Count,Percent
+,Aleatoric uncertainty is $$irreducible$$ uncertainty; Epistemic uncertainty is $$reducible$$ uncertainty,0,0
+,Aleatoric uncertainty is $$reducible$$ uncertainty; Epistemic uncertainty is $$irreducible$$ uncertainty,0,0
+
+A model who's structure -- everything it keeps track of and uses to make predictions -- grows as $$n$$ gets larger is called a,Activity type,Multiple choice
+,Total responses,0
+,Unique participants,0
+,Response options,Count,Percent
+,parametric model,0,0
+,non-parametric model,0,0
+,high variance model,0,0
+,high bias model,0,0
+
+A linear regression with only a few predictors would be expected to be a,Activity type,Multiple choice
+,Total responses,0
+,Unique participants,0
+,Response options,Count,Percent
+,parametric model,0,0
+,non-parametric model,0,0
+,high variance model,0,0
+,high bias model,0,0
+
+"If you wanted to use a model that facilitated interpretation, you would probably use a",Activity type,Multiple choice
+,Total responses,0
+,Unique participants,0
+,Response options,Count,Percent
+,parametric model,0,0
+,non-parametric model,0,0
+,high variance model,0,0
+,high bias model,0,0
+
+An extremely low bias model would be expected to be a,Activity type,Multiple choice
+,Total responses,0
+,Unique participants,0
+,Response options,Count,Percent
+,parametric model,0,0
+,non-parametric model,0,0
+,high variance model,0,0
+,high bias model,0,0
+
+"A KNN model with a quite small value for $$k$$, e.g., $$k=3$$ would be expected to be a",Activity type,Multiple choice
+,Total responses,0
+,Unique participants,0
+,Response options,Count,Percent
+,parametric model,0,0
+,non-parametric model,0,0
+,high variance model,0,0
+,high bias model,0,0
+
+Select all true statements,Activity type,Multiple choice
+,Total responses,0
+,Unique participants,0
+,Response options,Count,Percent
+,Error rates on test sets will never outperform error rates on training sets (on which the model was fitted),0,0
+,"The red circle shows the best parameter range for ""out of sample"" error rates",0,0
+,The yellow arrows are wrong because the x-axis is $$1/k$$,0,0
+
+"To make a KNN more flexible, or make it a model with ""more degrees of freedom"", you increase the value of k",Activity type,Multiple choice
+,Total responses,0
+,Unique participants,0
+,Response options,Count,Percent
+,True,0,0
+,False,0,0
+
+"Underfitting is a _______ issue, while Overfitting is a _______ issue",Activity type,Multiple choice
+,Total responses,0
+,Unique participants,0
+,Response options,Count,Percent
+,"parametric, non-parametric",0,0
+,"model bias, model variance",0,0
+,"inference, prediction",0,0
+
+"Understanding relationships is a _______ issue, whereas balancing the variance-bias tradeoff is a _______ issue",Activity type,Multiple choice
+,Total responses,0
+,Unique participants,0
+,Response options,Count,Percent
+,"parametric, non-parametric",0,0
+,"model bias, model variance",0,0
+,"inference, prediction",0,0
+
+MAE is,Activity type,Multiple choice
+,Total responses,0
+,Unique participants,0
+,Response options,Count,Percent
+,$$\frac{\sum_{i=1}^n (y_i -f(x_i))^2}{n},0,0
+,$$\frac{\sum_{i=1}^n |y_i -f(x_i)|}{n},0,0
+,is a cost function with corresponding loss function $$|y_i-f(x_i)|$$,0,0
+,is a cost function with corresponding loss function $$|y_i-f(x_i)|^2$$,0,0
+
+I find linear regression and logistic regression similar,Activity type,Multiple choice
+,Total responses,0
+,Unique participants,0
+,Response options,Count,Percent
+,Yes,0,0
+,No,0,0
+
+I find regression and classification similar,Activity type,Multiple choice
+,Total responses,0
+,Unique participants,0
+,Response options,Count,Percent
+,Yes,0,0
+,No,0,0
+
+I can use KNN for both classification and regression,Activity type,Multiple choice
+,Total responses,0
+,Unique participants,0
+,Response options,Count,Percent
+,Yes,0,0
+,No,0,0
+
+I can use linear model regression for both classification and regression,Activity type,Multiple choice
+,Total responses,0
+,Unique participants,0
+,Response options,Count,Percent
+,Yes,0,0
+,No,0,0
+
+"What's the difference between `c(""none"", ""confidence"", ""prediction"")` in `predict(..., interval = <...>, ...)`?",Activity type,Multiple choice
+,Total responses,0
+,Unique participants,0
+,Response options,Count,Percent
+,Nothing -- that's not the correct function signature,0,0
+,"""none"" means you're probably just asking for `predict(lm.fit, type=""response"")`",0,0
+,"""confidence"" will give you the confidence interval $$\sum_{i=1}^{p} \beta_j\pm t_{n-p-1}^{0.05}SE\left(\sum_{i=1}^{p} \beta_j\right)",0,0
+,"""prediction"" gives the uncertainty of the ""line of best fit"" at every point in the design matrix used to fit the model so long as the `new data=` is  not used",0,0
+
+Videos+Reading+Lab+HW (no tidyverse) took,Activity type,Multiple choice
+,Total responses,0
+,Unique participants,0
+,Response options,Count,Percent
+,<5hrs,0,0
+,5-10 hrs,0,0
+,10+ hrs,0,0
+,<5hrs (but I've still got quite a bit to do),0,0
+,5-10hrs (but I've still got quite a bit to do),0,0
+,10+ hrs (but I've still got quite a bit to do),0,0
+
+Time spent on tidyverse,Activity type,Multiple choice
+,Total responses,0
+,Unique participants,0
+,Response options,Count,Percent
+,<5hrs,0,0
+,5-10 hrs,0,0
+,10+ hrs,0,0
